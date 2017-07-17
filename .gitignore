@@ -18,7 +18,6 @@ client_publish
 assets
 armeabi-v7a
 downrec
-friend
 saverec
 log
 Debug.win32
@@ -29,3 +28,4 @@ Debug.win32
 *.lib
 Bugly
 JftMergeSDK
+.vs

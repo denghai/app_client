@@ -474,10 +474,10 @@ function GameLayer:onSubGameStart( dataBuffer )
     --播放开始音效
     ExternalFun.playSoundEffect("GAME_BLACKGROUND.wav")
 
-    --[[--刷新庄家信息
+    --刷新庄家信息
     self._gameView:onChangeBanker(self.cmd_gamestart.wBankerUser, self.cmd_gamestart.lBankerScore, self.m_bEnableSystemBanker);
 
-    --玩家最大下注
+    --[[--玩家最大下注
     self._gameView.m_llMaxJetton = self.cmd_gamestart.lPlayBetScore;
 
     --游戏倒计时
