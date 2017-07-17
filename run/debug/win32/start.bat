@@ -1,0 +1,1 @@
+start GloryProject.exe -workdir E:\app\client -resolution 667x375
