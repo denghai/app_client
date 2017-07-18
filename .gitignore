@@ -25,3 +25,10 @@ Debug.win32
 Bugly
 JftMergeSDK
 .vs
+GloryProject.vcxproj
+/run
+备份
+/client/user_gameconfig.plist
+/client/UserDefault.xml
+/client/version.plist
+/client.config
