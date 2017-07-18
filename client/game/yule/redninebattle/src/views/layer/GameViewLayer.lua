@@ -21,7 +21,6 @@ local QueryDialog   = require("app.views.layer.other.QueryDialog")
 local LyCard = module_pre .. ".views.layer.ViewCard"
 local LyDeskChips = module_pre .. ".views.layer.DeskChips"
 local LyPlayer = module_pre .. ".views.layer.GameResult"
-local LySetting = module_pre .. ".views.layer.Setting"
 local LySetting = module_pre .. ".views.layer.UserLst"
 --
 
@@ -79,6 +78,16 @@ local DEFAULT_BET = 1
 --筹码运行时间
 local BET_ANITIME = 0.2
 
+--操作结果
+local enOperateResult =
+{
+	"enOperateResult_NULL",
+	"enOperateResult_Win",
+	"enOperateResult_Lost"
+}
+local OPERATE_RESULT = ExternalFun.declarEnumWithTable(1, enOperateResult)
+
+
 function GameViewLayer:ctor(scene)
 	--注册node事件
 	ExternalFun.registerNodeEvent(self)
@@ -103,30 +112,53 @@ function GameViewLayer:initCsbRes(  )
 	local rootLayer, csbNode = ExternalFun.loadRootCSB("MainScene.csb", self);
 	self.m_rootLayer = rootLayer
 
-    --音效按钮
-    --GlobalUserItem.bVoiceAble
+    --战绩层
+    self.m_lyRecord = csbNode:getChildByName("ly_record")
+    self:initRecords()
 
-	--底部按钮
-	local bottom_sp = csbNode:getChildByName("bottom_sp");
-	self.m_spBottom = bottom_sp;
+	--筹码
+    self.m_lyChips = csbNode:getChildByName("chips")
+    self:initChips()
+
+    --时钟
+    self.m_lyTimer = csbNode:getChildByName("timer")
+    self:initTimer()
+    --self:createClockNode()
+
+    --玩家信息
+    self.m_lyUserInfo = csbNode:getChildByName("bottom")
+    self:initUserInfo()
+    
+    --庄家信息
+    self.m_lyBankerInfo = csbNode:getChildByName("face")
+    self:initBankerInfo()
+    
+    --左边筹码区
+    self.m_lyLeftDeskChips = csbNode:getChildByName("deskChip0")
+    --中间筹码区
+    self.m_lyCenterDeskChips = csbNode:getChildByName("deskChip1")
+    --右边筹码区
+    self.m_lyRightDeskChips = csbNode:getChildByName("deskChip2")
+    self:initDeskChips()
+
+    --上边Card
+    self.m_lyCardUp = csbNode:getChildByName("card_up")
+    --下边Card
+    self.m_lyCardDown = csbNode:getChildByName("card_down")
+    --左边Card
+    self.m_lyCardLeft = csbNode:getChildByName("card_left")
+    --右边Card
+    self.m_lyCardRight = csbNode:getChildByName("card_right")
+    --中间Card
+    self.m_lyCardStart = csbNode:getChildByName("card_start_index")
+    --self:initCard()
+
+    --轮庄Tips
+    self.m_lyCenterTips = csbNode:getChildByName("change_banker")
+    self.m_lyCenterTips:setVisible(false)
 
 	--初始化按钮
-	self:initBtn(csbNode);
-
-	--[[--初始化庄家信息
-	self:initBankerInfo();
-
-	--初始化玩家信息
-	self:initUserInfo();
-
-	--初始化桌面下注
-	self:initJetton(csbNode);
-
-	--初始化座位列表
-	self:initSitDownList(csbNode)
-
-	--倒计时
-	self:createClockNode()]]	
+	self:initBtn(csbNode)
 end
 
 function GameViewLayer:reSet(  )
@@ -145,6 +177,62 @@ function GameViewLayer:reSetForNewGame(  )
 	if nil ~= self.m_cardLayer then
 		self.m_cardLayer:showLayer(false)
 	end
+end
+
+--初始化战绩
+function GameViewLayer:initRecords()
+    for i=0,9 do
+        for j=0,2 do
+            local node = self.m_lyRecord:getChildByName("s_" .. i .. "_" .. j)
+            node:setProperty(str, "game_res/WIN_FLAGS.png", 26, 24, "0")
+            node:setString("1")
+            --node:setProperty(str, "game_res/ME_WIN_FLAGS.png", 24, 26, "1")
+        end
+    end
+end
+
+--初始化下注区
+function GameViewLayer:initChips()
+    local clip_layout = self.m_lyChips;
+
+	local function clipEvent( sender, eventType )
+		if eventType == ccui.TouchEventType.ended then
+			self:onJettonButtonClicked(sender:getTag(), sender);
+		end
+	end
+
+	for i=1,#self.m_pJettonNumber do
+		local tag = i - 1
+		local str = string.format("Btn_%d", tag)
+		local btn = clip_layout:getChildByName(str)
+		btn:setTag(i)
+		btn:addTouchEventListener(clipEvent)
+		self.m_tableJettonBtn[i] = btn
+		self.m_tabJettonAnimate[i] = btn:getChildByName("effect")
+	end
+
+	self:reSetJettonBtnInfo(false);
+end
+
+--初始化时钟
+function GameViewLayer:initTimer()
+    local timer_layout = self.m_lyTimer
+	--倒计时
+	self.m_lyTimer.m_lbNum = timer_layout:getChildByName("lbNum")
+	self.m_lyTimer.m_lbNum:setString("")
+
+	--提示
+	self.m_lyTimer.m_spTip = timer_layout:getChildByName("spTips")
+    self.m_lyTimer.m_spTip:setTexture("res/green_edit.png")
+
+    self.m_lyTimer.m_actRun = timer_layout:getChildByName("actRun")
+
+    local rotate1 = cc.RotateTo:create(1.5, 180.0)
+    local rotate2 = cc.RotateTo:create(1.5, 360.0)
+    local seq = cc.Sequence:create(rotate1, rotate2)
+    local repeatForever = cc.RepeatForever:create(seq)
+    self.m_lyTimer.m_actRun:runAction(repeatForever)
+    --self.m_lyTimer.m_actRun:stopAllActions()
 end
 
 --初始化按钮
@@ -173,12 +261,12 @@ function GameViewLayer:initBtn( csbNode )
 
     self:refreshMusicBtnState();
 
-    --申请上庄
+    --[[--申请上庄
     self.m_btnReqZhuang = csbNode:getChildByName("btn_reqZhuang");
     self.m_btnReqZhuang:setTag(TAG_ENUM.BT_REQZHUANG);
     self.m_btnReqZhuang:addTouchEventListener(btnEvent);
 
-	--[[local btnlist_check = csbNode:getChildByName("btnlist_check");
+	local btnlist_check = csbNode:getChildByName("btnlist_check");
 	btnlist_check:addEventListener(checkEvent);
 	btnlist_check:setSelected(false);
 	btnlist_check:setLocalZOrder(TAG_ZORDER.DROPDOWN_CHECK_ZORDER)
@@ -263,37 +351,53 @@ function GameViewLayer:refreshMusicBtnState(  )
 end
 
 --初始化庄家信息
-function GameViewLayer:initBankerInfo( ... )
-	local banker_bg = self.m_spBankerBg;
-	--庄家姓名
-	--[[local tmp = banker_bg:getChildByName("name_text");
-	self.m_clipBankerNick = g_var(ClipText):createClipText(tmp:getContentSize(), "");
-	self.m_clipBankerNick:setAnchorPoint(tmp:getAnchorPoint());
-	self.m_clipBankerNick:setPosition(tmp:getPosition());
-	banker_bg:addChild(self.m_clipBankerNick);
+function GameViewLayer:initBankerInfo( )
+	local banker_layout = self.m_lyBankerInfo;
 
-	--庄家金币
-	self.m_textBankerCoin = banker_bg:getChildByName("bankercoin_text");
+    --庄家头像
+    self.m_spBankerIcon = banker_layout:getChildByName("face_icon")
+    --庄家昵称
+    self.m_textBankerNickname = banker_layout:getChildByName("face_nickname")
+    --庄家金币
+    self.m_textBankerCoint = banker_layout:getChildByName("face_gold")
 
-	self:reSetBankerInfo();]]
+    --申请坐庄按钮
+    local function clipEvent( sender, eventType )
+		if eventType == ccui.TouchEventType.ended then
+			--self:onJettonButtonClicked(sender:getTag(), sender)
+            --[[if nil == self.m_userListLayer then
+			    self.m_userListLayer = g_var(UserListLayer):create()
+			    self:addToRootLayer(self.m_userListLayer, TAG_ZORDER.USERLIST_ZORDER)
+		    end
+		    local userList = self:getDataMgr():getUserList()		
+		    self.m_userListLayer:refreshList(userList)]]
+		end
+	end
+
+    self.m_btnReqBanker = banker_layout:getChildByName("btn_reqZhuang")
+	self.m_btnReqBanker:addTouchEventListener(clipEvent)
+
+	self:reSetBankerInfo()
 end
 
 function GameViewLayer:reSetBankerInfo(  )
-	self.m_clipBankerNick:setString("");
-	self.m_textBankerCoin:setString("");
+    self.m_spBankerIcon:setVisible(false)
+	self.m_textBankerNickname:setString("")
+	self.m_textBankerCoint:setString("")
 end
 
 --初始化玩家信息
 function GameViewLayer:initUserInfo(  )	
-	--玩家头像
-	local tmp = self.m_spBottom:getChildByName("player_head")
-	local head = g_var(PopupInfoHead):createClipHead(self:getMeUserItem(), tmp:getContentSize().width)
-	head:setPosition(tmp:getPosition())
-	self.m_spBottom:addChild(head)
-	head:enableInfoPop(true)
+    local bottom_layout = self.m_lyUserInfo
 
-	--玩家金币
-	self.m_textUserCoint = self.m_spBottom:getChildByName("coin_text")
+    --玩家昵称
+    self.m_textUseNickName = bottom_layout:getChildByName("nickname"):getChildByName("text")
+    --玩家金币
+    self.m_textUserCoint = bottom_layout:getChildByName("gold"):getChildByName("text")
+    --玩家已下注
+    self.m_textUserJetton = bottom_layout:getChildByName("jetton"):getChildByName("text")
+    --玩家成绩
+    self.m_textUserScore = bottom_layout:getChildByName("score"):getChildByName("text")
 
 	self:reSetUserInfo()
 end
@@ -302,35 +406,26 @@ function GameViewLayer:reSetUserInfo(  )
 	self.m_scoreUser = 0
 	local myUser = self:getMeUserItem()
 	if nil ~= myUser then
-		self.m_scoreUser = myUser.lScore;
+		self.m_scoreUser = myUser.lScore
+        self.m_nicknameUser = myUser.szNickName
 	end	
-	print("自己金币:" .. ExternalFun.formatScore(self.m_scoreUser))
-	local str = ExternalFun.numberThousands(self.m_scoreUser);
+	
+    self.m_textUseNickName:setString(self.m_nicknameUser)
+    
+    print("自己金币:" .. ExternalFun.formatScore(self.m_scoreUser))
+	local str = ExternalFun.numberThousands(self.m_scoreUser)
 	if string.len(str) > 11 then
-		str = string.sub(str,1,11) .. "...";
+		str = string.sub(str,1,11) .. "..."
 	end
-	self.m_textUserCoint:setString(str);
+	self.m_textUserCoint:setString(str)
+
+    self.m_textUserJetton:setString("0")
+    self.m_textUserScore:setString("0")
 end
 
---初始化桌面下注
-function GameViewLayer:initJetton( csbNode )
-	local bottom_sp = self.m_spBottom;
-	------
-	--下注按钮	
-	local clip_layout = bottom_sp:getChildByName("clip_layout");
-	self.m_layoutClip = clip_layout;
-	self:initJettonBtnInfo();
-	------
+--初始化桌面筹码区
+function GameViewLayer:initDeskChips()
 
-	------
-	--下注区域
-	self:initJettonArea(csbNode);
-	------
-
-	-----
-	--下注胜利提示
-	-----
-	self:initJettonSp(csbNode);
 end
 
 function GameViewLayer:enableJetton( var )
@@ -339,42 +434,6 @@ function GameViewLayer:enableJetton( var )
 
 	--下注区域
 	self:reSetJettonArea(var);
-end
-
---下注按钮
-function GameViewLayer:initJettonBtnInfo(  )
-	local clip_layout = self.m_layoutClip;
-
-	local function clipEvent( sender, eventType )
-		if eventType == ccui.TouchEventType.ended then
-			self:onJettonButtonClicked(sender:getTag(), sender);
-		end
-	end
-
-	self.m_pJettonNumber = 
-	{
-		{k = 1000, i = 2},
-		{k = 10000, i = 3}, 
-		{k = 100000, i = 4}, 
-		{k = 1000000, i = 5}, 
-		{k = 5000000, i = 6},
-		{k = 10000000, i = 7} 
-	}
-
-	self.m_tabJettonAnimate = {}
-	for i=1,#self.m_pJettonNumber do
-		local tag = i - 1
-		local str = string.format("chip%d_btn", tag)
-		local btn = clip_layout:getChildByName(str)
-		btn:setTag(i)
-		btn:addTouchEventListener(clipEvent)
-		self.m_tableJettonBtn[i] = btn
-
-		str = string.format("chip%d", tag)
-		self.m_tabJettonAnimate[i] = clip_layout:getChildByName(str)
-	end
-
-	self:reSetJettonBtnInfo(false);
 end
 
 function GameViewLayer:reSetJettonBtnInfo( var )
@@ -1104,7 +1163,7 @@ end
 function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBanker )
 	print("更新庄家数据:" .. wBankerUser .. "; coin =>" .. lBankerScore)
 
-	--上一个庄家是自己，且当前庄家不是自己，标记自己的状态
+	--[[--上一个庄家是自己，且当前庄家不是自己，标记自己的状态
 	if self.m_wBankerUser ~= wBankerUser and self:isMeChair(self.m_wBankerUser) then
 		self.m_enApplyState = APPLY_STATE.kCancelState
 	end
@@ -1168,7 +1227,7 @@ function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBank
 			chair = self.m_tabSitDownUser[i]:getChair()
 			self.m_tabSitDownUser[i]:updateBanker(chair == wBankerUser)
 		end
-	end
+	end]]
 end
 
 --超级抢庄申请
@@ -1616,6 +1675,39 @@ function GameViewLayer:gameDataInit( )
 	self:loadRes()
 
 	--变量声明
+    self.m_nRecordLast = 1
+    self.m_nRecordFirst = 1
+    self.m_GameRecordArrary = {}
+
+    self.m_lUserJettonScore = {}
+    self.m_lUserJettonScore[g_var(cmd).ID_SHUN_MEN] = 0
+	self.m_lUserJettonScore[g_var(cmd).ID_DI_MEN] = 0
+	self.m_lUserJettonScore[g_var(cmd).ID_TIAN_MEN] = 0
+
+    --筹码面额
+    self.m_pJettonNumber = 
+	{
+		{k = 1000, i = 2},
+		{k = 10000, i = 3}, 
+		{k = 100000, i = 4}, 
+		{k = 1000000, i = 5}, 
+		{k = 5000000, i = 6},
+		{k = 10000000, i = 7} 
+	}
+
+    --下注信息
+	self.m_tableJettonBtn = {};
+    self.m_tabJettonAnimate = {}
+
+
+
+
+
+
+
+
+
+
 	self.m_nJettonSelect = -1
 	self.m_lHaveJetton = 0;
 	self.m_llMaxJetton = 0;
@@ -2072,6 +2164,106 @@ function GameViewLayer:refreshScore(  )
 
 	self.m_bankLayer.m_editNumber:setText("")
 	self.m_bankLayer.m_editPasswd:setText("")
+end
+
+function GameViewLayer:SetGameHistory( bWinShunMen, bWinDaoMen, bWinDuiMen )
+    local lastIdx = self.m_nRecordLast
+    
+    --设置数据
+    if self.m_GameRecordArrary[lastIdx] == nil then
+        self.m_GameRecordArrary[lastIdx] = {}
+    end
+
+    local gameRecord = self.m_GameRecordArrary[lastIdx]
+
+	gameRecord.bWinShunMen = bWinShunMen
+	gameRecord.bWinDuiMen = bWinDuiMen
+	gameRecord.bWinDaoMen = bWinDaoMen
+
+	--操作类型
+    local userJettonScore_ShunMen = self.m_lUserJettonScore[g_var(cmd).ID_SHUN_MEN]
+	if 0 == userJettonScore_ShunMen then
+        gameRecord.enOperateShunMen = OPERATE_RESULT.enOperateResult_NULL
+	elseif userJettonScore_ShunMen > 0 and 1 == bWinShunMen then
+        gameRecord.enOperateShunMen = OPERATE_RESULT.enOperateResult_Win
+	elseif userJettonScore_ShunMen > 0 and -1 == bWinShunMen then
+        gameRecord.enOperateShunMen = OPERATE_RESULT.enOperateResult_Lost
+    end
+
+    local userJettonScore_DiMen = self.m_lUserJettonScore[g_var(cmd).ID_DI_MEN]
+	if 0 == userJettonScore_DiMen then
+        gameRecord.enOperateDaoMen = OPERATE_RESULT.enOperateResult_NULL
+	elseif userJettonScore_DiMen > 0 and 1 == bWinDaoMen then
+        gameRecord.enOperateDaoMen = OPERATE_RESULT.enOperateResult_Win
+	elseif userJettonScore_DiMen > 0 and -1 == bWinDaoMen then
+        gameRecord.enOperateDaoMen = OPERATE_RESULT.enOperateResult_Lost
+    end
+
+    local userJettonScore_TianMen = self.m_lUserJettonScore[g_var(cmd).ID_TIAN_MEN]
+	if 0 == userJettonScore_TianMen then
+        gameRecord.enOperateDuiMen = OPERATE_RESULT.enOperateResult_NULL
+	elseif userJettonScore_TianMen > 0 and 1 == bWinDuiMen then
+        gameRecord.enOperateDuiMen = OPERATE_RESULT.enOperateResult_Win
+	elseif userJettonScore_TianMen > 0 and -1 == bWinDuiMen then
+        gameRecord.enOperateDuiMen = OPERATE_RESULT.enOperateResult_Lost
+    end
+
+    self.m_GameRecordArrary[lastIdx] = gameRecord 
+
+	--移动下标
+    local maxFlagCount = g_var(cmd).MAX_SCORE_HISTORY
+	self.m_nRecordLast = (self.m_nRecordLast + 1) % maxFlagCount
+	if self.m_nRecordLast == self.m_nRecordFirst then
+		self.m_nRecordFirst = (self.m_nRecordFirst + 1) % maxFlagCount
+	end
+end
+
+function GameViewLayer:updateRecord()
+    --非空判断
+	if self.m_nRecordLast == self.m_nRecordFirst then
+        return
+    end
+
+    local nIdx = (self.m_nRecordLast - 2 + g_var(cmd).MAX_SCORE_HISTORY) % g_var(cmd).MAX_SCORE_HISTORY + 1
+
+    for i=9,0,-1 do
+        --胜利标识
+        local ClientGameRecord = self.m_GameRecordArrary[nIdx]
+        if ClientGameRecord == nil then
+            return
+        end
+
+		local bWinMen = {}
+		bWinMen[0] = ClientGameRecord.bWinShunMen
+		bWinMen[1] = ClientGameRecord.bWinDaoMen
+		bWinMen[2] = ClientGameRecord.bWinDuiMen
+
+        --操作结果
+		local OperateResult = {}
+		OperateResult[0] = ClientGameRecord.enOperateShunMen
+		OperateResult[1] = ClientGameRecord.enOperateDaoMen
+		OperateResult[2] = ClientGameRecord.enOperateDuiMen
+
+        for j=0,2 do
+            --胜利标识
+			local nFlagsIndex = "1";
+			if -1 == bWinMen[j] then
+				nFlagsIndex = "0"
+            end
+
+            local node = self.m_lyRecord:getChildByName("s_" .. i .. "_" .. j)
+            
+            if OperateResult[j] == OPERATE_RESULT.enOperateResult_NULL then
+                node:setProperty(str, "game_res/WIN_FLAGS.png", 26, 24, "0")
+                node:setString(nFlagsIndex)
+            else
+                node:setProperty(str, "game_res/ME_WIN_FLAGS.png", 26, 24, "0")
+                node:setString(nFlagsIndex)
+            end
+        end
+        --移动下标
+        nIdx = (nIdx - 2 + g_var(cmd).MAX_SCORE_HISTORY) % g_var(cmd).MAX_SCORE_HISTORY + 1
+    end
 end
 ------
 return GameViewLayer

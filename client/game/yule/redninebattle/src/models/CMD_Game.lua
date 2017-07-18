@@ -80,12 +80,13 @@ cmd.tagServerGameRecord =
     {k = "bWinDuiMen", t = "int"},                              --对门胜利
     {k = "bWinDaoMen", t = "int"},                              --倒门胜利
 }
+cmd.RECORDER_LEN                = 12                            --单条记录的长度
 
-cmd.SUB_S_GameRecord =
+--[[cmd.SUB_S_GameRecord =
 {
     {k = "RecordCount", t = "int"},
     {k = "GameRecordArrary", t = "table", d = cmd.tagServerGameRecord, l = {cmd.MAX_SCORE_HISTORY}},         --游戏记录
-}
+}]]
 
 ---------------------------------------------------------------------------------------
 --服务器命令结构

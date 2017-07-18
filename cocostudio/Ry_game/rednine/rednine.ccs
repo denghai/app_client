@@ -65,15 +65,15 @@
             <PlistImageFile Name="click_effect_5.png" Key="click_effect_5.png" />
             <PlistImageFile Name="click_effect_6.png" Key="click_effect_6.png" />
             <PlistImageFile Name="click_effect_7.png" Key="click_effect_7.png" />
+            <PlistImageFile Name="game_ludan_bg.png" Key="game_ludan_bg.png" />
+            <PlistImageFile Name="game_ludan_down.png" Key="game_ludan_down.png" />
+            <PlistImageFile Name="game_ludan_up.png" Key="game_ludan_up.png" />
             <PlistImageFile Name="game_ludan1_ping.png" Key="game_ludan1_ping.png" />
             <PlistImageFile Name="game_ludan1_xian.png" Key="game_ludan1_xian.png" />
             <PlistImageFile Name="game_ludan1_zhuang.png" Key="game_ludan1_zhuang.png" />
             <PlistImageFile Name="game_ludan2_ping.png" Key="game_ludan2_ping.png" />
             <PlistImageFile Name="game_ludan2_xian.png" Key="game_ludan2_xian.png" />
             <PlistImageFile Name="game_ludan2_zhuang.png" Key="game_ludan2_zhuang.png" />
-            <PlistImageFile Name="game_ludan_bg.png" Key="game_ludan_bg.png" />
-            <PlistImageFile Name="game_ludan_down.png" Key="game_ludan_down.png" />
-            <PlistImageFile Name="game_ludan_up.png" Key="game_ludan_up.png" />
             <PlistImageFile Name="game_topMenu.png" Key="game_topMenu.png" />
             <PlistImageFile Name="gameend_background.png" Key="gameend_background.png" />
             <PlistImageFile Name="player_bg.png" Key="player_bg.png" />
@@ -134,6 +134,9 @@
           <Image Name="redNine_card.png" />
           <Image Name="redNine_change_banker.png" />
           <Image Name="redNine_me_banker.png" />
+          <Image Name="time1.png" />
+          <Image Name="time2.png" />
+          <Image Name="time3.png" />
           <Image Name="WAITING.png" />
           <Image Name="WIN_FLAGS.png" />
           <Image Name="winnumber.png" />
@@ -173,12 +176,10 @@
           <Image Name="wappbanker.png" />
           <Image Name="wBalance.png" />
         </Folder>
-        <Project Name="Card.csd" Type="Layer" />
-        <Project Name="deskChips.csd" Type="Layer" />
-        <Project Name="MainScene.csd" Type="Scene" />
-        <Project Name="setting.csd" Type="Layer" />
-        <Project Name="UserLst.csd" Type="Layer" />
         <Project Name="GameResult.csd" Type="Layer" />
+        <Project Name="MainScene.csd" Type="Scene" />
+        <Project Name="UserLst.csd" Type="Layer" />
+        <Image Name="time0.png" />
       </RootFolder>
     </Group>
   </SolutionFolder>

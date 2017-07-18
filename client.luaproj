@@ -2381,7 +2381,6 @@
     <Compile Include="client\game\yule\redninebattle\src\views\layer\DeskChips.lua" />
     <Compile Include="client\game\yule\redninebattle\src\views\layer\GameResult.lua" />
     <Compile Include="client\game\yule\redninebattle\src\views\layer\GameViewLayer.lua" />
-    <Compile Include="client\game\yule\redninebattle\src\views\layer\Setting.lua" />
     <Compile Include="client\game\yule\redninebattle\src\views\layer\UserLst.lua" />
     <Compile Include="client\game\yule\redninebattle\src\views\layer\ViewCard.lua" />
     <Compile Include="client\game\yule\sparrowhz\src\models\CMD_Game.lua" />

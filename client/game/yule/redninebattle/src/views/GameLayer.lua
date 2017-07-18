@@ -624,43 +624,23 @@ end
 
 --游戏记录
 function GameLayer:onSubSendRecord( dataBuffer )
-    --[[local len = dataBuffer:getlen();
-    local recordcount = math.floor(len / g_var(cmd).RECORD_LEN);
-    if (len - recordcount * g_var(cmd).RECORD_LEN) ~= 0 then
+    local len = dataBuffer:getlen();
+    local recordcount = math.floor(len / g_var(cmd).RECORDER_LEN);
+    if (len - recordcount * g_var(cmd).RECORDER_LEN) ~= 0 then
         print("record_len_error" .. len);
         return;
     end
-    self._dataModle:clearRecord()
     
-    --游戏记录
-    local game_record = {};
     --读取记录列表
     for i=1,recordcount do
-        if nil == dataBuffer then
-            break;
-        end
-        local rec = bjlDefine.getEmptyRecord()
-
-        local serverrecord = bjlDefine.getEmptyServerRecord();
-        serverrecord.cbKingWinner = dataBuffer:readbyte();
-        serverrecord.bPlayerTwoPair = dataBuffer:readbool();
-        serverrecord.bBankerTwoPair = dataBuffer:readbool();
-        serverrecord.cbPlayerCount = dataBuffer:readbyte();
-        serverrecord.cbBankerCount = dataBuffer:readbyte();
-        rec.m_pServerRecord = serverrecord;
-
-        if serverrecord.cbPlayerCount > serverrecord.cbBankerCount then
-            rec.m_cbGameResult = g_var(cmd).AREA_XIAN;
-        elseif serverrecord.cbPlayerCount < serverrecord.cbBankerCount then
-            rec.m_cbGameResult = g_var(cmd).AREA_ZHUANG;
-        elseif serverrecord.cbPlayerCount == serverrecord.cbBankerCount then
-            rec.m_cbGameResult = g_var(cmd).AREA_PING;
-        end
-
-        self._dataModle:addGameRecord(rec)
+        local  pServerGameRecord = {}
+        pServerGameRecord.bWinShunMen = dataBuffer:readint()
+        pServerGameRecord.bWinDuiMen = dataBuffer:readint()
+        pServerGameRecord.bWinDaoMen = dataBuffer:readint()
+        self._gameView:SetGameHistory(pServerGameRecord.bWinShunMen, pServerGameRecord.bWinDaoMen, pServerGameRecord.bWinDuiMen)
     end
 
-    self._gameView:updateWallBill()]]
+    self._gameView:updateRecord()
 end
 
 --下注失败
