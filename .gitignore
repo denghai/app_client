@@ -21,11 +21,7 @@ downrec
 saverec
 log
 Debug.win32
-*.dylib
-*.a
 *.zip
-*.dll
-*.lib
 Bugly
 JftMergeSDK
 .vs
