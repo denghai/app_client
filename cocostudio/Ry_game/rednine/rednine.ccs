@@ -140,6 +140,7 @@
           <Image Name="WAITING.png" />
           <Image Name="WIN_FLAGS.png" />
           <Image Name="winnumber.png" />
+          <Image Name="time0.png" />
         </Folder>
         <Folder Name="res">
           <Image Name="boxImg.png" />
@@ -179,7 +180,6 @@
         <Project Name="GameResult.csd" Type="Layer" />
         <Project Name="MainScene.csd" Type="Scene" />
         <Project Name="UserLst.csd" Type="Layer" />
-        <Image Name="time0.png" />
       </RootFolder>
     </Group>
   </SolutionFolder>

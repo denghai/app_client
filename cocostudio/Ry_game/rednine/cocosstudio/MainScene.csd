@@ -848,10 +848,10 @@
             <FileData Type="Normal" Path="game_res/bg1.png" Plist="" />
             <BlendFunc Src="1" Dst="771" />
           </AbstractNodeData>
-          <AbstractNodeData Name="deskChip0" ActionTag="-1920864419" Tag="265" IconVisible="False" LeftMargin="-127.5329" RightMargin="303.5329" TopMargin="-31.0000" BottomMargin="31.0000" ctype="SpriteObjectData">
+          <AbstractNodeData Name="deskChip0" ActionTag="1935925845" Tag="105" IconVisible="False" LeftMargin="-122.2156" RightMargin="298.2156" TopMargin="-29.6791" BottomMargin="29.6791" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
             <Children>
-              <AbstractNodeData Name="AtlasLabel_1" ActionTag="999969197" Tag="264" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
+              <AbstractNodeData Name="lbScore" ActionTag="999969197" Tag="264" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
                 <Size X="133.0000" Y="29.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="449.6174" Y="677.7928" />
@@ -861,7 +861,7 @@
                 <PreSize X="0.1385" Y="0.0453" />
                 <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="AtlasLabel_2" ActionTag="1096013524" Tag="263" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
+              <AbstractNodeData Name="lbNum" ActionTag="1096013524" Tag="263" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
                 <Size X="19.0000" Y="29.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="435.5309" Y="-42.2946" />
@@ -873,18 +873,22 @@
               </AbstractNodeData>
             </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position X="352.4671" Y="351.0000" />
+            <Position X="357.7844" Y="349.6791" />
             <Scale ScaleX="0.2000" ScaleY="0.2000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.3103" Y="0.5484" />
+            <PrePosition X="0.3150" Y="0.5464" />
             <PreSize X="0.8451" Y="1.0000" />
-            <FileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
-            <BlendFunc Src="1" Dst="771" />
+            <TextColor A="255" R="65" G="65" B="70" />
+            <DisabledFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <PressedFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <NormalFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <OutlineColor A="255" R="255" G="0" B="0" />
+            <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="deskChip1" ActionTag="1564600914" Tag="266" IconVisible="False" LeftMargin="188.2983" RightMargin="-12.2983" TopMargin="57.0844" BottomMargin="-57.0844" ctype="SpriteObjectData">
+          <AbstractNodeData Name="deskChip1" ActionTag="1071704635" Tag="106" IconVisible="False" LeftMargin="182.9863" RightMargin="-6.9863" TopMargin="61.2632" BottomMargin="-61.2632" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
             <Children>
-              <AbstractNodeData Name="AtlasLabel_1" ActionTag="24361714" Tag="267" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
+              <AbstractNodeData Name="lbScore" ActionTag="-30824998" Tag="107" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
                 <Size X="133.0000" Y="29.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="449.6174" Y="677.7928" />
@@ -894,7 +898,7 @@
                 <PreSize X="0.1385" Y="0.0453" />
                 <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="AtlasLabel_2" ActionTag="-935914664" Tag="268" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
+              <AbstractNodeData Name="lbNum" ActionTag="1054573525" Tag="108" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
                 <Size X="19.0000" Y="29.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="435.5309" Y="-42.2946" />
@@ -906,18 +910,22 @@
               </AbstractNodeData>
             </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position X="668.2983" Y="262.9156" />
+            <Position X="662.9863" Y="258.7368" />
             <Scale ScaleX="0.2000" ScaleY="0.2000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.5883" Y="0.4108" />
+            <PrePosition X="0.5836" Y="0.4043" />
             <PreSize X="0.8451" Y="1.0000" />
-            <FileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
-            <BlendFunc Src="1" Dst="771" />
+            <TextColor A="255" R="65" G="65" B="70" />
+            <DisabledFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <PressedFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <NormalFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <OutlineColor A="255" R="255" G="0" B="0" />
+            <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="deskChip2" ActionTag="-538033330" Tag="269" IconVisible="False" LeftMargin="487.6224" RightMargin="-311.6223" TopMargin="-29.6763" BottomMargin="29.6763" ctype="SpriteObjectData">
+          <AbstractNodeData Name="deskChip2" ActionTag="805155636" Tag="109" IconVisible="False" LeftMargin="480.3107" RightMargin="-304.3107" TopMargin="-29.6791" BottomMargin="29.6790" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
             <Children>
-              <AbstractNodeData Name="AtlasLabel_1" ActionTag="1216423178" Tag="270" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
+              <AbstractNodeData Name="lbScore" ActionTag="-13808768" Tag="110" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
                 <Size X="133.0000" Y="29.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="449.6174" Y="677.7928" />
@@ -927,7 +935,7 @@
                 <PreSize X="0.1385" Y="0.0453" />
                 <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="AtlasLabel_2" ActionTag="1394654732" Tag="271" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
+              <AbstractNodeData Name="lbNum" ActionTag="-24112005" Tag="111" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
                 <Size X="19.0000" Y="29.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="435.5309" Y="-42.2946" />
@@ -939,13 +947,17 @@
               </AbstractNodeData>
             </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position X="967.6224" Y="349.6763" />
+            <Position X="960.3107" Y="349.6790" />
             <Scale ScaleX="0.2000" ScaleY="0.2000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.8518" Y="0.5464" />
+            <PrePosition X="0.8453" Y="0.5464" />
             <PreSize X="0.8451" Y="1.0000" />
-            <FileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
-            <BlendFunc Src="1" Dst="771" />
+            <TextColor A="255" R="65" G="65" B="70" />
+            <DisabledFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <PressedFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <NormalFileData Type="Normal" Path="res/lv2Bg.png" Plist="" />
+            <OutlineColor A="255" R="255" G="0" B="0" />
+            <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
           <AbstractNodeData Name="card_up" Visible="False" ActionTag="592294140" Tag="362" IconVisible="True" LeftMargin="674.2238" RightMargin="461.7762" TopMargin="157.3380" BottomMargin="482.6620" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />

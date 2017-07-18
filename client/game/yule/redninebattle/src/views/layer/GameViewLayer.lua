@@ -133,25 +133,11 @@ function GameViewLayer:initCsbRes(  )
     self.m_lyBankerInfo = csbNode:getChildByName("face")
     self:initBankerInfo()
     
-    --左边筹码区
-    self.m_lyLeftDeskChips = csbNode:getChildByName("deskChip0")
-    --中间筹码区
-    self.m_lyCenterDeskChips = csbNode:getChildByName("deskChip1")
-    --右边筹码区
-    self.m_lyRightDeskChips = csbNode:getChildByName("deskChip2")
-    self:initDeskChips()
+    --筹码区
+    self:initDeskChips(csbNode)
 
-    --上边Card
-    self.m_lyCardUp = csbNode:getChildByName("card_up")
-    --下边Card
-    self.m_lyCardDown = csbNode:getChildByName("card_down")
-    --左边Card
-    self.m_lyCardLeft = csbNode:getChildByName("card_left")
-    --右边Card
-    self.m_lyCardRight = csbNode:getChildByName("card_right")
-    --中间Card
-    self.m_lyCardStart = csbNode:getChildByName("card_start_index")
-    --self:initCard()
+    --发牌区
+    self:initCard(csbNode)
 
     --轮庄Tips
     self.m_lyCenterTips = csbNode:getChildByName("change_banker")
@@ -424,8 +410,62 @@ function GameViewLayer:reSetUserInfo(  )
 end
 
 --初始化桌面筹码区
-function GameViewLayer:initDeskChips()
+function GameViewLayer:initDeskChips(csbNode)
+	--按钮列表
+	local function btnEvent( sender, eventType )
+		if eventType == ccui.TouchEventType.ended then
+			self:onJettonAreaClicked(sender:getTag(), sender);
+		end
+	end
 
+	for i=1,3 do
+		local tag = i - 1;
+		local str = string.format("deskChip%d", tag);
+		local tag_btn = csbNode:getChildByName(str);
+		tag_btn:setTag(i);
+		tag_btn:addTouchEventListener(btnEvent);
+		self.m_tableJettonArea[i] = tag_btn
+
+        local area_score = tag_btn:getChildByName("lbScore")
+        area_score:setString("0")
+        self.m_tableJettonScore[i] = area_score
+
+        local area_num = tag_btn:getChildByName("lbNum")
+        area_num:setString("0")
+        self.m_tableJettonNum[i] = area_num
+	end
+
+    self:reSetJettonArea(false)
+end
+
+function GameViewLayer:reSetJettonArea( var )
+	for i=1,#self.m_tableJettonArea do
+		self.m_tableJettonArea[i]:setEnabled(var);
+	end
+end
+
+--初始化发牌区
+function GameViewLayer:initCard(csbNode)
+    --上边Card
+    self.m_lyCardUp = csbNode:getChildByName("card_up")
+    --下边Card
+    self.m_lyCardDown = csbNode:getChildByName("card_down")
+    --左边Card
+    self.m_lyCardLeft = csbNode:getChildByName("card_left")
+    --右边Card
+    self.m_lyCardRight = csbNode:getChildByName("card_right")
+    --中间Card
+    self.m_lyCardStart = csbNode:getChildByName("card_start_index")
+
+    self:reSetCard(false)
+end
+
+function GameViewLayer:reSetCard(var)
+    self.m_lyCardUp:setVisible(var)
+    self.m_lyCardDown:setVisible(var)
+    self.m_lyCardLeft:setVisible(var)
+    self.m_lyCardRight:setVisible(var)
+    self.m_lyCardStart:setVisible(var)
 end
 
 function GameViewLayer:enableJetton( var )
@@ -664,57 +704,6 @@ function GameViewLayer:randomGetBetIdx( score, totalIdx )
 	end	
 end
 
---下注区域
-function GameViewLayer:initJettonArea( csbNode )
-	local tag_control = csbNode:getChildByName("tag_control");
-	self.m_tagControl = tag_control
-
-	--筹码区域
-	self.m_betAreaLayout = tag_control:getChildByName("bet_area")
-
-	--按钮列表
-	local function btnEvent( sender, eventType )
-		if eventType == ccui.TouchEventType.ended then
-			self:onJettonAreaClicked(sender:getTag(), sender);
-		end
-	end	
-
-	for i=1,8 do
-		local tag = i - 1;
-		local str = string.format("tag%d_btn", tag);
-		local tag_btn = tag_control:getChildByName(str);
-		tag_btn:setTag(i);
-		tag_btn:addTouchEventListener(btnEvent);
-		self.m_tableJettonArea[i] = tag_btn; 
-	end
-
-	--下注信息
-	local m_userJettonLayout = csbNode:getChildByName("jetton_control");
-	local infoSize = m_userJettonLayout:getContentSize()
-	local text = ccui.Text:create("本次下注为:", "fonts/round_body.ttf", 20)
-	text:setAnchorPoint(cc.p(1.0,0.5))
-	text:setPosition(cc.p(infoSize.width * 0.495, infoSize.height * 0.19))
-	m_userJettonLayout:addChild(text)
-	m_userJettonLayout:setVisible(false)
-
-	local m_clipJetton = g_var(ClipText):createClipText(cc.size(120, 23), "")
-	m_clipJetton:setPosition(cc.p(infoSize.width * 0.5, infoSize.height * 0.19))
-	m_clipJetton:setAnchorPoint(cc.p(0,0.5));
-	m_clipJetton:setTextColor(cc.c4b(255,165,0,255))
-	m_userJettonLayout:addChild(m_clipJetton)
-
-	self.m_userJettonLayout = m_userJettonLayout;
-	self.m_clipJetton = m_clipJetton;
-
-	self:reSetJettonArea(false);
-end
-
-function GameViewLayer:reSetJettonArea( var )
-	for i=1,#self.m_tableJettonArea do
-		self.m_tableJettonArea[i]:setEnabled(var);
-	end
-end
-
 function GameViewLayer:cleanJettonArea(  )
 	--[[--移除界面已下注
 	self.m_betAreaLayout:removeAllChildren()
@@ -727,20 +716,6 @@ function GameViewLayer:cleanJettonArea(  )
 	end
 	self.m_userJettonLayout:setVisible(false)
 	self.m_clipJetton:setString("")]]
-end
-
---下注胜利提示
-function GameViewLayer:initJettonSp( csbNode )
-	self.m_tagSpControls = {};
-	local sp_control = csbNode:getChildByName("tag_sp_control");
-	for i=1,8 do
-		local tag = i - 1;
-		local str = string.format("tagsp_%d", tag);
-		local tagsp = sp_control:getChildByName(str);
-		self.m_tagSpControls[i] = tagsp;
-	end
-
-	self:reSetJettonSp();
 end
 
 function GameViewLayer:reSetJettonSp(  )
@@ -1689,15 +1664,25 @@ function GameViewLayer:gameDataInit( )
 	{
 		{k = 1000, i = 2},
 		{k = 10000, i = 3}, 
-		{k = 100000, i = 4}, 
-		{k = 1000000, i = 5}, 
-		{k = 5000000, i = 6},
-		{k = 10000000, i = 7} 
+		{k = 50000, i = 4}, 
+		{k = 100000, i = 5}, 
+		{k = 500000, i = 6},
+		{k = 1000000, i = 7},
+        {k = 5000000, i = 8} 
 	}
 
     --下注信息
 	self.m_tableJettonBtn = {};
     self.m_tabJettonAnimate = {}
+
+    --下注区信息
+    self.m_tableJettonArea = {}
+    self.m_tableJettonScore = {}
+    self.m_tableJettonNum = {}
+
+
+
+
 
 
 
