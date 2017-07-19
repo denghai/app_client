@@ -132,9 +132,9 @@ end
 -- 设置计时器
 function GameLayer:SetGameClock(chair,id,time)
     GameLayer.super.SetGameClock(self,chair,id,time)
-    if nil ~= self._gameView and nil ~= self._gameView.showTimerTip then
-        self._gameView:showTimerTip(id)
-    end
+    --[[if nil ~= self._gameView and nil ~= self._gameView.showTimerTip then
+        self._gameView:showTimerTip(id,time)
+    end]]
 end
 
 ------网络发送
@@ -216,19 +216,21 @@ function GameLayer:onEventGameScene(cbGameStatus,dataBuffer)
     self._gameView.m_cbGameStatus = cbGameStatus;
 	if cbGameStatus == g_var(cmd).GAME_SCENE_FREE	then                        --空闲状态
         self:onEventGameSceneFree(dataBuffer);
-	elseif cbGameStatus == g_var(cmd).GAME_JETTON	then                        --下注状态
+	elseif cbGameStatus == g_var(cmd).GS_PLACE_JETTON	then                        --下注状态
         self:onEventGameSceneJetton(dataBuffer);
-	elseif cbGameStatus == g_var(cmd).GAME_END	then                            --游戏状态
+	elseif cbGameStatus == g_var(cmd).GS_GAME_END	then                            --游戏状态
         self:onEventGameSceneEnd(dataBuffer);
 	end
     self:dismissPopWait()
 end
 
 function GameLayer:onEventGameSceneFree( dataBuffer )
-    self._gameView:reSetForNewGame()
+    --self._gameView:reSetForNewGame()
 
-    local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusFree, dataBuffer);
-    yl.m_bDynamicJoin = false
+    local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusFree, dataBuffer)
+
+
+    --[[yl.m_bDynamicJoin = false
     local subRob = cmd_table.wCurSuperRobBankerUser
     --当前超级抢庄用户
     self._gameView.m_wCurrentRobApply = subRob
@@ -248,12 +250,13 @@ function GameLayer:onEventGameSceneFree( dataBuffer )
     self._dataModle:removeApplyUser(cmd_table.wBankerUser)
 
     --获取到占位信息
-    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])
+    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])]]
 end
 
 function GameLayer:onEventGameSceneJetton( dataBuffer )
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusPlay, dataBuffer);
-    yl.m_bDynamicJoin = false
+    
+    --[[yl.m_bDynamicJoin = false
     local suRob = cmd_table.wCurSuperRobBankerUser
     --当前超级抢庄用户
     self._gameView.m_wCurrentRobApply = suRob
@@ -264,12 +267,12 @@ function GameLayer:onEventGameSceneJetton( dataBuffer )
 
     --游戏倒计时
     --self._gameView:startCountDown(cmd_table.cbTimeLeave, g_var(cmd).kGAMEPLAY_COUNTDOWN);
-    self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEPLAY_COUNTDOWN, cmd_table.cbTimeLeave)
+    self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEPLAY_COUNTDOWN, cmd_table.cbTimeLeave)]]
 
     --玩家最大下注
-    self._gameView.m_llMaxJetton = cmd_table.lPlayBetScore;
+    self._gameView.m_llMaxJetton = cmd_table.lUserMaxScore;
 
-    --界面下注信息
+    --[[--界面下注信息
     local lScore = 0;
     local ll = 0;
     for i=1,g_var(cmd).AREA_MAX do
@@ -296,12 +299,16 @@ function GameLayer:onEventGameSceneJetton( dataBuffer )
     self._gameView:reEnterStart(lScore);
 
     --获取到占位信息
-    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])
+    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])]]
 end
 
 function GameLayer:onEventGameSceneEnd( dataBuffer )
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusPlay, dataBuffer)
-    --保存游戏结果
+
+
+
+
+    --[[--保存游戏结果
     self._dataModle.m_tabGameEndCmd = cmd_table
 
     local suRob = cmd_table.wCurSuperRobBankerUser
@@ -315,11 +322,11 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
     --游戏倒计时
     --self._gameView:startCountDown(cmd_table.cbTimeLeave, g_var(cmd).kGAMEOVER_COUNTDOWN);
     self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEOVER_COUNTDOWN, cmd_table.cbTimeLeave)
-    yl.m_bDynamicJoin = true
+    yl.m_bDynamicJoin = true]]
 
     --玩家最大下注
-    self._gameView.m_llMaxJetton = cmd_table.lPlayBetScore;
-    --界面下注信息
+    self._gameView.m_llMaxJetton = cmd_table.lUserMaxScore;
+    --[[--界面下注信息
     local ll = 0;
     local lScore = 0;
     for i=1,g_var(cmd).AREA_MAX do
@@ -378,7 +385,7 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
     self._gameView:onGetGameCard(tabRes, cmd_table.cbTimeLeave > 15, cmd_table.cbTimeLeave)
 
     --获取到占位信息
-    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])
+    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])]]
 end
 
 -- 游戏消息
@@ -471,66 +478,54 @@ end
 function GameLayer:onSubGameStart( dataBuffer )
     print("game start");
     self.cmd_gamestart = ExternalFun.read_netdata(g_var(cmd).CMD_S_GameStart,dataBuffer);
-    --播放开始音效
-    ExternalFun.playSoundEffect("GAME_BLACKGROUND.wav")
 
-    --刷新庄家信息
-    self._gameView:onChangeBanker(self.cmd_gamestart.wBankerUser, self.cmd_gamestart.lBankerScore, self.m_bEnableSystemBanker);
+    --庄家信息
+    self:SetBankerInfo(self.cmd_gamestart.wBankerUser, self.cmd_gamestart.lBankerScore)
 
-    --[[--玩家最大下注
-    self._gameView.m_llMaxJetton = self.cmd_gamestart.lPlayBetScore;
+	--玩家信息
+	self.m_lMeMaxScore = self.cmd_gamestart.lUserMaxScore
+	self._gameView:SetMeMaxScore(self.m_lMeMaxScore)
 
-    --游戏倒计时
-    --self._gameView:startCountDown(self.cmd_gamestart.cbTimeLeave, g_var(cmd).kGAMEPLAY_COUNTDOWN);
-    self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEPLAY_COUNTDOWN, self.cmd_gamestart.cbTimeLeave)
+    self._cbGameStatus = g_var(cmd).GS_PLACE_JETTON
 
-    self._gameView:onGameStart();
+    --玩家最大下注
+    --self._gameView.m_llMaxJetton = self.cmd_gamestart.lPlayBetScore;
 
 
+	--更新控制
+	--UpdateButtonContron();
 
-	//庄家信息
-    m_wCurrentBanker=pGameStart->wBankerUser;
-	m_lBankerScore=pGameStart->lBankerScore;
-	IClientUserItem  *pUserData=m_wCurrentBanker==INVALID_CHAIR ? NULL : GetTableUserItem(m_wCurrentBanker);
-	DWORD dwBankerUserID = (NULL==pUserData) ? 0 : pUserData->GetUserID();
-	m_GameClientView.SetBankerInfo(dwBankerUserID,m_lBankerScore);
+	--设置提示
+	--m_GameClientView.SetDispatchCardTip(pGameStart->bContiueCard ? enDispatchCardTip_Continue : enDispatchCardTip_Dispatch);
 
-	//玩家信息
-	m_lMeMaxScore=pGameStart->lUserMaxScore;
-	m_GameClientView.SetMeMaxScore(m_lMeMaxScore);
+	--播放声音
+    ExternalFun.playSoundEffect("GAME_START.wav")
 
-	//设置时间
-	SetGameClock(GetMeChairID(),IDI_PLACE_JETTON,pGameStart->cbTimeLeave);
-	SetTimer(IDI_ANDROID_BET, 100, NULL);
+	--m_GameClientView.SetMeUserScore();
 
-	//设置状态
-	SetGameStatus(GS_PLACE_JETTON);
-	m_GameClientView.AllowControl(GS_PLACE_JETTON);
-
-	//机器变量
-	m_ListAndroid.RemoveAll();
-
-	//更新控制
-	UpdateButtonContron();
-
-	//设置提示
-	m_GameClientView.SetDispatchCardTip(pGameStart->bContiueCard ? enDispatchCardTip_Continue : enDispatchCardTip_Dispatch);
-
-	//播放声音
-	//if (IsEnableSound()) 
-	{
-		PlayGameSound(AfxGetInstanceHandle(),TEXT("GAME_START"));
-		
-	}
-
-	m_GameClientView.SetMeUserScore();
-
-
-	if (m_GameClientView.m_pClientControlDlg->GetSafeHwnd())
+	--[[if (m_GameClientView.m_pClientControlDlg->GetSafeHwnd())
 	{
 		m_GameClientView.m_pClientControlDlg->ResetUserBet();
-		//m_GameClientView.m_pClientControlDlg->ResetUserNickName();
 	}]]
+
+    self._gameView:onGameStart()
+end
+
+--设置庄家
+function GameLayer:SetBankerInfo(wBanker, lScore)
+	self.m_wCurrentBanker = wBanker
+	self.m_lBankerScore = lScore
+
+    local userItem = nil
+    if wBanker ~= yl.INVALID_CHAIR then
+        userItem = self:getDataMgr():getChairUserList()[wBanker + 1]
+    end
+    local dwBankerUserID = 0
+	if nil ~= userItem then
+        dwBankerUserID = userItem.dwUserID
+    end
+
+    self._gameView:SetBankerInfo(dwBankerUserID, self.m_lBankerScore)
 end
 
 --用户下注
@@ -543,6 +538,9 @@ end
 
 --游戏结束
 function GameLayer:onSubGameEnd( dataBuffer )
+    print("game end");
+    local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_GameEnd,dataBuffer)
+
     --[[print("game end");
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_GameEnd,dataBuffer)
     --保存游戏结果
@@ -679,15 +677,31 @@ function GameLayer:onSubTimeStatus( dataBuffer )
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).SUB_S_TimeStatus, dataBuffer)
     local nStatus = cmd_table.btStatus
     local nTime = cmd_table.btTime
-    print("onSubTimeStatus status=" .. nStatus .. " time=" .. nTime)
 
-    if ((nStatus == 2) and (nTime == 0)) then
-        self.m_lCurrentJetton = 0
+    print("### GameLayer:onSubTimeStatus status="..nStatus.."   time="..nTime)
 
-        return
+    local id = nil
+    local status = nil
+    if nStatus == 1 then
+        id = g_var(cmd).IDI_FREE
+        status = g_var(cmd).GAME_SCENE_FREE
+    elseif nStatus == 2 then
+        id = g_var(cmd).IDI_PLACE_JETTON
+        status = g_var(cmd).GS_PLACE_JETTON
+    elseif nStatus == 3 then
+        id = g_var(cmd).IDI_DISPATCH_CARD
+        status = g_var(cmd).GS_GAME_END
     end
 
+    if id ~= nil then
+        self._gameView:showTimerTip(id,nTime) --SetGameClock
 
+        --设置时间
+        --self:SetGameClock(self:GetMeChairID(), g_var(cmd).IDI_PLACE_JETTON, self.cmd_gamestart.cbTimeLeave)
+
+	    --设置状态
+        self._cbGameStatus = status
+    end
 end
 
 --更新库存

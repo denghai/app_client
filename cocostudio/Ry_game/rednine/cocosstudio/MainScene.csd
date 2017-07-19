@@ -55,7 +55,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_1000.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_1000.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip1000.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip2.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -83,7 +83,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_1w.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_1w.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip1w.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip3.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -111,7 +111,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_5w.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_5w.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip5w.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip4.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -139,7 +139,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_10w.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_10w.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip10w.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip5.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -167,7 +167,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_50w.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_50w.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip50w.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip6.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -195,7 +195,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_100w.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_100w.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip100w.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip7.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -223,7 +223,7 @@
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="Normal" Path="chip_res/chip_500w.png" Plist="" />
                 <PressedFileData Type="Normal" Path="chip_res/chip_500w.png" Plist="" />
-                <NormalFileData Type="Normal" Path="chip_res/chip500w.png" Plist="" />
+                <NormalFileData Type="Normal" Path="chip_res/chip8.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
@@ -922,7 +922,7 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="deskChip2" ActionTag="805155636" Tag="109" IconVisible="False" LeftMargin="480.3107" RightMargin="-304.3107" TopMargin="-29.6791" BottomMargin="29.6790" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
+          <AbstractNodeData Name="deskChip2" ActionTag="805155636" Tag="109" IconVisible="False" LeftMargin="480.3107" RightMargin="-304.3108" TopMargin="-29.6790" BottomMargin="29.6790" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
             <Children>
               <AbstractNodeData Name="lbScore" ActionTag="-13808768" Tag="110" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">

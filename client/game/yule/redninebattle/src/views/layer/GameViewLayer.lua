@@ -477,7 +477,7 @@ function GameViewLayer:enableJetton( var )
 end
 
 function GameViewLayer:reSetJettonBtnInfo( var )
-	for i=1,#self.m_tableJettonBtn do
+    for i=1,#self.m_tableJettonBtn do
 		self.m_tableJettonBtn[i]:setTag(i)
 		self.m_tableJettonBtn[i]:setEnabled(var)
 
@@ -531,8 +531,12 @@ function GameViewLayer:switchJettonBtnState( idx )
 	if nil ~= idx and nil ~= self.m_tabJettonAnimate[idx] then
 		local enable = lCondition >= self.m_pJettonNumber[idx].k;
 		if enable then
-			local blink = cc.Blink:create(1.0,1)
-			self.m_tabJettonAnimate[idx]:runAction(cc.RepeatForever:create(blink))
+			--local blink = cc.Blink:create(1.0,1)
+			local rotate1 = cc.RotateTo:create(1.0, 180.0)
+            local rotate2 = cc.RotateTo:create(1.0, 360.0)
+            local seq = cc.Sequence:create(rotate1, rotate2)
+            self.m_tabJettonAnimate[idx]:runAction(cc.RepeatForever:create(seq))
+            self.m_tabJettonAnimate[idx]:setVisible(true)
 		end		
 	end
 end
@@ -1011,7 +1015,7 @@ end
 ------
 --网络接收
 function GameViewLayer:onGetUserScore( item )
-	--自己
+	--[[--自己
 	if item.dwUserID == GlobalUserItem.dwUserID then
        self:reSetUserInfo()
     end
@@ -1033,7 +1037,7 @@ function GameViewLayer:onGetUserScore( item )
 			str = string.sub(str, 1, 9) .. "...";
 		end
 		self.m_textBankerCoin:setString("金币:" .. str);
-    end
+    end]]
 end
 
 function GameViewLayer:refreshCondition(  )
@@ -1099,7 +1103,7 @@ function GameViewLayer:onGameStart( )
 	math.randomseed(tostring(os.time()):reverse():sub(1, 6))
 
 	--申请按钮状态更新
-	self:refreshApplyBtnState()	
+	--self:refreshApplyBtnState()
 end
 
 --游戏进行
@@ -1236,15 +1240,17 @@ function GameViewLayer:onGetUserBet( )
 	if nil == data then
 		return
 	end
-	local area = data.cbBetArea + 1;
-	local wUser = data.wChairID;
-	local llScore = data.lBetScore
 
-	local nIdx = self:getJettonIdx(data.lBetScore);
-	local str = string.format("room_chip_%d_0.png", nIdx);
+	local area = data.cbJettonArea + 1;
+	local wUser = data.wChairID;
+	local llScore = data.lJettonScore
+
+	local nIdx = self:getJettonIdx(llScore);
+	local str = string.format("chip_res/chip%d.png", nIdx);
 	local sp = nil
-	local frame = cc.SpriteFrameCache:getInstance():getSpriteFrame(str)
-	if nil ~= frame then
+	--local frame = cc.SpriteFrameCache:getInstance():getSpriteFrame(str)
+	local frame = cc.SpriteFrame:create(str, cc.rect(0,0,71,76))
+    if nil ~= frame then
 		sp = cc.Sprite:createWithSpriteFrame(frame);
 	end
 	local btn = self.m_tableJettonArea[area];
@@ -1263,8 +1269,9 @@ function GameViewLayer:onGetUserBet( )
 		sp:setName(name)
 		
 		--筹码飞行起点位置
-		local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
-		--pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
+		--local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
+        local pos = self.m_tableJettonBtn[nIdx-1].pos
+        --local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
 		sp:setPosition(pos)
 		--筹码飞行动画
 		local act = self:getBetAnimation(self:getBetRandomPos(btn), cc.CallFunc:create(function()
@@ -1680,6 +1687,15 @@ function GameViewLayer:gameDataInit( )
     self.m_tableJettonScore = {}
     self.m_tableJettonNum = {}
 
+    --庄家信息
+    self.m_wBankerUser = 0
+	self.m_wBankerTime = 0
+	self.m_lBankerWinScore = 0
+	self.m_lTmpBankerWinScore = 0
+	self.m_lBankerScore = 0
+
+
+
 
 
 
@@ -1812,7 +1828,7 @@ function GameViewLayer:randomSetJettonPos( nodeArea, jettonSp )
 end
 
 function GameViewLayer:getBetFromPos( wchair )
-	if nil == wchair then
+	--[[if nil == wchair then
 		return {x = 0, y = 0}
 	end
 	local winSize = cc.Director:getInstance():getWinSize()
@@ -1849,7 +1865,7 @@ function GameViewLayer:getBetFromPos( wchair )
 	end
 
 	--默认位置
-	return {x = winSize.width, y = 0}
+	return {x = winSize.width, y = 0}]]
 end
 
 function GameViewLayer:getBetAnimation( pos, call_back )
@@ -1899,12 +1915,10 @@ function GameViewLayer:createClockNode()
 end
 
 function GameViewLayer:updateClock(tag, left)
-	self.m_pClock:setVisible(left > 0)
+	--local str = string.format("%02d", left)
+	--self.m_lyTimer.m_lbNum:setString(str)
 
-	local str = string.format("%02d", left)
-	self.m_pClock.m_atlasTimer:setString(str)
-
-	if g_var(cmd).kGAMEOVER_COUNTDOWN == tag then
+	--[[if g_var(cmd).IDI_PLACE_JETTON == tag then
 		if 8 == left then
 			if self:getDataMgr().m_bJoin then
 				if nil ~= self.m_cardLayer then
@@ -1929,27 +1943,20 @@ function GameViewLayer:updateClock(tag, left)
 			--闪烁停止
 			self:jettonAreaBlinkClean()
 		end
-	end
+    elseif g_var(cmd).IDI_FREE == tag then
+
+    elseif g_var(cmd).IDI_DISPATCH_CARD == tag then
+
+    elseif g_var(cmd).IDI_ANDROID_BET == tag then
+        
+	end]]
 end
 
-function GameViewLayer:showTimerTip(tag)
-	--[[tag = tag or -1
-	local scale = cc.ScaleTo:create(0.2, 0.0001, 1.0)
-	local call = cc.CallFunc:create(function (  )
-		local str = string.format("sp_tip_%d.png", tag)
-		local frame = cc.SpriteFrameCache:getInstance():getSpriteFrame(str)
+function GameViewLayer:showTimerTip(tag,time)
+    self.m_lyTimer.m_spTip:setTexture("game_res/time"..tag..".png")
 
-		self.m_pClock.m_spTip:setVisible(false)
-		if nil ~= frame then
-			self.m_pClock.m_spTip:setVisible(true)
-			self.m_pClock.m_spTip:setSpriteFrame(frame)
-		end
-	end)
-	local scaleBack = cc.ScaleTo:create(0.2,1.0)
-	local seq = cc.Sequence:create(scale, call, scaleBack)
-
-	self.m_pClock.m_spTip:stopAllActions()
-	self.m_pClock.m_spTip:runAction(seq)]]
+    local str = string.format("%02d", time)
+	self.m_lyTimer.m_lbNum:setString(str)
 end
 ------
 
@@ -2249,6 +2256,52 @@ function GameViewLayer:updateRecord()
         --移动下标
         nIdx = (nIdx - 2 + g_var(cmd).MAX_SCORE_HISTORY) % g_var(cmd).MAX_SCORE_HISTORY + 1
     end
+end
+
+--庄家信息
+function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore) 
+	--庄家椅子号
+	local wBankerUser = yl.INVALID_CHAIR;
+
+	--查找椅子号
+    local pUserData = nil
+	if 0 ~= dwBankerUserID then
+		for wChairID = 0,yl.MAX_CHAIR do
+            pUserData = self:getDataMgr():getChairUserList()[wChairID + 1]
+			if nil ~= pUserData and dwBankerUserID == pUserData.dwUserID then
+				wBankerUser = wChairID
+				break
+			end
+		end
+	end
+
+	--切换判断
+	if pUserData ~= nil and self.m_wBankerUser ~= wBankerUser then
+		self.m_wBankerUser = wBankerUser
+		self.m_wBankerTime = 0
+		self.m_lBankerWinScore = 0
+		self.m_lTmpBankerWinScore = 0
+
+        self.m_textBankerNickname:setString(pUserData.szNickName)
+        local str = string.formatNumberThousands(lBankerScore);
+	    if string.len(str) > 11 then
+		    str = string.sub(str, 1, 7) .. "...";
+	    end
+        self.m_textBankerCoint:setString(str)
+
+	    local head = g_var(PopupInfoHead):createClipHead(pUserData, self.m_spBankerIcon:getContentSize().width)
+	    head:setPosition(self.m_spBankerIcon:getPosition())
+	    self.m_lyBankerInfo:addChild(head)
+	    head:enableInfoPop(true)
+	end
+	self.m_lBankerScore = lBankerScore
+end
+
+--设置信息
+function GameViewLayer:SetMeMaxScore(lMeMaxScore)
+	if self.m_lMeMaxScore ~= lMeMaxScore then
+		self.m_lMeMaxScore = lMeMaxScore
+	end
 end
 ------
 return GameViewLayer

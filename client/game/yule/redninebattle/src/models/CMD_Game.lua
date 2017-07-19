@@ -34,6 +34,13 @@ cmd.GAME_PLAYER					= 100
 cmd.GS_PLACE_JETTON				= 100							--下注状态
 cmd.GS_GAME_END					= 101						    --结束状态
 cmd.GS_MOVECARD_END				= 102						    --结束状态
+cmd.GAME_SCENE_FREE				= 103                           --空闲状态
+
+--时间标识
+cmd.IDI_FREE					= 99							--空闲时间5
+cmd.IDI_PLACE_JETTON			= 100							--下注时间15
+cmd.IDI_DISPATCH_CARD			= 301							--发牌时间21
+cmd.IDI_ANDROID_BET				= 1000
 
 --区域索引
 cmd.ID_SHUN_MEN                 = 1                             --顺门

@@ -2,7 +2,7 @@
 
 @echo off
 ::运行游戏模拟器调试游戏
-start run\debug\win32\GloryProject.exe -workdir %~dp0\client -resolution 480x320
+start run\debug\win32\GloryProject.exe -workdir %~dp0\client -resolution 960x640 -write-debug-log e:\log
 
 REM -entry src\main.lua -search-path src;res 
 

@@ -14,15 +14,15 @@
           <Image Name="chip_500w.png" />
           <Image Name="chip_50w.png" />
           <Image Name="chip_5w.png" />
-          <Image Name="chip100.png" />
-          <Image Name="chip1000.png" />
-          <Image Name="chip1000w.png" />
-          <Image Name="chip100w.png" />
-          <Image Name="chip10w.png" />
-          <Image Name="chip1w.png" />
-          <Image Name="chip500w.png" />
-          <Image Name="chip50w.png" />
-          <Image Name="chip5w.png" />
+          <Image Name="chip1.png" />
+          <Image Name="chip2.png" />
+          <Image Name="chip9.png" />
+          <Image Name="chip7.png" />
+          <Image Name="chip5.png" />
+          <Image Name="chip3.png" />
+          <Image Name="chip8.png" />
+          <Image Name="chip6.png" />
+          <Image Name="chip4.png" />
         </Folder>
         <Folder Name="game_res">
           <PlistImageFolder Image="game.png" PListFile="game.plist" Name=".game_PList.Dir">
@@ -134,13 +134,13 @@
           <Image Name="redNine_card.png" />
           <Image Name="redNine_change_banker.png" />
           <Image Name="redNine_me_banker.png" />
-          <Image Name="time1.png" />
+          <Image Name="time100.png" />
+          <Image Name="time301.png" />
           <Image Name="time2.png" />
-          <Image Name="time3.png" />
+          <Image Name="time99.png" />
           <Image Name="WAITING.png" />
           <Image Name="WIN_FLAGS.png" />
           <Image Name="winnumber.png" />
-          <Image Name="time0.png" />
         </Folder>
         <Folder Name="res">
           <Image Name="boxImg.png" />
