@@ -140,7 +140,7 @@ end
 ------网络发送
 --玩家下注
 function GameLayer:sendUserBet( cbArea, lScore )
-    local cmddata = ExternalFun.create_netdata(g_var(cmd).CMD_C_PlaceBet)
+    local cmddata = ExternalFun.create_netdata(g_var(cmd).CMD_C_PlaceJetton)
     cmddata:pushbyte(cbArea)
     cmddata:pushscore(lScore)
 
@@ -531,7 +531,7 @@ end
 --用户下注
 function GameLayer:onSubPlaceJetton( dataBuffer )
     print("game bet");
-    self.cmd_placebet = ExternalFun.read_netdata(g_var(cmd).CMD_S_PlaceBet, dataBuffer);
+    self.cmd_placebet = ExternalFun.read_netdata(g_var(cmd).CMD_S_PlaceJetton, dataBuffer);
     --ExternalFun.playSoundEffect("ADD_SCORE.wav")
     self._gameView:onGetUserBet();
 end
@@ -541,14 +541,12 @@ function GameLayer:onSubGameEnd( dataBuffer )
     print("game end");
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_GameEnd,dataBuffer)
 
-    --[[print("game end");
-    local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_GameEnd,dataBuffer)
     --保存游戏结果
     self._dataModle.m_tabGameEndCmd = cmd_table
 
-    --游戏倒计时
+    --[[--游戏倒计时
     --self._gameView:startCountDown(cmd_table.cbTimeLeave, g_var(cmd).kGAMEOVER_COUNTDOWN);
-    self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEOVER_COUNTDOWN, cmd_table.cbTimeLeave)
+    --self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEOVER_COUNTDOWN, cmd_table.cbTimeLeave)
     
     --设置游戏结果
     local res = bjlDefine.getEmptyGameResult()

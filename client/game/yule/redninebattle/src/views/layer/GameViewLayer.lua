@@ -902,7 +902,7 @@ function GameViewLayer:onJettonAreaClicked( tag, ref )
 		return;
 	end
 
-	local area = tag - 1;	
+	local area = tag-- - 1;	
 	if self.m_lHaveJetton > self.m_llMaxJetton then
 		showToast(self,"已超过最大下注限额",1)
 		self.m_lHaveJetton = self.m_lHaveJetton - m_nJettonSelect;
@@ -1248,11 +1248,11 @@ function GameViewLayer:onGetUserBet( )
 	local nIdx = self:getJettonIdx(llScore);
 	local str = string.format("chip_res/chip%d.png", nIdx);
 	local sp = nil
-	--local frame = cc.SpriteFrameCache:getInstance():getSpriteFrame(str)
-	local frame = cc.SpriteFrame:create(str, cc.rect(0,0,71,76))
+	--[[local frame = cc.SpriteFrameCache:getInstance():getSpriteFrame(str)
     if nil ~= frame then
 		sp = cc.Sprite:createWithSpriteFrame(frame);
-	end
+	end]]
+    sp = cc.Sprite:create(str)
 	local btn = self.m_tableJettonArea[area];
 	if nil == sp then
 		print("sp nil");
@@ -1270,9 +1270,8 @@ function GameViewLayer:onGetUserBet( )
 		
 		--筹码飞行起点位置
 		--local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
-        local pos = self.m_tableJettonBtn[nIdx-1].pos
         --local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
-		sp:setPosition(pos)
+		sp:setPosition(self.m_tableJettonBtn[nIdx-1]:getPosition())
 		--筹码飞行动画
 		local act = self:getBetAnimation(self:getBetRandomPos(btn), cc.CallFunc:create(function()
 			--播放下注声音
@@ -1280,7 +1279,8 @@ function GameViewLayer:onGetUserBet( )
 		end))
 		sp:stopAllActions()
 		sp:runAction(act)
-		self.m_betAreaLayout:addChild(sp)
+        btn:addChild(sp)
+		--[[self.m_betAreaLayout:addChild(sp)
 
 		--下注信息显示
 		if nil == self.m_tableJettonNode[area] then
@@ -1290,8 +1290,8 @@ function GameViewLayer:onGetUserBet( )
 			jettonNode:setTag(-1);
 			self.m_tableJettonNode[area] = jettonNode;
 		end
-		--self.m_tableJettonNode[area]:refreshJetton(llScore, llScore, self:isMeChair(wUser))
-		self:refreshJettonNode(self.m_tableJettonNode[area], llScore, llScore, self:isMeChair(wUser))
+		--self.m_tableJettonNode[area]:refreshJetton(llScore, llScore, self:isMeChair(wUser))]]
+		self:refreshJettonNode(btn, llScore, llScore, self:isMeChair(wUser))
 	end
 
 	if self:isMeChair(wUser) then
@@ -1401,13 +1401,21 @@ end
 
 --游戏结束
 function GameViewLayer:onGetGameEnd(  )
+    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+	if nil == cmd_gameend then
+		return
+	end
+
+
+
+
 	self.m_bOnGameRes = true
 
 	--不可下注
 	self:enableJetton(false)
 
 	--界面资源清理
-	self:reSet()
+	--self:reSet()
 end
 
 --申请庄家
@@ -1459,12 +1467,13 @@ end
 
 --更新扑克牌
 function GameViewLayer:onGetGameCard( tabRes, bAni, cbTime )
-	if nil == self.m_cardLayer then
+	--[[if nil == self.m_cardLayer then
 		self.m_cardLayer = g_var(GameCardLayer):create(self)
 		self:addToRootLayer(self.m_cardLayer, TAG_ZORDER.GAMECARD_ZORDER)
 	end
 	self.m_cardLayer:showLayer(true)
-	self.m_cardLayer:refresh(tabRes, bAni, cbTime)
+	self.m_cardLayer:refresh(tabRes, bAni, cbTime)]]
+
 end
 
 --座位坐下信息
@@ -1995,7 +2004,8 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 		str = string.sub(str,1,12)
 		str = str .. "... /";
 	end
-	node.m_textMyJetton:setString(str);
+    self.m_tableJettonNum:setString(str)
+	--node.m_textMyJetton:setString(str);
 
 	--总下注
 	str = ExternalFun.numberThousands(node.m_llAreaTotal)
@@ -2011,15 +2021,16 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 			str = str .. "...";
 		end
 	end
-	node.m_textTotalJetton:setString(str);
+    self.m_tableJettonScore:setString(str)
+	--node.m_textTotalJetton:setString(str);
 
-	--调整背景宽度
+	--[[调整背景宽度
 	local mySize = node.m_textMyJetton:getContentSize();
 	local totalSize = node.m_textTotalJetton:getContentSize();
 	local total = cc.size(mySize.width + totalSize.width + 18, 32);
 	node.m_imageBg:setContentSize(total);
 
-	node.m_textTotalJetton:setPositionX(6 + mySize.width);
+	node.m_textTotalJetton:setPositionX(6 + mySize.width);]]
 end
 
 function GameViewLayer:reSetJettonNode(node)
