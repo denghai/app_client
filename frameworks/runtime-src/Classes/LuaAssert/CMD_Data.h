@@ -54,7 +54,7 @@ public:
 	//当前位置
 	WORD	GetCurrentIndex(){return m_wCurIndex;}
 	//设置游标
-	VOID	SetCurrentIndex(WORD wIndex){if(wIndex<=m_wMaxLenght)m_wCurIndex = wIndex;}
+	VOID	SetCurrentIndex(WORD wIndex){if(wIndex<=m_wMaxLenght)m_wCurIndex = wIndex*2;}
 	//重置游标
 	VOID	ResetCurrentIndex(){m_wCurIndex = 0 ;}
 };

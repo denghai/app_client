@@ -464,6 +464,15 @@ end
 --游戏空闲
 function GameLayer:onSubGameFree( dataBuffer )
     print("game free")
+
+
+    self._gameView.m_lyCardStart:removeAllChildren()
+    self._gameView.m_lyCardStart:setVisible(false)
+    self._gameView.m_lyCardUp:setVisible(false)
+    self._gameView.m_lyCardDown:setVisible(false)
+    self._gameView.m_lyCardRight:setVisible(false)
+    self._gameView.m_lyCardLeft:setVisible(false)
+
    --[[ yl.m_bDynamicJoin = false
 
     self.cmd_gamefree = ExternalFun.read_netdata(g_var(cmd).CMD_S_GameFree, dataBuffer);
@@ -533,6 +542,7 @@ function GameLayer:onSubPlaceJetton( dataBuffer )
     print("game bet");
     self.cmd_placebet = ExternalFun.read_netdata(g_var(cmd).CMD_S_PlaceJetton, dataBuffer);
     --ExternalFun.playSoundEffect("ADD_SCORE.wav")
+    self.cmd_placebet.lJettonScore = 1000
     self._gameView:onGetUserBet();
 end
 

@@ -959,28 +959,26 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_up" Visible="False" ActionTag="592294140" Tag="362" IconVisible="True" LeftMargin="674.2238" RightMargin="461.7762" TopMargin="157.3380" BottomMargin="482.6620" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_up" ActionTag="592294140" Tag="362" IconVisible="True" LeftMargin="674.2238" RightMargin="461.7762" TopMargin="157.3380" BottomMargin="482.6620" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
-              <AbstractNodeData Name="card1" ActionTag="308838547" Tag="361" IconVisible="False" LeftMargin="-68.8025" RightMargin="-36.1975" TopMargin="-64.5486" BottomMargin="-75.4514" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="-16.3025" Y="-5.4514" />
+              <AbstractNodeData Name="card1" ActionTag="-511080537" Tag="107" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="-17.4889" Y="-6.3729" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="card2" ActionTag="-874750556" Tag="360" IconVisible="False" LeftMargin="-42.5345" RightMargin="-62.4655" TopMargin="-64.3098" BottomMargin="-75.6902" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="9.9655" Y="-5.6902" />
+              <AbstractNodeData Name="card2" ActionTag="1562957347" Tag="106" IconVisible="True" LeftMargin="10.4646" RightMargin="-10.4646" TopMargin="6.3700" BottomMargin="-6.3700" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="10.4646" Y="-6.3700" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
               <AbstractNodeData Name="hand_l" ActionTag="-832545686" Tag="359" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
                 <Size X="64.0000" Y="131.0000" />
@@ -1004,6 +1002,15 @@
                 <FileData Type="Normal" Path="res/HAND_R.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
+              <AbstractNodeData Name="nd_start" ActionTag="1252353441" Tag="125" IconVisible="True" LeftMargin="11.0817" RightMargin="-11.0817" TopMargin="170.9802" BottomMargin="-170.9802" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="11.0817" Y="-170.9802" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition />
+                <PreSize X="0.0000" Y="0.0000" />
+              </AbstractNodeData>
             </Children>
             <AnchorPoint />
             <Position X="674.2238" Y="482.6620" />
@@ -1012,30 +1019,28 @@
             <PrePosition X="0.5935" Y="0.7542" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_down" Visible="False" ActionTag="-1388882114" Tag="364" IconVisible="True" LeftMargin="680.4653" RightMargin="455.5347" TopMargin="435.9022" BottomMargin="204.0978" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_down" ActionTag="-625390972" Tag="110" IconVisible="True" LeftMargin="672.4838" RightMargin="463.5162" TopMargin="428.3544" BottomMargin="211.6456" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
-              <AbstractNodeData Name="card2" ActionTag="-851119684" Tag="365" IconVisible="False" LeftMargin="-42.5345" RightMargin="-62.4655" TopMargin="-64.3098" BottomMargin="-75.6902" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="9.9655" Y="-5.6902" />
+              <AbstractNodeData Name="card1" ActionTag="-234884198" Tag="111" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="-17.4889" Y="-6.3729" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="card1" ActionTag="-792175815" Tag="366" IconVisible="False" LeftMargin="-68.8025" RightMargin="-36.1975" TopMargin="-64.5486" BottomMargin="-75.4514" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="-16.3025" Y="-5.4514" />
+              <AbstractNodeData Name="card2" ActionTag="-837398109" Tag="112" IconVisible="True" LeftMargin="10.4646" RightMargin="-10.4646" TopMargin="6.3700" BottomMargin="-6.3700" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="10.4646" Y="-6.3700" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="hand_l" ActionTag="-1505002528" Tag="367" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
+              <AbstractNodeData Name="hand_l" ActionTag="1657039800" Tag="113" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
                 <Size X="64.0000" Y="131.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="-77.7874" Y="23.0518" />
@@ -1046,7 +1051,7 @@
                 <FileData Type="Normal" Path="res/HAND_L.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
-              <AbstractNodeData Name="hand_r" ActionTag="216408448" Tag="368" IconVisible="False" LeftMargin="33.4928" RightMargin="-103.4928" TopMargin="2.3557" BottomMargin="-143.3557" ctype="SpriteObjectData">
+              <AbstractNodeData Name="hand_r" ActionTag="1580386584" Tag="114" IconVisible="False" LeftMargin="33.4928" RightMargin="-103.4928" TopMargin="2.3557" BottomMargin="-143.3557" ctype="SpriteObjectData">
                 <Size X="70.0000" Y="141.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="68.4928" Y="-72.8557" />
@@ -1057,38 +1062,45 @@
                 <FileData Type="Normal" Path="res/HAND_R.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
+              <AbstractNodeData Name="nd_start" ActionTag="1803550741" Tag="126" IconVisible="True" LeftMargin="10.8730" RightMargin="-10.8730" TopMargin="-165.2001" BottomMargin="165.2001" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="10.8730" Y="165.2001" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition />
+                <PreSize X="0.0000" Y="0.0000" />
+              </AbstractNodeData>
             </Children>
             <AnchorPoint />
-            <Position X="680.4653" Y="204.0978" />
+            <Position X="672.4838" Y="211.6456" />
             <Scale ScaleX="0.8000" ScaleY="0.8000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.5990" Y="0.3189" />
+            <PrePosition X="0.5920" Y="0.3307" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_left" Visible="False" ActionTag="-349631388" Tag="369" IconVisible="True" LeftMargin="370.5726" RightMargin="765.4274" TopMargin="341.9994" BottomMargin="298.0006" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_left" ActionTag="427177512" Tag="115" IconVisible="True" LeftMargin="361.4365" RightMargin="774.5635" TopMargin="320.8962" BottomMargin="319.1038" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
-              <AbstractNodeData Name="card2" ActionTag="980709676" Tag="370" IconVisible="False" LeftMargin="-42.5345" RightMargin="-62.4655" TopMargin="-64.3098" BottomMargin="-75.6902" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="9.9655" Y="-5.6902" />
+              <AbstractNodeData Name="card1" ActionTag="1686275911" Tag="116" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="-17.4889" Y="-6.3729" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="card1" ActionTag="767317628" Tag="371" IconVisible="False" LeftMargin="-68.8025" RightMargin="-36.1975" TopMargin="-64.5486" BottomMargin="-75.4514" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="-16.3025" Y="-5.4514" />
+              <AbstractNodeData Name="card2" ActionTag="-988512947" Tag="117" IconVisible="True" LeftMargin="10.4646" RightMargin="-10.4646" TopMargin="6.3700" BottomMargin="-6.3700" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="10.4646" Y="-6.3700" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="hand_l" ActionTag="-1870046241" Tag="372" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
+              <AbstractNodeData Name="hand_l" ActionTag="-524329826" Tag="118" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
                 <Size X="64.0000" Y="131.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="-77.7874" Y="23.0518" />
@@ -1099,7 +1111,7 @@
                 <FileData Type="Normal" Path="res/HAND_L.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
-              <AbstractNodeData Name="hand_r" ActionTag="-134805813" Tag="373" IconVisible="False" LeftMargin="33.4928" RightMargin="-103.4928" TopMargin="2.3557" BottomMargin="-143.3557" ctype="SpriteObjectData">
+              <AbstractNodeData Name="hand_r" ActionTag="-88357107" Tag="119" IconVisible="False" LeftMargin="33.4928" RightMargin="-103.4928" TopMargin="2.3557" BottomMargin="-143.3557" ctype="SpriteObjectData">
                 <Size X="70.0000" Y="141.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="68.4928" Y="-72.8557" />
@@ -1110,38 +1122,45 @@
                 <FileData Type="Normal" Path="res/HAND_R.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
+              <AbstractNodeData Name="nd_start" ActionTag="-769765347" Tag="127" IconVisible="True" LeftMargin="399.2981" RightMargin="-399.2981" TopMargin="-32.8383" BottomMargin="32.8383" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="399.2981" Y="32.8383" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition />
+                <PreSize X="0.0000" Y="0.0000" />
+              </AbstractNodeData>
             </Children>
             <AnchorPoint />
-            <Position X="370.5726" Y="298.0006" />
+            <Position X="361.4365" Y="319.1038" />
             <Scale ScaleX="0.8000" ScaleY="0.8000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.3262" Y="0.4656" />
+            <PrePosition X="0.3182" Y="0.4986" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_right" Visible="False" ActionTag="-348284760" Tag="374" IconVisible="True" LeftMargin="992.2048" RightMargin="143.7952" TopMargin="345.7560" BottomMargin="294.2440" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_right" ActionTag="-1466933994" Tag="120" IconVisible="True" LeftMargin="971.7804" RightMargin="164.2196" TopMargin="324.3703" BottomMargin="315.6297" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
-              <AbstractNodeData Name="card2" ActionTag="28713003" Tag="375" IconVisible="False" LeftMargin="-42.5345" RightMargin="-62.4655" TopMargin="-64.3098" BottomMargin="-75.6902" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="9.9655" Y="-5.6902" />
+              <AbstractNodeData Name="card1" ActionTag="49241261" Tag="121" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="-17.4889" Y="-6.3729" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="card1" ActionTag="-412356228" Tag="376" IconVisible="False" LeftMargin="-68.8025" RightMargin="-36.1975" TopMargin="-64.5486" BottomMargin="-75.4514" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="105.0000" Y="140.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="-16.3025" Y="-5.4514" />
+              <AbstractNodeData Name="card2" ActionTag="-666437331" Tag="122" IconVisible="True" LeftMargin="10.4646" RightMargin="-10.4646" TopMargin="6.3700" BottomMargin="-6.3700" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="10.4646" Y="-6.3700" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition />
                 <PreSize X="0.0000" Y="0.0000" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="hand_l" ActionTag="1899375006" Tag="377" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
+              <AbstractNodeData Name="hand_l" ActionTag="1253881894" Tag="123" IconVisible="False" LeftMargin="-109.7874" RightMargin="45.7874" TopMargin="-88.5518" BottomMargin="-42.4482" ctype="SpriteObjectData">
                 <Size X="64.0000" Y="131.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="-77.7874" Y="23.0518" />
@@ -1152,7 +1171,7 @@
                 <FileData Type="Normal" Path="res/HAND_L.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
-              <AbstractNodeData Name="hand_r" ActionTag="-1077765896" Tag="378" IconVisible="False" LeftMargin="33.4928" RightMargin="-103.4928" TopMargin="2.3557" BottomMargin="-143.3557" ctype="SpriteObjectData">
+              <AbstractNodeData Name="hand_r" ActionTag="260227747" Tag="124" IconVisible="False" LeftMargin="33.4928" RightMargin="-103.4928" TopMargin="2.3557" BottomMargin="-143.3557" ctype="SpriteObjectData">
                 <Size X="70.0000" Y="141.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="68.4928" Y="-72.8557" />
@@ -1163,23 +1182,31 @@
                 <FileData Type="Normal" Path="res/HAND_R.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
+              <AbstractNodeData Name="nd_start" ActionTag="814763322" Tag="128" IconVisible="True" LeftMargin="-361.8464" RightMargin="361.8464" TopMargin="-36.6861" BottomMargin="36.6861" ctype="SingleNodeObjectData">
+                <Size X="0.0000" Y="0.0000" />
+                <AnchorPoint />
+                <Position X="-361.8464" Y="36.6861" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition />
+                <PreSize X="0.0000" Y="0.0000" />
+              </AbstractNodeData>
             </Children>
             <AnchorPoint />
-            <Position X="992.2048" Y="294.2440" />
+            <Position X="971.7804" Y="315.6297" />
             <Scale ScaleX="0.8000" ScaleY="0.8000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.8734" Y="0.4598" />
+            <PrePosition X="0.8554" Y="0.4932" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_start_index" Visible="False" ActionTag="-1554502974" Tag="100" IconVisible="False" LeftMargin="629.8451" RightMargin="401.1549" TopMargin="230.2099" BottomMargin="269.7901" CharWidth="105" CharHeight="140" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="105.0000" Y="140.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position X="682.3451" Y="339.7901" />
-            <Scale ScaleX="0.8000" ScaleY="0.8000" />
+          <AbstractNodeData Name="card_start_index" ActionTag="-628166335" Tag="105" IconVisible="True" LeftMargin="681.0000" RightMargin="455.0000" TopMargin="296.0000" BottomMargin="344.0000" ctype="SingleNodeObjectData">
+            <Size X="0.0000" Y="0.0000" />
+            <AnchorPoint />
+            <Position X="681.0000" Y="344.0000" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
             <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.6007" Y="0.5309" />
-            <PreSize X="0.0924" Y="0.2188" />
-            <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/redNine_card.png" Plist="" />
+            <PrePosition X="0.5995" Y="0.5375" />
+            <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
         </Children>
       </ObjectData>

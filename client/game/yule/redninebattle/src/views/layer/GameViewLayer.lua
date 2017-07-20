@@ -22,6 +22,7 @@ local LyCard = module_pre .. ".views.layer.ViewCard"
 local LyDeskChips = module_pre .. ".views.layer.DeskChips"
 local LyPlayer = module_pre .. ".views.layer.GameResult"
 local LySetting = module_pre .. ".views.layer.UserLst"
+local SpCard = module_pre .. ".views.layer.CardSprite"
 --
 
 GameViewLayer.TAG_START				= 100
@@ -103,7 +104,7 @@ end
 
 function GameViewLayer:loadRes(  )
 	--加载卡牌纹理
-	--cc.Director:getInstance():getTextureCache():addImage("game/card.png");
+	cc.Director:getInstance():getTextureCache():addImage("game_res/redNine_card.png");
 end
 
 ---------------------------------------------------------------------------------------
@@ -424,6 +425,8 @@ function GameViewLayer:initDeskChips(csbNode)
 		local tag_btn = csbNode:getChildByName(str);
 		tag_btn:setTag(i);
 		tag_btn:addTouchEventListener(btnEvent);
+        tag_btn.m_llMyTotal = 0
+	    tag_btn.m_llAreaTotal = 0
 		self.m_tableJettonArea[i] = tag_btn
 
         local area_score = tag_btn:getChildByName("lbScore")
@@ -1241,9 +1244,11 @@ function GameViewLayer:onGetUserBet( )
 		return
 	end
 
-	local area = data.cbJettonArea + 1;
-	local wUser = data.wChairID;
+	local area = data.cbJettonArea
+	local wUser = data.wChairID
 	local llScore = data.lJettonScore
+
+    print("@@@@@@@@@@ area = "..area.."   wUser = "..wUser.."   llScore = "..llScore)
 
 	local nIdx = self:getJettonIdx(llScore);
 	local str = string.format("chip_res/chip%d.png", nIdx);
@@ -1263,7 +1268,7 @@ function GameViewLayer:onGetUserBet( )
 	end
 	if nil ~= sp and nil ~= btn then
 		--下注
-		sp:setScale(0.35);
+		--sp:setScale(0.35);
 		sp:setTag(wUser);
 		local name = string.format("%d", area) --ExternalFun.formatScore(data.lBetScore);
 		sp:setName(name)
@@ -1406,8 +1411,26 @@ function GameViewLayer:onGetGameEnd(  )
 		return
 	end
 
+    local cbCardData = cmd_gameend.cbLeftCardCount
+    local spCard = g_var(SpCard):createCard(cbCardData)
+    spCard:setTag(1)
+    self.m_lyCardStart:addChild(spCard)
+    self.m_lyCardStart:setVisible(true)
 
+    local callfunc = cc.CallFunc:create(function()
+        local callfunc1 = cc.CallFunc:create(function()
+            self.m_lyCardStart:setVisible(false)
+            self:showCard()
+        end)
 
+        local spCard = self.m_lyCardStart:getChildByTag(1)
+        spCard:showCardBack(true)
+
+        local act = cc.Sequence:create(cc.DelayTime:create(0.5), callfunc1)
+        self.m_lyCardStart:runAction(act)
+	end)
+    local act = cc.Sequence:create(cc.DelayTime:create(0.5), callfunc)
+    self.m_lyCardStart:runAction(act)
 
 	self.m_bOnGameRes = true
 
@@ -1416,6 +1439,155 @@ function GameViewLayer:onGetGameEnd(  )
 
 	--界面资源清理
 	--self:reSet()
+end
+
+function GameViewLayer:showCard()
+    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+
+    self:initHandCard(self.m_lyCardUp)
+    self:initHandCard(self.m_lyCardDown)
+    self:initHandCard(self.m_lyCardLeft)
+    self:initHandCard(self.m_lyCardRight)
+
+    self.m_dealCardIdx = 0
+
+    self:dealCard()
+
+    local callfunc = cc.CallFunc:create(function()
+        self.m_dealCardIdx = 0
+
+        self:dealCard1()
+    end)
+
+    local act = cc.Sequence:create(cc.DelayTime:create(4), callfunc)
+    self.m_lyCardStart:runAction(act)
+end
+
+function GameViewLayer:initHandCard(node)
+    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+
+    node:setVisible(true)
+
+    local card1 = node:getChildByName("card1")
+    card1:setTag(1)
+    card1:setVisible(false)
+    local card2 = node:getChildByName("card2")
+    card2:setTag(2)
+    card2:setVisible(false)
+    local hand_l = node:getChildByName("hand_l")
+    hand_l:setTag(3)
+    hand_l:setVisible(false)
+    local hand_r = node:getChildByName("hand_r")
+    hand_r:setTag(4)
+    hand_r:setVisible(false)
+    local ndStart = node:getChildByName("nd_start")
+    ndStart:setTag(5)
+
+    card1:removeAllChildren()
+    local cbCardData1 = cmd_gameend.cbTableCardArray[1][1]
+    local spCard1 = g_var(SpCard):createCard(cbCardData1)
+    spCard1:setTag(1)
+    spCard1:showCardBack(true)
+    card1:addChild(spCard1)
+
+    card2:removeAllChildren()
+    local cbCardData2 = cmd_gameend.cbTableCardArray[1][2]
+    local spCard2 = g_var(SpCard):createCard(cbCardData2)
+    spCard2:setTag(1)
+    spCard2:showCardBack(true)
+    card2:addChild(spCard2)
+end
+
+function GameViewLayer:dealCard()
+    if self.m_dealCardIdx >= 4 then
+        return
+    end
+
+    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+
+    local seatNum = (cmd_gameend.cbLeftCardCount + self.m_dealCardIdx) % 4
+    local node = self.m_lyCardRight
+    if seatNum == 1 then
+        node = self.m_lyCardUp
+    elseif seatNum == 2 then
+        node = self.m_lyCardLeft
+    elseif seatNum == 3 then
+        node = self.m_lyCardDown
+    end
+
+    local ndStart = node:getChildByTag(5)
+
+    local card1 = node:getChildByTag(1)
+    local p1X,p1Y = card1:getPosition()
+    card1:setPosition(ndStart:getPosition())
+    card1:setVisible(true)
+    local act1 = cc.MoveTo:create(0.4, cc.p(p1X,p1Y))
+
+    local callfunc = cc.CallFunc:create(function()
+        --local node = self:getParentNode()
+        local card2 = node:getChildByTag(2)
+        local p2X,p2Y = card2:getPosition()
+        card2:setPosition(ndStart:getPosition())
+        card2:setVisible(true)
+        local act2 = cc.MoveTo:create(0.4, cc.p(p2X,p2Y))
+        
+        local callfunc1 = cc.CallFunc:create(function()
+            --local node = self:getParentNode()
+            local card2 = node:getChildByTag(2)
+            card2:getChildByTag(1):showCardBack(false)
+            
+            self.m_dealCardIdx = self.m_dealCardIdx + 1
+
+            self:dealCard()
+        end)
+
+        local act = cc.Sequence:create(act2, callfunc1)
+        card2:runAction(act)
+    end)
+
+    local act = cc.Sequence:create(act1,callfunc)
+    card1:runAction(act)
+end
+
+function GameViewLayer:dealCard1(seatNum)
+    if self.m_dealCardIdx >= 4 then
+        return
+    end
+
+    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+
+    local seatNum = (cmd_gameend.cbLeftCardCount + self.m_dealCardIdx) % 4
+    local node = self.m_lyCardRight
+    if seatNum == 1 then
+        node = self.m_lyCardUp
+    elseif seatNum == 2 then
+        node = self.m_lyCardLeft
+    elseif seatNum == 3 then
+        node = self.m_lyCardDown
+    end
+
+    local card1 = node:getChildByTag(1)
+    card1:getChildByTag(1):showCardBack(false)
+    local card2 = node:getChildByTag(2)
+    local hand_l = node:getChildByTag(3)
+    hand_l:setVisible(true)
+    local hand_r = node:getChildByTag(4)
+    hand_r:setVisible(true)
+
+    local callfunc = cc.CallFunc:create(function()
+        node:getChildByTag(3):setVisible(false)
+        node:getChildByTag(4):setVisible(false)
+
+        self.m_dealCardIdx = self.m_dealCardIdx + 1
+
+        self:dealCard1()
+    end)
+
+    local act = cc.Sequence:create(cc.MoveBy:create(1, cc.p(50,0)), cc.MoveBy:create(1, cc.p(-50,0)))
+    local act_1 = cc.Sequence:create(cc.MoveBy:create(1, cc.p(50,0)), cc.MoveBy:create(1, cc.p(-50,0)), callfunc)
+
+    card2:runAction(act)
+    hand_r:runAction(act_1)
 end
 
 --申请庄家
@@ -1999,12 +2171,11 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 
 	--自己下注数额
 	local str = ExternalFun.numberThousands(node.m_llMyTotal);
-	str = str .. " /";
 	if string.len(str) > 15 then
 		str = string.sub(str,1,12)
-		str = str .. "... /";
+		str = str .. "...";
 	end
-    self.m_tableJettonNum:setString(str)
+    self.m_tableJettonNum[1]:setString(str)
 	--node.m_textMyJetton:setString(str);
 
 	--总下注
@@ -2021,7 +2192,7 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 			str = str .. "...";
 		end
 	end
-    self.m_tableJettonScore:setString(str)
+    self.m_tableJettonScore[1]:setString(str)
 	--node.m_textTotalJetton:setString(str);
 
 	--[[调整背景宽度
