@@ -37,20 +37,10 @@
             <PreSize X="0.0000" Y="0.0000" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lb_me_score_1" ActionTag="692624841" Tag="186" IconVisible="False" LeftMargin="58.2473" RightMargin="-202.2473" TopMargin="-33.9668" BottomMargin="-0.0332" CharWidth="24" CharHeight="34" LabelText="999999" StartChar="0" ctype="TextAtlasObjectData">
+          <AbstractNodeData Name="lb_banker_score" ActionTag="692624841" Tag="186" IconVisible="False" LeftMargin="58.2473" RightMargin="-202.2473" TopMargin="-33.9668" BottomMargin="-0.0332" CharWidth="24" CharHeight="34" LabelText="999999" StartChar="0" ctype="TextAtlasObjectData">
             <Size X="144.0000" Y="34.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="130.2473" Y="16.9668" />
-            <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition />
-            <PreSize X="0.0000" Y="0.0000" />
-            <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
-          </AbstractNodeData>
-          <AbstractNodeData Name="lb_me_score_0_0" ActionTag="1724926992" Tag="187" IconVisible="False" LeftMargin="58.2473" RightMargin="-202.2473" TopMargin="31.3434" BottomMargin="-65.3434" CharWidth="24" CharHeight="34" LabelText="999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="144.0000" Y="34.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position X="130.2473" Y="-48.3434" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />

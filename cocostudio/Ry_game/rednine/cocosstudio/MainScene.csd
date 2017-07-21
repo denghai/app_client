@@ -850,28 +850,6 @@
           </AbstractNodeData>
           <AbstractNodeData Name="deskChip0" ActionTag="1935925845" Tag="105" IconVisible="False" LeftMargin="-122.2156" RightMargin="298.2156" TopMargin="-29.6791" BottomMargin="29.6791" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
-            <Children>
-              <AbstractNodeData Name="lbScore" ActionTag="999969197" Tag="264" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="133.0000" Y="29.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="449.6174" Y="677.7928" />
-                <Scale ScaleX="2.0000" ScaleY="2.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.4684" Y="1.0591" />
-                <PreSize X="0.1385" Y="0.0453" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="lbNum" ActionTag="1096013524" Tag="263" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="19.0000" Y="29.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="435.5309" Y="-42.2946" />
-                <Scale ScaleX="2.0000" ScaleY="2.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.4537" Y="-0.0661" />
-                <PreSize X="0.0198" Y="0.0453" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
-              </AbstractNodeData>
-            </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="357.7844" Y="349.6791" />
             <Scale ScaleX="0.2000" ScaleY="0.2000" />
@@ -885,30 +863,28 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
+          <AbstractNodeData Name="lbScore0" ActionTag="999969197" Tag="264" IconVisible="False" LeftMargin="383.1174" RightMargin="619.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
+            <Size X="133.0000" Y="29.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="449.6174" Y="677.7928" />
+            <Scale ScaleX="2.0000" ScaleY="2.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.3958" Y="1.0591" />
+            <PreSize X="0.1171" Y="0.0453" />
+            <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="lbNum0" ActionTag="1096013524" Tag="263" IconVisible="False" LeftMargin="426.0309" RightMargin="690.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
+            <Size X="19.0000" Y="29.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="435.5309" Y="-42.2946" />
+            <Scale ScaleX="2.0000" ScaleY="2.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.3834" Y="-0.0661" />
+            <PreSize X="0.0167" Y="0.0453" />
+            <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
+          </AbstractNodeData>
           <AbstractNodeData Name="deskChip1" ActionTag="1071704635" Tag="106" IconVisible="False" LeftMargin="182.9863" RightMargin="-6.9863" TopMargin="61.2632" BottomMargin="-61.2632" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
-            <Children>
-              <AbstractNodeData Name="lbScore" ActionTag="-30824998" Tag="107" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="133.0000" Y="29.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="449.6174" Y="677.7928" />
-                <Scale ScaleX="2.0000" ScaleY="2.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.4684" Y="1.0591" />
-                <PreSize X="0.1385" Y="0.0453" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="lbNum" ActionTag="1054573525" Tag="108" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="19.0000" Y="29.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="435.5309" Y="-42.2946" />
-                <Scale ScaleX="2.0000" ScaleY="2.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.4537" Y="-0.0661" />
-                <PreSize X="0.0198" Y="0.0453" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
-              </AbstractNodeData>
-            </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="662.9863" Y="258.7368" />
             <Scale ScaleX="0.2000" ScaleY="0.2000" />
@@ -922,30 +898,28 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
+          <AbstractNodeData Name="lbScore1" ActionTag="-30824998" Tag="107" IconVisible="False" LeftMargin="383.1174" RightMargin="619.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
+            <Size X="133.0000" Y="29.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="449.6174" Y="677.7928" />
+            <Scale ScaleX="2.0000" ScaleY="2.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.3958" Y="1.0591" />
+            <PreSize X="0.1171" Y="0.0453" />
+            <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="lbNum1" ActionTag="1054573525" Tag="108" IconVisible="False" LeftMargin="426.0309" RightMargin="690.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
+            <Size X="19.0000" Y="29.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="435.5309" Y="-42.2946" />
+            <Scale ScaleX="2.0000" ScaleY="2.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.3834" Y="-0.0661" />
+            <PreSize X="0.0167" Y="0.0453" />
+            <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
+          </AbstractNodeData>
           <AbstractNodeData Name="deskChip2" ActionTag="805155636" Tag="109" IconVisible="False" LeftMargin="480.3107" RightMargin="-304.3108" TopMargin="-29.6790" BottomMargin="29.6790" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
             <Size X="960.0000" Y="640.0000" />
-            <Children>
-              <AbstractNodeData Name="lbScore" ActionTag="-13808768" Tag="110" IconVisible="False" LeftMargin="383.1174" RightMargin="443.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="133.0000" Y="29.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="449.6174" Y="677.7928" />
-                <Scale ScaleX="2.0000" ScaleY="2.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.4684" Y="1.0591" />
-                <PreSize X="0.1385" Y="0.0453" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="lbNum" ActionTag="-24112005" Tag="111" IconVisible="False" LeftMargin="426.0309" RightMargin="514.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="19.0000" Y="29.0000" />
-                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="435.5309" Y="-42.2946" />
-                <Scale ScaleX="2.0000" ScaleY="2.0000" />
-                <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.4537" Y="-0.0661" />
-                <PreSize X="0.0198" Y="0.0453" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
-              </AbstractNodeData>
-            </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="960.3107" Y="349.6790" />
             <Scale ScaleX="0.2000" ScaleY="0.2000" />
@@ -959,7 +933,27 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_up" ActionTag="592294140" Tag="362" IconVisible="True" LeftMargin="674.2238" RightMargin="461.7762" TopMargin="157.3380" BottomMargin="482.6620" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="lbScore2" ActionTag="-13808768" Tag="110" IconVisible="False" LeftMargin="383.1174" RightMargin="619.8826" TopMargin="-52.2928" BottomMargin="663.2928" CharWidth="19" CharHeight="29" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
+            <Size X="133.0000" Y="29.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="449.6174" Y="677.7928" />
+            <Scale ScaleX="2.0000" ScaleY="2.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.3958" Y="1.0591" />
+            <PreSize X="0.1171" Y="0.0453" />
+            <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="lbNum2" ActionTag="-24112005" Tag="111" IconVisible="False" LeftMargin="426.0309" RightMargin="690.9691" TopMargin="667.7946" BottomMargin="-56.7946" CharWidth="19" CharHeight="29" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
+            <Size X="19.0000" Y="29.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="435.5309" Y="-42.2946" />
+            <Scale ScaleX="2.0000" ScaleY="2.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.3834" Y="-0.0661" />
+            <PreSize X="0.0167" Y="0.0453" />
+            <LabelAtlasFileImage_CNB Type="Normal" Path="res/timeNum.png" Plist="" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="card_up" Visible="False" ActionTag="592294140" Tag="362" IconVisible="True" LeftMargin="674.2238" RightMargin="461.7762" TopMargin="157.3380" BottomMargin="482.6620" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
               <AbstractNodeData Name="card1" ActionTag="-511080537" Tag="107" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
@@ -1019,7 +1013,7 @@
             <PrePosition X="0.5935" Y="0.7542" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_down" ActionTag="-625390972" Tag="110" IconVisible="True" LeftMargin="672.4838" RightMargin="463.5162" TopMargin="428.3544" BottomMargin="211.6456" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_down" Visible="False" ActionTag="-625390972" Tag="110" IconVisible="True" LeftMargin="672.4838" RightMargin="463.5162" TopMargin="428.3544" BottomMargin="211.6456" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
               <AbstractNodeData Name="card1" ActionTag="-234884198" Tag="111" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
@@ -1079,7 +1073,7 @@
             <PrePosition X="0.5920" Y="0.3307" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_left" ActionTag="427177512" Tag="115" IconVisible="True" LeftMargin="361.4365" RightMargin="774.5635" TopMargin="320.8962" BottomMargin="319.1038" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_left" Visible="False" ActionTag="427177512" Tag="115" IconVisible="True" LeftMargin="361.4365" RightMargin="774.5635" TopMargin="320.8962" BottomMargin="319.1038" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
               <AbstractNodeData Name="card1" ActionTag="1686275911" Tag="116" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">
@@ -1139,7 +1133,7 @@
             <PrePosition X="0.3182" Y="0.4986" />
             <PreSize X="0.0000" Y="0.0000" />
           </AbstractNodeData>
-          <AbstractNodeData Name="card_right" ActionTag="-1466933994" Tag="120" IconVisible="True" LeftMargin="971.7804" RightMargin="164.2196" TopMargin="324.3703" BottomMargin="315.6297" ctype="SingleNodeObjectData">
+          <AbstractNodeData Name="card_right" Visible="False" ActionTag="-1466933994" Tag="120" IconVisible="True" LeftMargin="971.7804" RightMargin="164.2196" TopMargin="324.3703" BottomMargin="315.6297" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
               <AbstractNodeData Name="card1" ActionTag="49241261" Tag="121" IconVisible="True" LeftMargin="-17.4889" RightMargin="17.4889" TopMargin="6.3729" BottomMargin="-6.3729" ctype="SingleNodeObjectData">

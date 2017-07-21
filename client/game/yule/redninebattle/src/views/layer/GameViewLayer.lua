@@ -68,8 +68,7 @@ local enumApply =
 {
 	"kCancelState",
 	"kApplyState",
-	"kApplyedState",
-	"kSupperApplyed"
+	"kApplyedState"
 }
 GameViewLayer._apply_state = ExternalFun.declarEnumWithTable(0, enumApply)
 local APPLY_STATE = GameViewLayer._apply_state
@@ -105,6 +104,10 @@ end
 function GameViewLayer:loadRes(  )
 	--加载卡牌纹理
 	cc.Director:getInstance():getTextureCache():addImage("game_res/redNine_card.png");
+
+    for i=1,9 do
+        cc.Director:getInstance():getTextureCache():addImage("chip_res/chip"..i..".png");
+    end
 end
 
 ---------------------------------------------------------------------------------------
@@ -148,22 +151,14 @@ function GameViewLayer:initCsbRes(  )
 	self:initBtn(csbNode)
 end
 
-function GameViewLayer:reSet(  )
-
-end
-
 function GameViewLayer:reSetForNewGame(  )
 	--重置下注区域
 	self:cleanJettonArea()
 
-	--闪烁停止
-	self:jettonAreaBlinkClean()
+    --关闭结果UI
+    self:showGameResult(false)
 
-	self:showGameResult(false)
-
-	if nil ~= self.m_cardLayer then
-		self.m_cardLayer:showLayer(false)
-	end
+    self:reSetCard()
 end
 
 --初始化战绩
@@ -349,20 +344,15 @@ function GameViewLayer:initBankerInfo( )
     self.m_textBankerCoint = banker_layout:getChildByName("face_gold")
 
     --申请坐庄按钮
-    local function clipEvent( sender, eventType )
+    local function btnEvent( sender, eventType )
 		if eventType == ccui.TouchEventType.ended then
-			--self:onJettonButtonClicked(sender:getTag(), sender)
-            --[[if nil == self.m_userListLayer then
-			    self.m_userListLayer = g_var(UserListLayer):create()
-			    self:addToRootLayer(self.m_userListLayer, TAG_ZORDER.USERLIST_ZORDER)
-		    end
-		    local userList = self:getDataMgr():getUserList()		
-		    self.m_userListLayer:refreshList(userList)]]
+			self:onButtonClickedEvent(sender:getTag(), sender);
 		end
-	end
+	end	
 
     self.m_btnReqBanker = banker_layout:getChildByName("btn_reqZhuang")
-	self.m_btnReqBanker:addTouchEventListener(clipEvent)
+    self.m_btnReqBanker:setTag(TAG_ENUM.BT_REQZHUANG);
+	self.m_btnReqBanker:addTouchEventListener(btnEvent)
 
 	self:reSetBankerInfo()
 end
@@ -421,7 +411,7 @@ function GameViewLayer:initDeskChips(csbNode)
 
 	for i=1,3 do
 		local tag = i - 1;
-		local str = string.format("deskChip%d", tag);
+		local str = string.format("deskChip%d", tag)
 		local tag_btn = csbNode:getChildByName(str);
 		tag_btn:setTag(i);
 		tag_btn:addTouchEventListener(btnEvent);
@@ -429,11 +419,13 @@ function GameViewLayer:initDeskChips(csbNode)
 	    tag_btn.m_llAreaTotal = 0
 		self.m_tableJettonArea[i] = tag_btn
 
-        local area_score = tag_btn:getChildByName("lbScore")
+        str = string.format("lbScore%d", tag)
+        local area_score = csbNode:getChildByName(str)
         area_score:setString("0")
         self.m_tableJettonScore[i] = area_score
 
-        local area_num = tag_btn:getChildByName("lbNum")
+        str = string.format("lbNum%d", tag)
+        local area_num = csbNode:getChildByName(str)
         area_num:setString("0")
         self.m_tableJettonNum[i] = area_num
 	end
@@ -469,6 +461,8 @@ function GameViewLayer:reSetCard(var)
     self.m_lyCardLeft:setVisible(var)
     self.m_lyCardRight:setVisible(var)
     self.m_lyCardStart:setVisible(var)
+
+    self.m_lyCardStart:removeAllChildren()
 end
 
 function GameViewLayer:enableJetton( var )
@@ -516,12 +510,6 @@ function GameViewLayer:adjustJettonBtn(  )
 	end
 end
 
-function GameViewLayer:refreshJetton(  )
-	local str = ExternalFun.numberThousands(self.m_lHaveJetton)
-	self.m_clipJetton:setString(str)
-	self.m_userJettonLayout:setVisible(self.m_lHaveJetton > 0)
-end
-
 function GameViewLayer:switchJettonBtnState( idx )
 	for i=1,#self.m_tabJettonAnimate do
 		self.m_tabJettonAnimate[i]:stopAllActions()
@@ -544,229 +532,14 @@ function GameViewLayer:switchJettonBtnState( idx )
 	end
 end
 
---下注筹码结算动画
-function GameViewLayer:betAnimation( )
-	local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
-	if nil == cmd_gameend then
-		return
-	end
-
-	local tmp = self.m_betAreaLayout:getChildren()
-	--数量控制
-	local maxCount = 300
-	local count = 0
-	local children = {}
-	for k,v in pairs(tmp) do
-		table.insert(children, v)
-		count = count + 1
-		if count > maxCount then
-			break
-		end
-	end
-	local left = {}
-	print("bankerscore:" .. ExternalFun.formatScore(cmd_gameend.lBankerScore))
-	print("selfscore:" .. ExternalFun.formatScore(cmd_gameend.lPlayAllScore))
-
-	--庄家的
-	local call = cc.CallFunc:create(function()
-		left = self:userBetAnimation(children, "banker", cmd_gameend.lBankerScore)
-	end)
-	local delay = cc.DelayTime:create(0.5)
-
-	--自己的
-	local meChair =  self:getMeUserItem().wChairID
-	local call2 = cc.CallFunc:create(function()		
-		left = self:userBetAnimation(left, meChair, cmd_gameend.lPlayAllScore)
-	end)	
-	local delay2 = cc.DelayTime:create(0.5)
-
-	--坐下的
-	local call3 = cc.CallFunc:create(function()
-		for i = 1, g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
-			if nil ~= self.m_tabSitDownUser[i] then
-				--非自己
-				local chair = self.m_tabSitDownUser[i]:getChair()
-				local score = cmd_gameend.lOccupySeatUserWinScore[1][i]
-				if meChair ~= chair then
-					left = self:userBetAnimation(left, chair, cmd_gameend.lOccupySeatUserWinScore[1][i])
-				end
-
-				local useritem = self:getDataMgr():getChairUserList()[chair + 1]
-				--金币动画
-				self.m_tabSitDownUser[i]:gameEndScoreChange(useritem, score)
-			end
-		end
-	end)
-	local delay3 = cc.DelayTime:create(0.5)	
-
-	--其余玩家的
-	local call4 = cc.CallFunc:create(function()
-		self:userBetAnimation(left, "other", 1)
-	end)
-
-	--剩余没有移走的
-	local call5 = cc.CallFunc:create(function()
-		--下注筹码数量显示移除
-		self:cleanJettonArea()
-	end)
-
-	local seq = cc.Sequence:create(call, delay, call2, delay2, call3, delay3, call4, cc.DelayTime:create(2), call5)
-	self:stopAllActions()
-	self:runAction(seq)	
-end
-
---玩家分数
-function GameViewLayer:userBetAnimation( children, wchair, score )
-	if nil == score or score <= 0 then
-		return children
-	end
-
-	local left = {}
-	local getScore = score
-	local tmpScore = 0
-	local totalIdx = #self.m_pJettonNumber
-	local winSize = self.m_betAreaLayout:getContentSize()
-	local remove = true
-	local count = 0
-	for k,v in pairs(children) do
-		local idx = nil
-
-		if remove then
-			if nil ~= v and v:getTag() == wchair then
-				idx = tonumber(v:getName())
-				
-				local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wchair))
-				self:generateBetAnimtion(v, {x = pos.x, y = pos.y}, count)
-
-				if nil ~= idx and nil ~= self.m_pJettonNumber[idx] then
-					tmpScore = tmpScore + self.m_pJettonNumber[idx].k
-				end
-
-				if tmpScore >= score then
-					remove = false
-				end
-			elseif yl.INVALID_CHAIR == wchair then
-				--随机抽下注筹码
-				idx = self:randomGetBetIdx(getScore, totalIdx)
-
-				local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wchair))
-
-				if nil ~= idx and nil ~= self.m_pJettonNumber[idx] then
-					tmpScore = tmpScore + self.m_pJettonNumber[idx].k
-					getScore = getScore - tmpScore
-				end
-
-				if tmpScore >= score then
-					remove = false
-				end
-			elseif "banker" == wchair then
-				--随机抽下注筹码
-				idx = self:randomGetBetIdx(getScore, totalIdx)
-
-				local pos = cc.p(self.m_textBankerCoin:getPositionX(), self.m_textBankerCoin:getPositionY())
-				pos = self.m_textBankerCoin:convertToWorldSpace(pos)
-				pos = self.m_betAreaLayout:convertToNodeSpace(pos)
-				self:generateBetAnimtion(v, {x = pos.x, y = pos.y}, count)
-
-				if nil ~= idx and nil ~= self.m_pJettonNumber[idx] then
-					tmpScore = tmpScore + self.m_pJettonNumber[idx].k
-					getScore = getScore - tmpScore
-				end
-
-				if tmpScore >= score then
-					remove = false
-				end
-			elseif "other" == wchair then
-				self:generateBetAnimtion(v, {x = winSize.width, y = 0}, count)
-			else
-				table.insert(left, v)
-			end
-		else
-			table.insert(left, v)
-		end	
-		count = count + 1	
-	end
-	return left
-end
-
-function GameViewLayer:generateBetAnimtion( bet, pos, count)
-	--筹码动画	
-	local moveTo = cc.MoveTo:create(BET_ANITIME, cc.p(pos.x, pos.y))
-	local call = cc.CallFunc:create(function ( )
-		bet:removeFromParent()
-	end)
-	bet:stopAllActions()
-	bet:runAction(cc.Sequence:create(cc.DelayTime:create(0.05 * count),moveTo, call))
-end
-
-function GameViewLayer:randomGetBetIdx( score, totalIdx )
-	if score > self.m_pJettonNumber[1].k and score < self.m_pJettonNumber[2].k then
-		return math.random(1,2)
-	elseif score > self.m_pJettonNumber[2].k and score < self.m_pJettonNumber[3].k then
-		return math.random(1,3)
-	elseif score > self.m_pJettonNumber[3].k and score < self.m_pJettonNumber[4].k then
-		return math.random(1,4)
-	else
-		return math.random(totalIdx)
-	end	
-end
-
 function GameViewLayer:cleanJettonArea(  )
-	--[[--移除界面已下注
-	self.m_betAreaLayout:removeAllChildren()
-
-	for i=1,#self.m_tableJettonArea do
-		if nil ~= self.m_tableJettonNode[i] then
-			--self.m_tableJettonNode[i]:reSet()
-			self:reSetJettonNode(self.m_tableJettonNode[i])
-		end
-	end
-	self.m_userJettonLayout:setVisible(false)
-	self.m_clipJetton:setString("")]]
-end
-
-function GameViewLayer:reSetJettonSp(  )
-	for i=1,#self.m_tagSpControls do
-		self.m_tagSpControls[i]:setVisible(false);
-	end
-end
-
---胜利区域闪烁
-function GameViewLayer:jettonAreaBlink( tabArea )
-	for i = 1, #tabArea do
-		local score = tabArea[i]
-		if score > 0 then
-			local rep = cc.RepeatForever:create(cc.Blink:create(1.0,1))
-			self.m_tagSpControls[i]:runAction(rep)
-		end
-	end
-end
-
-function GameViewLayer:jettonAreaBlinkClean(  )
-	--[[for i = 1, g_var(cmd).AREA_MAX do
-		self.m_tagSpControls[i]:stopAllActions()
-		self.m_tagSpControls[i]:setVisible(false)
-	end]]
-end
-
---座位列表
-function GameViewLayer:initSitDownList( csbNode )
-	local m_roleSitDownLayer = csbNode:getChildByName("role_control")
-	self.m_roleSitDownLayer = m_roleSitDownLayer
-
-	--按钮列表
-	local function btnEvent( sender, eventType )
-		if eventType == ccui.TouchEventType.ended then
-			self:onSitDownClick(sender:getTag(), sender);
-		end
-	end
-
-	local str = ""
-	for i=1,g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
-		str = string.format("sit_btn_%d", i)
-		self.m_tabSitDownList[i] = m_roleSitDownLayer:getChildByName(str)
-		self.m_tabSitDownList[i]:setTag(i)
-		self.m_tabSitDownList[i]:addTouchEventListener(btnEvent);
+	--移除界面已下注
+    for i=1,#self.m_tableJettonArea do
+        self.m_tableJettonArea[i]:removeAllChildren()
+        self.m_tableJettonArea[i].m_llMyTotal = 0
+	    self.m_tableJettonArea[i].m_llAreaTotal = 0
+	    self.m_tableJettonScore[i]:setString("0")
+        self.m_tableJettonNum[i]:setString("0")
 	end
 end
 
@@ -795,95 +568,11 @@ function GameViewLayer:onButtonClickedEvent(tag,ref)
     elseif tag == TAG_ENUM.BT_HELP then
         self:getParentNode():getParentNode():popHelpLayer2(122, 0, yl.ZORDER.Z_HELP_BUTTON)
     elseif tag == TAG_ENUM.BT_REQZHUANG then
-        self:reqZhuang()
-
-
-
-
-
-
-
-	elseif tag == TAG_ENUM.BT_START then
-		self:getParentNode():onStartGame()
-	elseif tag == TAG_ENUM.BT_USERLIST then
-		if nil == self.m_userListLayer then
-			self.m_userListLayer = g_var(UserListLayer):create()
-			self:addToRootLayer(self.m_userListLayer, TAG_ZORDER.USERLIST_ZORDER)
-		end
-		local userList = self:getDataMgr():getUserList()		
-		self.m_userListLayer:refreshList(userList)
-	elseif tag == TAG_ENUM.BT_APPLYLIST then
-		if nil == self.m_applyListLayer then
-			self.m_applyListLayer = g_var(ApplyListLayer):create(self)
-			self:addToRootLayer(self.m_applyListLayer, TAG_ZORDER.USERLIST_ZORDER)
-		end
-		local userList = self:getDataMgr():getApplyBankerUserList()		
-		self.m_applyListLayer:refreshList(userList)
-	elseif tag == TAG_ENUM.BT_BANK then
-		--银行未开通
-		if 0 == GlobalUserItem.cbInsureEnabled then
-			showToast(self,"初次使用，请先开通银行！",1)
-			return
-		end
-
-		if nil == self.m_cbGameStatus or g_var(cmd).GAME_PLAY == self.m_cbGameStatus then
-			showToast(self,"游戏过程中不能进行银行操作",1)
-			return
-		end
-
-		--房间规则
-		local rule = self:getParentNode()._roomRule
-		if rule == yl.GAME_GENRE_SCORE 
-		or rule == yl.GAME_GENRE_EDUCATE then 
-			print("练习 or 积分房")
-		end
-		if false == self:getParentNode():getFrame():OnGameAllowBankTake() then
-			--showToast(self,"不允许银行取款操作操作",1)
-			--return
-		end
-
-		if nil == self.m_bankLayer then
-			self:createBankLayer()
-		end
-		self.m_bankLayer:setVisible(true)
-		self:refreshScore()
-	elseif tag == TAG_ENUM.BT_SET then
-		local setting = g_var(SettingLayer):create(self)
-		self:addToRootLayer(setting, TAG_ZORDER.SETTING_ZORDER)
-	elseif tag == TAG_ENUM.BT_LUDAN then
-		if nil == self.m_wallBill then
-			self.m_wallBill = g_var(WallBillLayer):create(self)
-			self:addToRootLayer(self.m_wallBill, TAG_ZORDER.WALLBILL_ZORDER)
-		end
-		self.m_wallBill:refreshWallBillList()
-	elseif tag == TAG_ENUM.BT_ROBBANKER then
-		--超级抢庄
-		if g_var(cmd).SUPERBANKER_CONSUMETYPE == self.m_tabSupperRobConfig.superbankerType then
-			local str = "超级抢庄将花费 " .. self.m_tabSupperRobConfig.lSuperBankerConsume .. ",确定抢庄?"
-			local query = QueryDialog:create(str, function(ok)
-		        if ok == true then
-		            self:getParentNode():sendRobBanker()
-		        end
-		    end):setCanTouchOutside(false)
-		        :addTo(self) 
-		else
-			self:getParentNode():sendRobBanker()
-		end
-	elseif tag == TAG_ENUM.BT_CLOSEBANK then
-		if nil ~= self.m_bankLayer then
-			self.m_bankLayer:setVisible(false)
-		end
-	elseif tag == TAG_ENUM.BT_TAKESCORE then
-		self:onTakeScore()
-	elseif tag == TAG_ENUM.BT_HELP then
-		self:getParentNode():getParentNode():popHelpLayer2(122, 0, yl.ZORDER.Z_HELP_BUTTON)
+        --self:applyBanker( state )
+        self:applyBanker( 0 )
 	else
 		showToast(self,"功能尚未开放！",1)
 	end
-end
-
-function GameViewLayer:reqZhuang()
-    
 end
 
 function GameViewLayer:onJettonButtonClicked( tag, ref )
@@ -924,71 +613,21 @@ function GameViewLayer:showGameResult( bShow )
 		end
 
 		if true == bShow and true == self:getDataMgr().m_bJoin then
-			self.m_gameResultLayer:showGameResult(self:getDataMgr().m_tabGameResult)
+            local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+            local rs = self:getDataMgr().m_tabGameResult
+
+            if nil ~= cmd_gameend then
+                rs.lEndUserScore = cmd_gameend.lUserScore
+                rs.lEndUserReturnScore = cmd_gameend.lUserReturnScore
+                rs.lEndBankerScore = cmd_gameend.lBankerScore
+            end
+
+			self.m_gameResultLayer:showGameResult(rs)
 		end
 	else
 		if nil ~= self.m_gameResultLayer then
 			self.m_gameResultLayer:hideGameResult()
 		end
-	end
-end
-
-function GameViewLayer:onCheckBoxClickEvent( sender,eventType )
-	ExternalFun.playClickEffect()
-	if eventType == ccui.CheckBoxEventType.selected then
-		self.m_btnList:stopAllActions();
-		self.m_btnList:runAction(self.m_actDropIn);
-	elseif eventType == ccui.CheckBoxEventType.unselected then
-		self.m_btnList:stopAllActions();
-		self.m_btnList:runAction(self.m_actDropOut);
-	end
-end
-
-function GameViewLayer:onSitDownClick( tag, sender )
-	print("sit ==> " .. tag)
-	local useritem = self:getMeUserItem()
-	if nil == useritem then
-		return
-	end
-
-	--重复判断
-	if nil ~= self.m_nSelfSitIdx and tag == self.m_nSelfSitIdx then
-		return
-	end
-
-	if nil ~= self.m_nSelfSitIdx then --and tag ~= self.m_nSelfSitIdx  then
-		showToast(self, "当前已占 " .. self.m_nSelfSitIdx .. " 号位置,不能重复占位!", 2)
-		return
-	end	
-
-	--坐下条件限制
-	if self.m_tabSitDownConfig.occupyseatType == g_var(cmd).OCCUPYSEAT_CONSUMETYPE then --金币占座
-		if useritem.lScore < self.m_tabSitDownConfig.lOccupySeatConsume then
-			local str = "坐下需要消耗 " .. self.m_tabSitDownConfig.lOccupySeatConsume .. " 金币,金币不足!"
-			showToast(self, str, 2)
-			return
-		end
-		local str = "坐下将花费 " .. self.m_tabSitDownConfig.lOccupySeatConsume .. ",确定坐下?"
-			local query = QueryDialog:create(str, function(ok)
-		        if ok == true then
-		            self:getParentNode():sendSitDown(tag - 1, useritem.wChairID)
-		        end
-		    end):setCanTouchOutside(false)
-		        :addTo(self)
-	elseif self.m_tabSitDownConfig.occupyseatType == g_var(cmd).OCCUPYSEAT_VIPTYPE then --会员占座
-		if useritem.cbMemberOrder < self.m_tabSitDownConfig.enVipIndex then
-			local str = "坐下需要会员等级为 " .. self.m_tabSitDownConfig.enVipIndex .. " 会员等级不足!"
-			showToast(self, str, 2)
-			return
-		end
-		self:getParentNode():sendSitDown(tag - 1, self:getMeUserItem().wChairID)
-	elseif self.m_tabSitDownConfig.occupyseatType == g_var(cmd).OCCUPYSEAT_FREETYPE then --免费占座
-		if useritem.lScore < self.m_tabSitDownConfig.lOccupySeatFree then
-			local str = "免费坐下需要携带金币大于 " .. self.m_tabSitDownConfig.lOccupySeatFree .. " ,当前携带金币不足!"
-			showToast(self, str, 2)
-			return
-		end
-		self:getParentNode():sendSitDown(tag - 1, self:getMeUserItem().wChairID)
 	end
 end
 
@@ -1044,28 +683,11 @@ function GameViewLayer:onGetUserScore( item )
 end
 
 function GameViewLayer:refreshCondition(  )
-	local applyable = self:getApplyable()
-	if applyable then
-		------
-		--超级抢庄
-
-		--如果当前有超级抢庄用户且庄家不是自己
-		if (yl.INVALID_CHAIR ~= self.m_wCurrentRobApply) or (true == self:isMeChair(self.m_wBankerUser)) then
-			ExternalFun.enableBtn(self.m_btnRob, false)
-		else
-			local useritem = self:getMeUserItem()
-			--判断抢庄类型
-			if g_var(cmd).SUPERBANKER_VIPTYPE == self.m_tabSupperRobConfig.superbankerType then
-				--vip类型				
-				ExternalFun.enableBtn(self.m_btnRob, useritem.cbMemberOrder >= self.m_tabSupperRobConfig.enVipIndex)
-			elseif g_var(cmd).SUPERBANKER_CONSUMETYPE == self.m_tabSupperRobConfig.superbankerType then
-				--游戏币消耗类型(抢庄条件+抢庄消耗)
-				local condition = self.m_tabSupperRobConfig.lSuperBankerConsume + self.m_llCondition
-				ExternalFun.enableBtn(self.m_btnRob, useritem.lScore >= condition)
-			end
-		end		
+	if true == self:isMeChair(self.m_wBankerUser) then
+		ExternalFun.enableBtn(self.m_btnReqZhuang, false)
 	else
-		ExternalFun.enableBtn(self.m_btnRob, false)
+		local useritem = self:getMeUserItem()
+		ExternalFun.enableBtn(self.m_btnRob, useritem.lScore >= self.m_llBankerConsume)
 	end
 end
 
@@ -1077,9 +699,6 @@ function GameViewLayer:onGameFree( )
 
 	--上庄条件刷新
 	self:refreshCondition()
-
-	--申请按钮状态更新
-	self:refreshApplyBtnState()
 end
 
 --游戏开始
@@ -1104,9 +723,6 @@ function GameViewLayer:onGameStart( )
 	end	
 
 	math.randomseed(tostring(os.time()):reverse():sub(1, 6))
-
-	--申请按钮状态更新
-	--self:refreshApplyBtnState()
 end
 
 --游戏进行
@@ -1130,15 +746,6 @@ function GameViewLayer:reEnterStart( lUserJetton )
 		--默认选中的筹码
 		self:switchJettonBtnState(DEFAULT_BET)
 	end		
-end
-
---下注条件
-function GameViewLayer:onGetApplyBankerCondition( llCon , rob_config)
-	self.m_llCondition = llCon
-	--超级抢庄配置
-	self.m_tabSupperRobConfig = rob_config
-
-	self:refreshCondition();
 end
 
 --刷新庄家信息
@@ -1212,31 +819,6 @@ function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBank
 	end]]
 end
 
---超级抢庄申请
-function GameViewLayer:onGetSupperRobApply(  )
-	if yl.INVALID_CHAIR ~= self.m_wCurrentRobApply then
-		self.m_bSupperRobApplyed = true
-		ExternalFun.enableBtn(self.m_btnRob, false)
-	end
-	--如果是自己
-	if true == self:isMeChair(self.m_wCurrentRobApply) then
-		--普通上庄申请不可用
-		self.m_enApplyState = APPLY_STATE.kSupperApplyed
-	end
-end
-
---超级抢庄用户离开
-function GameViewLayer:onGetSupperRobLeave( wLeave )
-	if yl.INVALID_CHAIR == self.m_wCurrentRobApply then
-		--普通上庄申请不可用
-		self.m_bSupperRobApplyed = false
-
-		ExternalFun.enableBtn(self.m_btnRob, true)
-	end
-
-	--如果是自己
-end
-
 --更新用户下注
 function GameViewLayer:onGetUserBet( )
 	local data = self:getParentNode().cmd_placebet;
@@ -1247,8 +829,6 @@ function GameViewLayer:onGetUserBet( )
 	local area = data.cbJettonArea
 	local wUser = data.wChairID
 	local llScore = data.lJettonScore
-
-    print("@@@@@@@@@@ area = "..area.."   wUser = "..wUser.."   llScore = "..llScore)
 
 	local nIdx = self:getJettonIdx(llScore);
 	local str = string.format("chip_res/chip%d.png", nIdx);
@@ -1268,7 +848,7 @@ function GameViewLayer:onGetUserBet( )
 	end
 	if nil ~= sp and nil ~= btn then
 		--下注
-		--sp:setScale(0.35);
+		sp:setScale(3.0);
 		sp:setTag(wUser);
 		local name = string.format("%d", area) --ExternalFun.formatScore(data.lBetScore);
 		sp:setName(name)
@@ -1276,14 +856,8 @@ function GameViewLayer:onGetUserBet( )
 		--筹码飞行起点位置
 		--local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
         --local pos = self.m_betAreaLayout:convertToNodeSpace(self:getBetFromPos(wUser))
-		sp:setPosition(self.m_tableJettonBtn[nIdx-1]:getPosition())
-		--筹码飞行动画
-		local act = self:getBetAnimation(self:getBetRandomPos(btn), cc.CallFunc:create(function()
-			--播放下注声音
-			ExternalFun.playSoundEffect("ADD_SCORE.wav")
-		end))
-		sp:stopAllActions()
-		sp:runAction(act)
+        --sp:setPosition(self.m_tableJettonBtn[nIdx-1]:getPosition())
+		sp:setPosition(self:getBetRandomPos(btn))
         btn:addChild(sp)
 		--[[self.m_betAreaLayout:addChild(sp)
 
@@ -1294,8 +868,7 @@ function GameViewLayer:onGetUserBet( )
 			self.m_tagControl:addChild(jettonNode);
 			jettonNode:setTag(-1);
 			self.m_tableJettonNode[area] = jettonNode;
-		end
-		--self.m_tableJettonNode[area]:refreshJetton(llScore, llScore, self:isMeChair(wUser))]]
+		end]]
 		self:refreshJettonNode(btn, llScore, llScore, self:isMeChair(wUser))
 	end
 
@@ -1305,9 +878,6 @@ function GameViewLayer:onGetUserBet( )
 		
 		--调整下注按钮
 		self:adjustJettonBtn();
-
-		--显示下注信息
-		self:refreshJetton();
 	end
 end
 
@@ -1321,7 +891,7 @@ function GameViewLayer:onGetUserBetFail(  )
 	--下注玩家
 	local wUser = data.wPlaceUser;
 	--下注区域
-	local cbArea = data.cbBetArea + 1;
+	local cbArea = data.lJettonArea;
 	--下注数额
 	local llScore = data.lPlaceScore;
 
@@ -1331,21 +901,17 @@ function GameViewLayer:onGetUserBetFail(  )
 		showToast(self,str,1)
 
 		--自己下注失败
-		self.m_scoreUser = self.m_scoreUser + llScore;
-		self.m_lHaveJetton = self.m_lHaveJetton - llScore;
-		self:adjustJettonBtn();
-		self:refreshJetton()
+		self.m_scoreUser = self.m_scoreUser + llScore
+		self.m_lHaveJetton = self.m_lHaveJetton - llScore
+		self:adjustJettonBtn()
 
 		--
 		if 0 ~= self.m_lHaveJetton then
-			if nil ~= self.m_tableJettonNode[cbArea] then
-				--self.m_tableJettonNode[cbArea]:refreshJetton(-llScore, -llScore, true)
-				self:refreshJettonNode(self.m_tableJettonNode[cbArea],-llScore, -llScore, true)
-			end
-
+            local btnArea = self.m_tableJettonArea[cbArea]
+			self:refreshJettonNode(btnArea,-llScore, -llScore, true)
 			--移除界面下注元素
-			local name = string.format("%d", cbArea) --ExternalFun.formatScore(llScore);
-			self.m_betAreaLayout:removeChildByName(name)
+			local name = string.format("%d", cbArea)
+			btnArea:removeChildByName(name)
 		end
 	end
 end
@@ -1436,18 +1002,15 @@ function GameViewLayer:onGetGameEnd(  )
 
 	--不可下注
 	self:enableJetton(false)
-
-	--界面资源清理
-	--self:reSet()
 end
 
 function GameViewLayer:showCard()
     local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
 
-    self:initHandCard(self.m_lyCardUp)
-    self:initHandCard(self.m_lyCardDown)
-    self:initHandCard(self.m_lyCardLeft)
-    self:initHandCard(self.m_lyCardRight)
+    self:initHandCard(self.m_lyCardUp, 1)
+    self:initHandCard(self.m_lyCardDown, 2)
+    self:initHandCard(self.m_lyCardLeft, 3)
+    self:initHandCard(self.m_lyCardRight, 4)
 
     self.m_dealCardIdx = 0
 
@@ -1463,7 +1026,7 @@ function GameViewLayer:showCard()
     self.m_lyCardStart:runAction(act)
 end
 
-function GameViewLayer:initHandCard(node)
+function GameViewLayer:initHandCard(node, idx)
     local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
 
     node:setVisible(true)
@@ -1484,14 +1047,14 @@ function GameViewLayer:initHandCard(node)
     ndStart:setTag(5)
 
     card1:removeAllChildren()
-    local cbCardData1 = cmd_gameend.cbTableCardArray[1][1]
+    local cbCardData1 = cmd_gameend.cbTableCardArray[idx][1]
     local spCard1 = g_var(SpCard):createCard(cbCardData1)
     spCard1:setTag(1)
     spCard1:showCardBack(true)
     card1:addChild(spCard1)
 
     card2:removeAllChildren()
-    local cbCardData2 = cmd_gameend.cbTableCardArray[1][2]
+    local cbCardData2 = cmd_gameend.cbTableCardArray[idx][2]
     local spCard2 = g_var(SpCard):createCard(cbCardData2)
     spCard2:setTag(1)
     spCard2:showCardBack(true)
@@ -1524,7 +1087,6 @@ function GameViewLayer:dealCard()
     local act1 = cc.MoveTo:create(0.4, cc.p(p1X,p1Y))
 
     local callfunc = cc.CallFunc:create(function()
-        --local node = self:getParentNode()
         local card2 = node:getChildByTag(2)
         local p2X,p2Y = card2:getPosition()
         card2:setPosition(ndStart:getPosition())
@@ -1532,7 +1094,6 @@ function GameViewLayer:dealCard()
         local act2 = cc.MoveTo:create(0.4, cc.p(p2X,p2Y))
         
         local callfunc1 = cc.CallFunc:create(function()
-            --local node = self:getParentNode()
             local card2 = node:getChildByTag(2)
             card2:getChildByTag(1):showCardBack(false)
             
@@ -1588,24 +1149,14 @@ function GameViewLayer:dealCard1(seatNum)
 
     card2:runAction(act)
     hand_r:runAction(act_1)
-end
 
---申请庄家
-function GameViewLayer:onGetApplyBanker( )
-	if self:isMeChair(self:getParentNode().cmd_applybanker.wApplyUser) then
-		self.m_enApplyState = APPLY_STATE.kApplyState
-	end
+    local callfunc1 = cc.CallFunc:create(function()
+        self:showGameResult(true)
+        self:updateRecord()
+    end)
 
-	self:refreshApplyList()
-end
-
---取消申请庄家
-function GameViewLayer:onGetCancelBanker(  )
-	if self:isMeChair(self:getParentNode().cmd_cancelbanker.wCancelUser) then
-		self.m_enApplyState = APPLY_STATE.kCancelState
-	end
-	
-	self:refreshApplyList()
+    local act = cc.Sequence:create(cc.DelayTime:create(8), callfunc1)
+    self.m_lyCardStart:runAction(act)
 end
 
 --刷新列表
@@ -1620,20 +1171,6 @@ function GameViewLayer:refreshUserList(  )
 	if nil ~= self.m_userListLayer and self.m_userListLayer:isVisible() then
 		local userList = self:getDataMgr():getUserList()		
 		self.m_userListLayer:refreshList(userList)
-	end
-end
-
---刷新申请列表按钮状态
-function GameViewLayer:refreshApplyBtnState(  )
-	if nil ~= self.m_applyListLayer and self.m_applyListLayer:isVisible() then
-		self.m_applyListLayer:refreshBtnState()
-	end
-end
-
---刷新路单
-function GameViewLayer:updateWallBill()
-	if nil ~= self.m_wallBill and self.m_wallBill:isVisible() then
-		self.m_wallBill:refreshWallBillList()
 	end
 end
 
@@ -1684,58 +1221,6 @@ function GameViewLayer:onGetSitDown( index, wchair, bAni )
 		end
 	end
 end
-
---座位失败/离开
-function GameViewLayer:onGetSitDownLeave( index )
-	if index ~= g_var(cmd).SEAT_INVALID_INDEX 
-		and nil ~= index then
-		index = index + 1
-		if nil ~= self.m_tabSitDownUser[index] then
-			self.m_tabSitDownUser[index]:removeFromParent()
-			self.m_tabSitDownUser[index] = nil
-		end
-
-		if self.m_nSelfSitIdx == index then
-			self.m_nSelfSitIdx = nil
-		end
-	end
-end
-
---银行操作成功
-function GameViewLayer:onBankSuccess( )
-	local bank_success = self:getParentNode().bank_success
-	if nil == bank_success then
-		return
-	end
-	GlobalUserItem.lUserScore = bank_success.lUserScore
-	GlobalUserItem.lUserInsure = bank_success.lUserInsure
-
-	if nil ~= self.m_bankLayer and true == self.m_bankLayer:isVisible() then
-		self:refreshScore()
-	end
-
-	showToast(self, bank_success.szDescribrString, 2)
-end
-
---银行操作失败
-function GameViewLayer:onBankFailure( )
-	local bank_fail = self:getParentNode().bank_fail
-	if nil == bank_fail then
-		return
-	end
-
-	showToast(self, bank_fail.szDescribeString, 2)
-end
-
---银行资料
-function GameViewLayer:onGetBankInfo(bankinfo)
-	bankinfo.wRevenueTake = bankinfo.wRevenueTake or 10
-	if nil ~= self.m_bankLayer then
-		local str = "温馨提示:取款将扣除" .. bankinfo.wRevenueTake .. "%的手续费"
-		self.m_bankLayer.m_textTips:setString(str)
-	end
-end
-------
 ---------------------------------------------------------------------------------------
 function GameViewLayer:getParentNode( )
 	return self._scene;
@@ -1771,40 +1256,6 @@ function GameViewLayer:getChildFromRootLayer( tag )
 		return nil
 	end
 	return self.m_rootLayer:getChildByTag(tag)
-end
-
-function GameViewLayer:getApplyState(  )
-	return self.m_enApplyState
-end
-
-function GameViewLayer:getApplyCondition(  )
-	return self.m_llCondition
-end
-
---获取能否上庄
-function GameViewLayer:getApplyable(  )
-	--自己超级抢庄已申请，则不可进行普通申请
-	if APPLY_STATE.kSupperApplyed == self.m_enApplyState then
-		return false
-	end
-
-	local userItem = self:getMeUserItem();
-	if nil ~= userItem then
-		return userItem.lScore > self.m_llCondition
-	else
-		return false
-	end
-end
-
---获取能否取消上庄
-function GameViewLayer:getCancelable(  )
-	return self.m_cbGameStatus == g_var(cmd).GAME_SCENE_FREE
-end
-
---下注区域闪烁
-function GameViewLayer:showBetAreaBlink(  )
-	local blinkArea = self:getDataMgr().m_tabBetArea
-	self:jettonAreaBlink(blinkArea)
 end
 
 function GameViewLayer:getDataMgr( )
@@ -1875,6 +1326,9 @@ function GameViewLayer:gameDataInit( )
 	self.m_lTmpBankerWinScore = 0
 	self.m_lBankerScore = 0
 
+    --上庄消耗金币
+    self.m_llBankerConsume = 0
+
 
 
 
@@ -1893,7 +1347,6 @@ function GameViewLayer:gameDataInit( )
 	self.m_nJettonSelect = -1
 	self.m_lHaveJetton = 0;
 	self.m_llMaxJetton = 0;
-	self.m_llCondition = 0;
 	yl.m_bDynamicJoin = false;
 	self.m_scoreUser = self:getMeUserItem().lScore or 0
 
@@ -1914,10 +1367,6 @@ function GameViewLayer:gameDataInit( )
 
 	--申请状态
 	self.m_enApplyState = APPLY_STATE.kCancelState
-	--超级抢庄申请
-	self.m_bSupperRobApplyed = false
-	--超级抢庄配置
-	self.m_tabSupperRobConfig = {}
 	--金币抢庄提示
 	self.m_bRobAlert = false
 
@@ -2008,68 +1457,19 @@ function GameViewLayer:randomSetJettonPos( nodeArea, jettonSp )
 	jettonSp:setPosition(cc.p(pos.x, pos.y));
 end
 
-function GameViewLayer:getBetFromPos( wchair )
-	--[[if nil == wchair then
-		return {x = 0, y = 0}
-	end
-	local winSize = cc.Director:getInstance():getWinSize()
-
-	--是否是自己
-	if self:isMeChair(wchair) then
-		local tmp = self.m_spBottom:getChildByName("player_head")
-		if nil ~= tmp then
-			local pos = cc.p(tmp:getPositionX(), tmp:getPositionY())
-			pos = self.m_spBottom:convertToWorldSpace(pos)
-			return {x = pos.x, y = pos.y}
-		else
-			return {x = winSize.width, y = 0}
-		end
-	end
-
-	local useritem = self:getDataMgr():getChairUserList()[wchair + 1]
-	if nil == useritem then
-		return {x = winSize.width, y = 0}
-	end
-
-	--是否是坐下列表
-	local idx = nil
-	for i = 1,g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
-		if (nil ~= self.m_tabSitDownUser[i]) and (wchair == self.m_tabSitDownUser[i]:getChair()) then
-			idx = i
-			break
-		end
-	end
-	if nil ~= idx then
-		local pos = cc.p(self.m_tabSitDownUser[idx]:getPositionX(), self.m_tabSitDownUser[idx]:getPositionY())
-		pos = self.m_roleSitDownLayer:convertToWorldSpace(pos)
-		return {x = pos.x, y = pos.y}
-	end
-
-	--默认位置
-	return {x = winSize.width, y = 0}]]
-end
-
-function GameViewLayer:getBetAnimation( pos, call_back )
-	local moveTo = cc.MoveTo:create(BET_ANITIME, cc.p(pos.x, pos.y))
-	if nil ~= call_back then
-		return cc.Sequence:create(cc.EaseIn:create(moveTo, 2), call_back)
-	else
-		return cc.EaseIn:create(moveTo, 2)
-	end
-end
-
 function GameViewLayer:getBetRandomPos(nodeArea)
 	if nil == nodeArea then
 		return {x = 0, y = 0}
 	end
 
-	local nodeSize = cc.size(nodeArea:getContentSize().width - 80, nodeArea:getContentSize().height - 80);
-	local xOffset = math.random()
-	local yOffset = math.random()
+	local nodeSize = cc.size(nodeArea:getContentSize().width - 100, nodeArea:getContentSize().height - 100);
+	local xOffset = math.random(0, nodeSize.width)
+	local yOffset = math.random(0, nodeSize.height)
 
-	local posX = nodeArea:getPositionX() - nodeArea:getAnchorPoint().x * nodeSize.width
-	local posY = nodeArea:getPositionY() - nodeArea:getAnchorPoint().y * nodeSize.height
-	return cc.p(xOffset * nodeSize.width + posX, yOffset * nodeSize.height + posY)
+	local posX = xOffset + 50--nodeArea:getPositionX() - nodeArea:getAnchorPoint().x * nodeSize.width
+	local posY = yOffset + 50--nodeArea:getPositionY() - nodeArea:getAnchorPoint().y * nodeSize.height
+	--return cc.p(xOffset * nodeSize.width + posX, yOffset * nodeSize.height + posY)
+    return cc.p(posX, posY)
 end
 
 ------
@@ -2096,41 +1496,7 @@ function GameViewLayer:createClockNode()
 end
 
 function GameViewLayer:updateClock(tag, left)
-	--local str = string.format("%02d", left)
-	--self.m_lyTimer.m_lbNum:setString(str)
 
-	--[[if g_var(cmd).IDI_PLACE_JETTON == tag then
-		if 8 == left then
-			if self:getDataMgr().m_bJoin then
-				if nil ~= self.m_cardLayer then
-					self.m_cardLayer:showLayer(false)
-				end
-			end					
-			--筹码动画
-			self:betAnimation()			
-		elseif 4 == left then
-			if true == self:getDataMgr().m_bJoin then
-				self:showGameResult(true)
-			end	
-			--更新路单列表
-			self:updateWallBill()		
-		elseif 3 == left then
-			if nil ~= self.m_cardLayer then
-				self.m_cardLayer:showLayer(false)
-			end
-		elseif 0 == left then
-			self:showGameResult(false)	
-
-			--闪烁停止
-			self:jettonAreaBlinkClean()
-		end
-    elseif g_var(cmd).IDI_FREE == tag then
-
-    elseif g_var(cmd).IDI_DISPATCH_CARD == tag then
-
-    elseif g_var(cmd).IDI_ANDROID_BET == tag then
-        
-	end]]
 end
 
 function GameViewLayer:showTimerTip(tag,time)
@@ -2169,13 +1535,15 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 	node.m_llAreaTotal = node.m_llAreaTotal + total
 	node:setVisible( node.m_llAreaTotal > 0)
 
+    local tag = node:getTag()
+
 	--自己下注数额
 	local str = ExternalFun.numberThousands(node.m_llMyTotal);
 	if string.len(str) > 15 then
 		str = string.sub(str,1,12)
 		str = str .. "...";
 	end
-    self.m_tableJettonNum[1]:setString(str)
+    self.m_tableJettonNum[tag]:setString(str)
 	--node.m_textMyJetton:setString(str);
 
 	--总下注
@@ -2192,154 +1560,12 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 			str = str .. "...";
 		end
 	end
-    self.m_tableJettonScore[1]:setString(str)
-	--node.m_textTotalJetton:setString(str);
-
-	--[[调整背景宽度
-	local mySize = node.m_textMyJetton:getContentSize();
-	local totalSize = node.m_textTotalJetton:getContentSize();
-	local total = cc.size(mySize.width + totalSize.width + 18, 32);
-	node.m_imageBg:setContentSize(total);
-
-	node.m_textTotalJetton:setPositionX(6 + mySize.width);]]
-end
-
-function GameViewLayer:reSetJettonNode(node)
-	node:setVisible(false);
-
-	node.m_textMyJetton:setString("")
-	node.m_textTotalJetton:setString("")
-	node.m_imageBg:setContentSize(cc.size(34, 32))
-
-	node.m_llMyTotal = 0
-	node.m_llAreaTotal = 0
+    self.m_tableJettonScore[tag]:setString(str)
 end
 ------
 
 ------
 --银行节点
-function GameViewLayer:createBankLayer()
-	self.m_bankLayer = cc.Node:create()
-	self:addToRootLayer(self.m_bankLayer, TAG_ZORDER.BANK_ZORDER)
-	self.m_bankLayer:setTag(TAG_ENUM.BANK_LAYER)
-
-	--加载csb资源
-	local csbNode = ExternalFun.loadCSB("bank/BankLayer.csb", self.m_bankLayer)
-	local sp_bg = csbNode:getChildByName("sp_bg")
-
-	------
-	--按钮事件
-	local function btnEvent( sender, eventType )
-		if eventType == ccui.TouchEventType.ended then
-			self:onButtonClickedEvent(sender:getTag(), sender)
-		end
-	end	
-	--关闭按钮
-	local btn = sp_bg:getChildByName("close_btn")
-	btn:setTag(TAG_ENUM.BT_CLOSEBANK)
-	btn:addTouchEventListener(btnEvent)
-
-	--取款按钮
-	btn = sp_bg:getChildByName("out_btn")
-	btn:setTag(TAG_ENUM.BT_TAKESCORE)
-	btn:addTouchEventListener(btnEvent)
-	------
-
-	------
-	--编辑框
-	--取款金额
-	local tmp = sp_bg:getChildByName("count_temp")
-	local editbox = ccui.EditBox:create(tmp:getContentSize(),"blank.png",UI_TEX_TYPE_PLIST)
-		:setPosition(tmp:getPosition())
-		:setFontName("fonts/round_body.ttf")
-		:setPlaceholderFontName("fonts/round_body.ttf")
-		:setFontSize(24)
-		:setPlaceholderFontSize(24)
-		:setMaxLength(32)
-		:setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE)
-		:setPlaceHolder("请输入取款金额")
-	sp_bg:addChild(editbox)
-	self.m_bankLayer.m_editNumber = editbox
-	tmp:removeFromParent()
-
-	--取款密码
-	tmp = sp_bg:getChildByName("passwd_temp")
-	editbox = ccui.EditBox:create(tmp:getContentSize(),"blank.png",UI_TEX_TYPE_PLIST)
-		:setPosition(tmp:getPosition())
-		:setFontName("fonts/round_body.ttf")
-		:setPlaceholderFontName("fonts/round_body.ttf")
-		:setFontSize(24)
-		:setPlaceholderFontSize(24)
-		:setMaxLength(32)
-		:setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD)
-		:setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE)
-		:setPlaceHolder("请输入取款密码")
-	sp_bg:addChild(editbox)
-	self.m_bankLayer.m_editPasswd = editbox
-	tmp:removeFromParent()
-	------
-
-	--当前游戏币
-	self.m_bankLayer.m_textCurrent = sp_bg:getChildByName("text_current")
-
-	--银行游戏币
-	self.m_bankLayer.m_textBank = sp_bg:getChildByName("text_bank")
-
-	--取款费率
-	self.m_bankLayer.m_textTips = sp_bg:getChildByName("text_tips")
-	self:getParentNode():sendRequestBankInfo()
-end
-
---取款
-function GameViewLayer:onTakeScore()
-	--参数判断
-	local szScore = string.gsub(self.m_bankLayer.m_editNumber:getText(),"([^0-9])","")
-	local szPass = self.m_bankLayer.m_editPasswd:getText()
-
-	if #szScore < 1 then 
-		showToast(self,"请输入操作金额！",2)
-		return
-	end
-
-	local lOperateScore = tonumber(szScore)
-	if lOperateScore<1 then
-		showToast(self,"请输入正确金额！",2)
-		return
-	end
-
-	if #szPass < 1 then 
-		showToast(self,"请输入银行密码！",2)
-		return
-	end
-	if #szPass <6 then
-		showToast(self,"密码必须大于6个字符，请重新输入！",2)
-		return
-	end
-
-	self:showPopWait()	
-	self:getParentNode():sendTakeScore(szScore,szPass)
-end
-
---刷新金币
-function GameViewLayer:refreshScore(  )
-	--携带游戏币
-	local str = ExternalFun.numberThousands(GlobalUserItem.lUserScore)
-	if string.len(str) > 19 then
-		str = string.sub(str, 1, 19)
-	end
-	self.m_bankLayer.m_textCurrent:setString(str)
-
-	--银行存款
-	str = ExternalFun.numberThousands(GlobalUserItem.lUserInsure)
-	if string.len(str) > 19 then
-		str = string.sub(str, 1, 19)
-	end
-	self.m_bankLayer.m_textBank:setString(ExternalFun.numberThousands(GlobalUserItem.lUserInsure))
-
-	self.m_bankLayer.m_editNumber:setText("")
-	self.m_bankLayer.m_editPasswd:setText("")
-end
-
 function GameViewLayer:SetGameHistory( bWinShunMen, bWinDaoMen, bWinDuiMen )
     local lastIdx = self.m_nRecordLast
     

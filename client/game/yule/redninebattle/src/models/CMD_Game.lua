@@ -237,7 +237,7 @@ cmd.CMD_S_StatusPlay =
     {k = "lAreaLimitScore", t = "score"},                       --区域限制
 
 	--扑克信息
-    {k = "cbTableCardArray", t = "byte", l = {4,2}},            --桌面扑克
+    {k = "cbTableCardArray", t = "byte", l = {2,2,2,2}},        --桌面扑克
 
 	--庄家信息
     {k = "wBankerUser", t = "word"},                            --当前庄家
@@ -301,7 +301,7 @@ cmd.CMD_S_GameEnd =
     {k = "cbTimeLeave", t = "byte"},                             --剩余时间
 
 	--扑克信息
-    {k = "cbTableCardArray", t = "byte", l = {4,2}},            --桌面扑克
+    {k = "cbTableCardArray", t = "byte", l = {2,2,2,2}},        --桌面扑克
     {k = "cbLeftCardCount", t = "byte"},                        --扑克数目
     {k = "bcFirstCard", t = "byte"},
  
@@ -322,7 +322,7 @@ cmd.CMD_S_GameEnd =
 --游戏作弊
 cmd.CMD_S_Cheat =
 {
-    {k = "cbTableCardArray", t = "byte", l = {4,2}},            --桌面扑克
+    {k = "cbTableCardArray", t = "byte", l = {2,2,2,2}},        --桌面扑克
 }
 
 --------------------------------------------------------------------------
