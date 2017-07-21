@@ -147,13 +147,6 @@ function GameLayer:sendUserBet( cbArea, lScore )
     self:SendData(g_var(cmd).SUB_C_PLACE_JETTON, cmddata)
 end
 
---超级抢庄
-function GameLayer:sendRobBanker(  )
-    local cmddata = CCmd_Data:create(0)
-
-    self:SendData(g_var(cmd).SUB_C_SUPERROB_BANKER, cmddata)
-end
-
 --申请上庄
 function GameLayer:sendApplyBanker(  )
     local cmddata = CCmd_Data:create(0)
@@ -166,15 +159,6 @@ function GameLayer:sendCancelApply(  )
     self:SendData(g_var(cmd).SUB_C_CANCEL_BANKER, cmddata)
 end
 
---申请坐下
-function GameLayer:sendSitDown( index, wchair )
-    local cmddata = ExternalFun.create_netdata(g_var(cmd).CMD_C_OccupySeat)
-    cmddata:pushword(wchair)
-    cmddata:pushbyte(index)
-
-    self:SendData(g_var(cmd).SUB_C_OCCUPYSEAT, cmddata)
-end
-
 --申请取消占位
 function GameLayer:sendCancelOccupy(  )
     if nil ~= self._gameView.m_nSelfSitIdx then 
@@ -183,26 +167,6 @@ function GameLayer:sendCancelOccupy(  )
     end 
 end
 
---申请取款
-function GameLayer:sendTakeScore( lScore,szPassword )
-    local cmddata = ExternalFun.create_netdata(g_var(game_cmd).CMD_GR_C_TakeScoreRequest)
-    cmddata:setcmdinfo(g_var(game_cmd).MDM_GR_INSURE, g_var(game_cmd).SUB_GR_TAKE_SCORE_REQUEST)
-    cmddata:pushbyte(g_var(game_cmd).SUB_GR_TAKE_SCORE_REQUEST)
-    cmddata:pushscore(lScore)
-    cmddata:pushstring(md5(szPassword),yl.LEN_PASSWORD)
-
-    self:sendNetData(cmddata)
-end
-
---请求银行信息
-function GameLayer:sendRequestBankInfo()
-    local cmddata = CCmd_Data:create(67)
-    cmddata:setcmdinfo(g_var(game_cmd).MDM_GR_INSURE,g_var(game_cmd).SUB_GR_QUERY_INSURE_INFO)
-    cmddata:pushbyte(g_var(game_cmd).SUB_GR_QUERY_INSURE_INFO)
-    cmddata:pushstring(md5(GlobalUserItem.szPassword),yl.LEN_PASSWORD)
-
-    self:sendNetData(cmddata)
-end
 ------网络接收
 
 -- 场景信息
