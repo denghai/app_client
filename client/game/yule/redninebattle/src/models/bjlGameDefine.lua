@@ -24,8 +24,6 @@ function bjlDefine.getEmptyApplyInfo(  )
         m_bCurrent = false,
         --编号
         m_llIdx = 0,
-        --是否超级抢庄
-        m_bRob = false
     }
 end
 

@@ -179,6 +179,7 @@
         </Folder>
         <Project Name="GameResult.csd" Type="Layer" />
         <Project Name="MainScene.csd" Type="Scene" />
+        <Project Name="UserItem.csd" Type="Node" />
         <Project Name="UserLst.csd" Type="Layer" />
       </RootFolder>
     </Group>

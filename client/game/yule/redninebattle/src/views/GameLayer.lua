@@ -193,7 +193,7 @@ function GameLayer:onEventGameSceneFree( dataBuffer )
 
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusFree, dataBuffer)
 
-    self._gameView.m_llBankerConsume = lApplyBankerCondition
+    self._gameView.m_llBankerConsume = cmd_table.lApplyBankerCondition
     --[[yl.m_bDynamicJoin = false
     local subRob = cmd_table.wCurSuperRobBankerUser
     --当前超级抢庄用户
@@ -201,7 +201,7 @@ function GameLayer:onEventGameSceneFree( dataBuffer )
     self.m_wCurrentRobApply = subRob
 
     --游戏倒计时
-    self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEFREE_COUNTDOWN, cmd_table.cbTimeLeave)
+    self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEFREE_COUNTDOWN, cmd_table.cbTimeLeave)]]
 
     self.m_bEnableSystemBanker = cmd_table.bEnableSysBanker
     --刷新庄家信息
@@ -211,13 +211,13 @@ function GameLayer:onEventGameSceneFree( dataBuffer )
     self._dataModle:removeApplyUser(cmd_table.wBankerUser)
 
     --获取到占位信息
-    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])]]
+    --self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])
 end
 
 function GameLayer:onEventGameSceneJetton( dataBuffer )
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusPlay, dataBuffer);
     
-    self._gameView.m_llBankerConsume = lApplyBankerCondition
+    self._gameView.m_llBankerConsume = cmd_table.lApplyBankerCondition
     --[[yl.m_bDynamicJoin = false
     local suRob = cmd_table.wCurSuperRobBankerUser
     --当前超级抢庄用户
@@ -234,16 +234,16 @@ function GameLayer:onEventGameSceneJetton( dataBuffer )
     --[[--界面下注信息
     local lScore = 0;
     local ll = 0;
-    for i=1,g_var(cmd).AREA_MAX do
+    for i=1,(g_var(cmd).AREA_COUNT+1) do
         --界面已下注
-        ll = cmd_table.lAllBet[1][i];
+        ll = cmd_table.lAllJettonScore[1][i];
         self._gameView:reEnterGameBet(i, ll);
 
         --玩家下注
-        ll = cmd_table.lPlayBet[1][i];
+        ll = cmd_table.lUserJettonScore[1][i];
         self._gameView:reEnterUserBet(i, ll);
         lScore = lScore + ll;
-    end
+    end]]
 
     self.m_bEnableSystemBanker = cmd_table.bEnableSysBanker
     --刷新庄家信息
@@ -253,22 +253,22 @@ function GameLayer:onEventGameSceneJetton( dataBuffer )
     self._dataModle:removeApplyUser(cmd_table.wBankerUser)
 
     --游戏开始
-    self._gameView:reEnterStart(lScore);
+    ------------self._gameView:reEnterStart(lScore);
 
     --获取到占位信息
-    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])]]
+    --self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])
 end
 
 function GameLayer:onEventGameSceneEnd( dataBuffer )
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_StatusPlay, dataBuffer)
 
 
-    self._gameView.m_llBankerConsume = lApplyBankerCondition
+    self._gameView.m_llBankerConsume = cmd_table.lApplyBankerCondition
 
-    --[[--保存游戏结果
+    --保存游戏结果
     self._dataModle.m_tabGameEndCmd = cmd_table
 
-    local suRob = cmd_table.wCurSuperRobBankerUser
+    --[[local suRob = cmd_table.wCurSuperRobBankerUser
     --当前超级抢庄用户
     self._gameView.m_wCurrentRobApply = suRob
     self.m_wCurrentRobApply = suRob
@@ -283,17 +283,17 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
     --[[--界面下注信息
     local ll = 0;
     local lScore = 0;
-    for i=1,g_var(cmd).AREA_MAX do
+    for i=1,(g_var(cmd).AREA_COUNT+1) do
         --界面已下注
-        ll = cmd_table.lAllBet[1][i]        
+        ll = cmd_table.lAllJettonScore[1][i]        
         self._gameView:reEnterGameBet(i, ll)
 
         --玩家下注
-        ll = cmd_table.lPlayBet[1][i]        
+        ll = cmd_table.lUserJettonScore[1][i]        
         self._gameView:reEnterUserBet(i, ll)
         lScore = lScore + ll
     end
-    self._gameView.m_lHaveJetton = lScore
+    self._gameView.m_lHaveJetton = lScore]]
 
     self.m_bEnableSystemBanker = cmd_table.bEnableSysBanker
     --刷新庄家信息
@@ -302,7 +302,7 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
     --从申请列表移除
     self._dataModle:removeApplyUser(cmd_table.wBankerUser)
 
-    --设置游戏结果
+    --[[--设置游戏结果
     local res = bjlDefine.getEmptyGameResult()
     res.m_llTotal = cmd_table.lPlayAllScore
     res.m_pAreaScore = cmd_table.lPlayScore[1]
@@ -310,7 +310,7 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
     local bJoin = false
     local nWinCount = 0
     local nLoseCount = 0
-    for i = 1, g_var(cmd).AREA_MAX do
+    for i = 1, (g_var(cmd).AREA_COUNT+1) do
         if cmd_table.lPlayScore[1][i] > 0 then
             bJoin = true
             nWinCount = nWinCount + 1
@@ -319,7 +319,7 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
             nLoseCount = nLoseCount + 1
         end
     end
-    self._dataModle.m_bJoin = bJoin
+    --self._dataModle.m_bJoin = bJoin
 
     --成绩
     self._dataModle.m_llTotalScore = cmd_table.lPlayAllScore
@@ -332,12 +332,12 @@ function GameLayer:onEventGameSceneEnd( dataBuffer )
     end
     for i=1,cmd_table.cbCardCount[1][2] do
         tabRes.m_masterCards[i] = cmd_table.cbTableCardArray[2][i]
-    end
+    end]]
     
     self._gameView:onGetGameCard(tabRes, cmd_table.cbTimeLeave > 15, cmd_table.cbTimeLeave)
 
     --获取到占位信息
-    self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])]]
+    --self._gameView:onGetSitDownInfo(cmd_table.occupyseatConfig, cmd_table.wOccupySeatChairID[1])
 end
 
 -- 游戏消息
@@ -497,6 +497,8 @@ function GameLayer:onSubGameEnd( dataBuffer )
     --保存游戏结果
     self._dataModle.m_tabGameEndCmd = cmd_table
 
+    self:SetBankerInfo(cmd_table.wCurrentBanker, cmd_table.lBankerScore)
+
     --[[--游戏倒计时
     --self._gameView:startCountDown(cmd_table.cbTimeLeave, g_var(cmd).kGAMEOVER_COUNTDOWN);
     --self:SetGameClock(self:GetMeChairID(), g_var(cmd).kGAMEOVER_COUNTDOWN, cmd_table.cbTimeLeave)
@@ -509,7 +511,7 @@ function GameLayer:onSubGameEnd( dataBuffer )
     local bJoin = false
     local nWinCount = 0
     local nLoseCount = 0
-    for i = 1, g_var(cmd).AREA_MAX do
+    for i = 1, (g_var(cmd).AREA_COUNT+1) do
         if cmd_table.lPlayScore[1][i] > 0 then
             bJoin = true
             nWinCount = nWinCount + 1
@@ -542,13 +544,9 @@ end
 function GameLayer:onSubApplyBanker( dataBuffer )
     local cmd_table = ExternalFun.read_netdata(g_var(cmd).CMD_S_ApplyBanker,dataBuffer);
     self.cmd_applybanker = cmd_table;
-    self._dataModle:addApplyUser(cmd_table.wApplyUser, self.m_wCurrentRobApply == cmd_table.wApplyUser ) 
+    self._dataModle:addApplyUser(cmd_table.wApplyUser) 
 
-    if self:isMeChair(self:getParentNode().cmd_applybanker.wApplyUser) then
-		self.m_enApplyState = APPLY_STATE.kApplyState
-	end
-
-	self:refreshApplyList()
+    self._gameView:onGetApplyBanker()
     print("apply banker ==>" .. cmd_table.wApplyUser)
 end
 
@@ -612,18 +610,10 @@ function GameLayer:onSubCancelBanker( dataBuffer )
     print("cancel banker")
     self.cmd_cancelbanker = ExternalFun.read_netdata(g_var(cmd).CMD_S_CancelBanker, dataBuffer)
 
-    if self.cmd_cancelbanker.wCancelUser == self.m_wCurrentRobApply then
-        self._gameView.m_wCurrentRobApply = yl.INVALID_CHAIR
-        self.m_wCurrentRobApply = yl.INVALID_CHAIR
-    end
     --从申请列表移除
     self._dataModle:removeApplyUser(self.cmd_cancelbanker.wCancelUser)
 
-    if self:isMeChair(self:getParentNode().cmd_cancelbanker.wCancelUser) then
-		self.m_enApplyState = APPLY_STATE.kCancelState
-	end
-	
-	self:refreshApplyList()
+    self._gameView:onGetCancelBanker()
 end
 
 --管理员命令

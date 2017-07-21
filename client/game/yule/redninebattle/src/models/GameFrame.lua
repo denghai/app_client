@@ -42,7 +42,6 @@ function GameFrame:ctor()
 
     --游戏结果
     self.m_tabGameResult = {}
-    self.m_bJoin = false
     self.m_tabBetArea = {}
     self.m_tabGameEndCmd = {}
 end
@@ -171,28 +170,22 @@ end
 --庄家管理
 
 --添加庄家申请用户
-function GameFrame:addApplyUser( wchair,bRob )
+function GameFrame:addApplyUser( wchair)
     local useritem = self.m_tableChairUserList[wchair + 1]
     if nil == useritem then
         return
     end
-    bRob = bRob or false
 
     local info = bjlDefine.getEmptyApplyInfo()
     
     info.m_userItem = useritem
     info.m_bCurrent = useritem.dwUserID == GlobalUserItem.dwUserID
-    if bRob then
-        --超级抢庄排最前
-        info.m_llIdx = -1
-    else
-        self.m_llApplyCount = self.m_llApplyCount + 1
-        if self.m_llApplyCount > yl.MAX_INT then
-            self.m_llApplyCount = 0
-        end
-        info.m_llIdx = self.m_llApplyCount
-    end    
-    info.m_bRob = bRob
+
+    self.m_llApplyCount = self.m_llApplyCount + 1
+    if self.m_llApplyCount > yl.MAX_INT then
+        self.m_llApplyCount = 0
+    end
+    info.m_llIdx = self.m_llApplyCount
 
     local user = self:getApplyUser(wchair)
     if nil ~= user then
@@ -215,19 +208,6 @@ function GameFrame:getApplyUser( wchair )
     return user
 end
 
---超级抢庄用户
---rob[抢庄用户] cur[当前用户]
-function GameFrame:updateSupperRobBanker( rob,cur )
-    if rob ~= cur then
-        self:updateSupperRobState(cur, false)
-    end
-    if nil == self:updateSupperRobState(rob, true) then
-        --添加
-        self:addApplyUser(rob, true)
-    end
-    self:sortList()
-end
-
 --移除庄家申请用户
 function GameFrame:removeApplyUser( wchair )
     local removeIdx = nil
@@ -243,21 +223,6 @@ function GameFrame:removeApplyUser( wchair )
     end
 
     self:sortList()
-end
-
---更新超级抢庄用户状态
-function GameFrame:updateSupperRobState( wchair, state )
-    local user = nil
-    for k,v in pairs(self.m_tableApplyList) do
-        if v.m_userItem.wChairID == wchair then
-             --超级抢庄排最前
-            v.m_llIdx = -1
-            v.m_bRob = state
-            user = v
-            break
-        end
-    end
-    return user
 end
 
 --获取申请庄家列表

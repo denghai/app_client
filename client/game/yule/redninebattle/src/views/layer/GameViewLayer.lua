@@ -18,10 +18,8 @@ local QueryDialog   = require("app.views.layer.other.QueryDialog")
 
 --utils
 --
-local LyCard = module_pre .. ".views.layer.ViewCard"
-local LyDeskChips = module_pre .. ".views.layer.DeskChips"
-local LyPlayer = module_pre .. ".views.layer.GameResult"
-local LySetting = module_pre .. ".views.layer.UserLst"
+local LyGameResult = module_pre .. ".views.layer.GameResult"
+local LyApplyList = module_pre .. ".views.layer.ApplyListLayer"
 local SpCard = module_pre .. ".views.layer.CardSprite"
 --
 
@@ -31,7 +29,8 @@ local enumTable =
     "BT_AUDIO",
     "BT_HELP",
 	"BT_EXIT",
-    "BT_REQZHUANG",
+    "BT_REQBANKER",
+    
 
 	"BT_START",
 	"BT_LUDAN",
@@ -39,8 +38,8 @@ local enumTable =
 	"BT_SET",
 	"BT_ROBBANKER",
 	"BT_APPLYBANKER",
-	"BT_USERLIST",
 	"BT_APPLYLIST",
+    "BT_USERLIST",
 	"BANK_LAYER",
 	"BT_CLOSEBANK",
 	"BT_TAKESCORE",
@@ -49,18 +48,8 @@ local TAG_ENUM = ExternalFun.declarEnumWithTable(GameViewLayer.TAG_START, enumTa
 
 local zorders = 
 {
-	"CLOCK_ZORDER",
-	"SITDOWN_ZORDER",
-	"DROPDOWN_ZORDER",
-	"DROPDOWN_CHECK_ZORDER",
-	"GAMECARD_ZORDER",
-	"SETTING_ZORDER",
-	"ROLEINFO_ZORDER",
-	"BANK_ZORDER",
-	"USERLIST_ZORDER",
-	"WALLBILL_ZORDER",
-	"GAMERS_ZORDER",	
-	"ENDCLOCK_ZORDER"
+	"GAMERS_ZORDER",
+    "USERLIST_ZORDER"
 }
 local TAG_ZORDER = ExternalFun.declarEnumWithTable(1, zorders);
 
@@ -108,6 +97,9 @@ function GameViewLayer:loadRes(  )
     for i=1,9 do
         cc.Director:getInstance():getTextureCache():addImage("chip_res/chip"..i..".png");
     end
+
+    cc.Director:getInstance():getTextureCache():addImage("res/BT_APPLY_BANKER.png");
+    cc.Director:getInstance():getTextureCache():addImage("res/BT_CANCEL_APPLY.png");
 end
 
 ---------------------------------------------------------------------------------------
@@ -127,7 +119,6 @@ function GameViewLayer:initCsbRes(  )
     --时钟
     self.m_lyTimer = csbNode:getChildByName("timer")
     self:initTimer()
-    --self:createClockNode()
 
     --玩家信息
     self.m_lyUserInfo = csbNode:getChildByName("bottom")
@@ -243,12 +234,7 @@ function GameViewLayer:initBtn( csbNode )
 
     self:refreshMusicBtnState();
 
-    --[[--申请上庄
-    self.m_btnReqZhuang = csbNode:getChildByName("btn_reqZhuang");
-    self.m_btnReqZhuang:setTag(TAG_ENUM.BT_REQZHUANG);
-    self.m_btnReqZhuang:addTouchEventListener(btnEvent);
-
-	local btnlist_check = csbNode:getChildByName("btnlist_check");
+	--[[local btnlist_check = csbNode:getChildByName("btnlist_check");
 	btnlist_check:addEventListener(checkEvent);
 	btnlist_check:setSelected(false);
 	btnlist_check:setLocalZOrder(TAG_ZORDER.DROPDOWN_CHECK_ZORDER)
@@ -351,7 +337,7 @@ function GameViewLayer:initBankerInfo( )
 	end	
 
     self.m_btnReqBanker = banker_layout:getChildByName("btn_reqZhuang")
-    self.m_btnReqBanker:setTag(TAG_ENUM.BT_REQZHUANG);
+    self.m_btnReqBanker:setTag(TAG_ENUM.BT_REQBANKER);
 	self.m_btnReqBanker:addTouchEventListener(btnEvent)
 
 	self:reSetBankerInfo()
@@ -567,9 +553,14 @@ function GameViewLayer:onButtonClickedEvent(tag,ref)
 	    end
     elseif tag == TAG_ENUM.BT_HELP then
         self:getParentNode():getParentNode():popHelpLayer2(122, 0, yl.ZORDER.Z_HELP_BUTTON)
-    elseif tag == TAG_ENUM.BT_REQZHUANG then
+    elseif tag == TAG_ENUM.BT_REQBANKER then
         --self:applyBanker( state )
-        self:applyBanker( 0 )
+		if nil == self.m_applyListLayer then
+			self.m_applyListLayer = g_var(LyApplyList):create(self)
+			self:addToRootLayer(self.m_applyListLayer, TAG_ZORDER.USERLIST_ZORDER)
+		end
+		local userList = self:getDataMgr():getApplyBankerUserList()		
+		self.m_applyListLayer:refreshList(userList)
 	else
 		showToast(self,"功能尚未开放！",1)
 	end
@@ -608,22 +599,20 @@ end
 function GameViewLayer:showGameResult( bShow )
 	if true == bShow then
 		if nil == self.m_gameResultLayer then
-			self.m_gameResultLayer = g_var(GameResultLayer):create()
+			self.m_gameResultLayer = g_var(LyGameResult):create()
 			self:addToRootLayer(self.m_gameResultLayer, TAG_ZORDER.GAMERS_ZORDER)
 		end
 
-		if true == bShow and true == self:getDataMgr().m_bJoin then
-            local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
-            local rs = self:getDataMgr().m_tabGameResult
+        local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+        local rs = self:getDataMgr().m_tabGameResult
 
-            if nil ~= cmd_gameend then
-                rs.lEndUserScore = cmd_gameend.lUserScore
-                rs.lEndUserReturnScore = cmd_gameend.lUserReturnScore
-                rs.lEndBankerScore = cmd_gameend.lBankerScore
-            end
+        if nil ~= cmd_gameend then
+            rs.lEndUserScore = cmd_gameend.lUserScore
+            rs.lEndUserReturnScore = cmd_gameend.lUserReturnScore
+            rs.lEndBankerScore = cmd_gameend.lBankerScore
+        end
 
-			self.m_gameResultLayer:showGameResult(rs)
-		end
+		self.m_gameResultLayer:showGameResult(rs)
 	else
 		if nil ~= self.m_gameResultLayer then
 			self.m_gameResultLayer:hideGameResult()
@@ -678,17 +667,23 @@ function GameViewLayer:onGetUserScore( item )
 		if string.len(str) > 11 then
 			str = string.sub(str, 1, 9) .. "...";
 		end
-		self.m_textBankerCoin:setString("金币:" .. str);
+		self.m_textBankerCoint:setString("金币:" .. str);
     end]]
 end
 
 function GameViewLayer:refreshCondition(  )
-	if true == self:isMeChair(self.m_wBankerUser) then
-		ExternalFun.enableBtn(self.m_btnReqZhuang, false)
-	else
+    if true == self:isMeChair(self.m_wBankerUser) then
+        self.m_btnReqBanker:loadTextureNormal("res/BT_CANCEL_APPLY.png")
+        self.m_btnReqBanker:loadTexturePressed("res/BT_CANCEL_APPLY.png")
+        self.m_btnReqBanker:loadTextureDisabled("res/BT_CANCEL_APPLY.png")
+    else
+        self.m_btnReqBanker:loadTextureNormal("res/BT_APPLY_BANKER.png")
+        self.m_btnReqBanker:loadTexturePressed("res/BT_APPLY_BANKER.png")
+        self.m_btnReqBanker:loadTextureDisabled("res/BT_APPLY_BANKER.png")
+	    
 		local useritem = self:getMeUserItem()
-		ExternalFun.enableBtn(self.m_btnRob, useritem.lScore >= self.m_llBankerConsume)
-	end
+		ExternalFun.enableBtn(self.m_btnReqBanker, useritem.lScore >= self.m_llBankerConsume)
+    end
 end
 
 --游戏free
@@ -752,7 +747,7 @@ end
 function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBanker )
 	print("更新庄家数据:" .. wBankerUser .. "; coin =>" .. lBankerScore)
 
-	--[[--上一个庄家是自己，且当前庄家不是自己，标记自己的状态
+	--上一个庄家是自己，且当前庄家不是自己，标记自己的状态
 	if self.m_wBankerUser ~= wBankerUser and self:isMeChair(self.m_wBankerUser) then
 		self.m_enApplyState = APPLY_STATE.kCancelState
 	end
@@ -794,22 +789,18 @@ function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBank
 			end
 		end
 	end
-	self.m_clipBankerNick:setString(nickstr);
+	self.m_textBankerNickname:setString(nickstr);
 
 	--庄家金币
 	local str = string.formatNumberThousands(lBankerScore);
 	if string.len(str) > 11 then
 		str = string.sub(str, 1, 7) .. "...";
 	end
-	self.m_textBankerCoin:setString("金币:" .. str);
+	self.m_textBankerCoint:setString("金币:" .. str);
 
-	--如果是超级抢庄用户上庄
-	if wBankerUser == self.m_wCurrentRobApply then
-		self.m_wCurrentRobApply = yl.INVALID_CHAIR
-		self:refreshCondition()
-	end
+    self:refreshCondition()
 
-	--坐下用户庄家
+	--[[--坐下用户庄家
 	local chair = -1
 	for i = 1, g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
 		if nil ~= self.m_tabSitDownUser[i] then
@@ -1246,16 +1237,10 @@ function GameViewLayer:addToRootLayer( node , zorder)
 	if nil == node then
 		return
 	end
-
+    local contentSize = self.m_rootLayer:getContentSize()
+    node:setPosition(cc.p(contentSize.width/2,contentSize.height/2))
 	self.m_rootLayer:addChild(node)
 	node:setLocalZOrder(zorder)
-end
-
-function GameViewLayer:getChildFromRootLayer( tag )
-	if nil == tag then
-		return nil
-	end
-	return self.m_rootLayer:getChildByTag(tag)
 end
 
 function GameViewLayer:getDataMgr( )
@@ -1329,6 +1314,9 @@ function GameViewLayer:gameDataInit( )
     --上庄消耗金币
     self.m_llBankerConsume = 0
 
+    self.m_applyListLayer = nil
+    --申请状态
+	self.m_enApplyState = APPLY_STATE.kCancelState
 
 
 
@@ -1357,18 +1345,13 @@ function GameViewLayer:gameDataInit( )
 	--下注提示
 	self.m_tableJettonNode = {};
 
-	self.m_applyListLayer = nil
+	
 	self.m_userListLayer = nil
 	self.m_wallBill = nil
 	self.m_cardLayer = nil
 	self.m_gameResultLayer = nil
 	self.m_pClock = nil
 	self.m_bankLayer = nil
-
-	--申请状态
-	self.m_enApplyState = APPLY_STATE.kCancelState
-	--金币抢庄提示
-	self.m_bRobAlert = false
 
 	--用户坐下配置
 	self.m_tabSitDownConfig = {}
@@ -1378,9 +1361,6 @@ function GameViewLayer:gameDataInit( )
 
 	--座位列表
 	self.m_tabSitDownList = {}
-
-	--当前抢庄用户
-	self.m_wCurrentRobApply = yl.INVALID_CHAIR
 
 	--当前庄家用户
 	self.m_wBankerUser = yl.INVALID_CHAIR
@@ -1473,28 +1453,6 @@ function GameViewLayer:getBetRandomPos(nodeArea)
 end
 
 ------
---倒计时节点
-function GameViewLayer:createClockNode()
-	self.m_pClock = cc.Node:create()
-	self.m_pClock:setPosition(665,450)
-	self:addToRootLayer(self.m_pClock, TAG_ZORDER.CLOCK_ZORDER)
-
-	--加载csb资源
-	local csbNode = ExternalFun.loadCSB("game/GameClockNode.csb", self.m_pClock)
-
-	--倒计时
-	self.m_pClock.m_atlasTimer = csbNode:getChildByName("timer_atlas")
-	self.m_pClock.m_atlasTimer:setString("")
-
-	--提示
-	self.m_pClock.m_spTip = csbNode:getChildByName("sp_tip")
-
-	local frame = cc.SpriteFrameCache:getInstance():getSpriteFrame("blank.png")
-	if nil ~= frame then
-		self.m_pClock.m_spTip:setSpriteFrame(frame)
-	end
-end
-
 function GameViewLayer:updateClock(tag, left)
 
 end
@@ -1674,7 +1632,7 @@ function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore)
 	--查找椅子号
     local pUserData = nil
 	if 0 ~= dwBankerUserID then
-		for wChairID = 0,yl.MAX_CHAIR do
+		for wChairID = 1,yl.MAX_CHAIR do
             pUserData = self:getDataMgr():getChairUserList()[wChairID + 1]
 			if nil ~= pUserData and dwBankerUserID == pUserData.dwUserID then
 				wBankerUser = wChairID
@@ -1691,24 +1649,62 @@ function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore)
 		self.m_lTmpBankerWinScore = 0
 
         self.m_textBankerNickname:setString(pUserData.szNickName)
-        local str = string.formatNumberThousands(lBankerScore);
-	    if string.len(str) > 11 then
-		    str = string.sub(str, 1, 7) .. "...";
-	    end
-        self.m_textBankerCoint:setString(str)
 
 	    local head = g_var(PopupInfoHead):createClipHead(pUserData, self.m_spBankerIcon:getContentSize().width)
 	    head:setPosition(self.m_spBankerIcon:getPosition())
 	    self.m_lyBankerInfo:addChild(head)
 	    head:enableInfoPop(true)
 	end
+    if yl.INVALID_CHAIR == wBankerUser then
+        self.m_textBankerNickname:setString("系统坐庄")
+    end
+
+    local str = string.formatNumberThousands(lBankerScore);
+	if string.len(str) > 11 then
+		str = string.sub(str, 1, 7) .. "...";
+	end
+    self.m_textBankerCoint:setString(str)
 	self.m_lBankerScore = lBankerScore
+
+    self:refreshCondition()
 end
 
 --设置信息
 function GameViewLayer:SetMeMaxScore(lMeMaxScore)
 	if self.m_lMeMaxScore ~= lMeMaxScore then
 		self.m_lMeMaxScore = lMeMaxScore
+	end
+end
+
+--申请庄家
+function GameViewLayer:onGetApplyBanker( )
+	if self:isMeChair(self:getParentNode().cmd_applybanker.wApplyUser) then
+		self.m_enApplyState = APPLY_STATE.kApplyState
+	end
+
+	self:refreshApplyList()
+end
+
+--取消申请庄家
+function GameViewLayer:onGetCancelBanker(  )
+	if self:isMeChair(self:getParentNode().cmd_cancelbanker.wCancelUser) then
+		self.m_enApplyState = APPLY_STATE.kCancelState
+	end
+	
+	self:refreshApplyList()
+end
+
+function GameViewLayer:getApplyState(  )
+	return self.m_enApplyState
+end
+
+--获取能否上庄
+function GameViewLayer:getApplyable(  )
+	local userItem = self:getMeUserItem();
+	if nil ~= userItem then
+		return userItem.lScore > self.m_llBankerConsume
+	else
+		return false
 	end
 end
 ------
