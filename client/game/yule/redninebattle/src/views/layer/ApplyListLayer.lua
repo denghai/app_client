@@ -40,7 +40,7 @@ function ApplyListLayer:ctor( viewParent)
 	--用户列表
 	local m_tableView = cc.TableView:create(content:getContentSize())
 	m_tableView:setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL)
-	m_tableView:setPosition(content:getPosition())
+	m_tableView:setPosition(cc.p(0,100))--content:getPosition())
 	m_tableView:setDelegate()
 	m_tableView:registerScriptHandler(self.cellSizeForTable, cc.TABLECELL_SIZE_FOR_INDEX)
 	m_tableView:registerScriptHandler(handler(self, self.tableCellAtIndex), cc.TABLECELL_SIZE_AT_INDEX)
@@ -96,7 +96,7 @@ function ApplyListLayer:refreshList( userlist )
 		--申请条件限制
 		ExternalFun.enableBtn(self.m_btnApply, self.m_parent:getApplyable())
 	elseif state == self.m_parent._apply_state.kApplyState then
-		str1 = "res/BT_APPLY_BANKER.png"
+		str1 = "res/BT_CANCEL_APPLY.png"
 		--str2 = "btn_cancel_apply_1.png"
 
 		ExternalFun.enableBtn(self.m_btnApply, true)
@@ -110,7 +110,7 @@ function ApplyListLayer:refreshList( userlist )
 
 	print("state . " .. state)
 	local btn = self.m_btnApply
-	if nil ~= str1 and nil ~= str2 then
+	if nil ~= str1 then--and nil ~= str2 then
 		btn:loadTextureDisabled(str1)--,UI_TEX_TYPE_PLIST)
 		btn:loadTextureNormal(str1)--,UI_TEX_TYPE_PLIST)
 		btn:loadTexturePressed(str1)--2,UI_TEX_TYPE_PLIST)

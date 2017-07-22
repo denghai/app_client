@@ -38,21 +38,21 @@
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />
             <TextColor A="255" R="65" G="65" B="70" />
-            <DisabledFileData Type="Default" Path="Default/Button_Disable.png" Plist="" />
-            <PressedFileData Type="Default" Path="Default/Button_Press.png" Plist="" />
+            <DisabledFileData Type="PlistSubImage" Path="room_single_lose.png" Plist="game_res/game.plist" />
+            <PressedFileData Type="PlistSubImage" Path="room_single_lose.png" Plist="game_res/game.plist" />
             <NormalFileData Type="PlistSubImage" Path="room_single_lose.png" Plist="game_res/game.plist" />
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="content" ActionTag="-1247085817" Tag="180" IconVisible="False" LeftMargin="-241.0452" RightMargin="-238.9548" TopMargin="-204.7181" BottomMargin="-215.2819" TouchEnable="True" ClipAble="False" ColorAngle="90.0000" Scale9Width="1" Scale9Height="1" ctype="PanelObjectData">
-            <Size X="480.0000" Y="420.0000" />
+          <AbstractNodeData Name="content" ActionTag="-1247085817" Tag="180" IconVisible="False" LeftMargin="-250.0500" RightMargin="-249.9500" TopMargin="-214.7181" BottomMargin="-225.2819" TouchEnable="True" ClipAble="False" ColorAngle="90.0000" Scale9Width="1" Scale9Height="1" ctype="PanelObjectData">
+            <Size X="500.0000" Y="440.0000" />
             <AnchorPoint />
-            <Position X="-241.0452" Y="-215.2819" />
+            <Position X="-250.0500" Y="-225.2819" />
             <Scale ScaleX="1.0000" ScaleY="1.0000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition />
             <PreSize X="0.0000" Y="0.0000" />
-            <SingleColor A="255" R="150" G="200" B="255" />
+            <SingleColor A="255" R="128" G="0" B="128" />
             <FirstColor A="255" R="150" G="200" B="255" />
             <EndColor A="255" R="255" G="255" B="255" />
             <ColorVector ScaleY="1.0000" />

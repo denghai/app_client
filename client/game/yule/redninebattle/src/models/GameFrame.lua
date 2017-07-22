@@ -225,6 +225,26 @@ function GameFrame:removeApplyUser( wchair )
     self:sortList()
 end
 
+function GameFrame:removeApplyUserByNickname(szNickname)
+    local removeIdx = nil
+    local removeChairId = yl.INVALID_CHAIR
+    for k,v in pairs(self.m_tableApplyList) do
+        if v.m_userItem.szNickName == szNickname then
+            removeIdx = k
+            removeChairId = v.m_userItem.wChairID
+            break
+        end
+    end
+
+    if nil ~= removeIdx then
+        table.remove(self.m_tableApplyList,removeIdx)
+    end
+
+    self:sortList()
+
+    return removeChairId
+end
+
 --获取申请庄家列表
 function GameFrame:getApplyBankerUserList(  )
     return self.m_tableApplyList
@@ -536,4 +556,14 @@ function GameFrame.calcuteJetton( llScore, bAllJetton )
 
     return vec;
 end
+
+function GameFrame:DeduceWinner()
+    local ary = self.m_tabGameEndCmd.cbTableCardArray
+    
+    --大小比较
+	bWinShunMen = GameLogic.CompareCard(ary[1], 2, ary[2], 2)
+	bWinDuiMen = GameLogic.CompareCard(ary[1], 2, ary[3], 2)
+	bWinDaoMen = GameLogic.CompareCard(ary[1], 2, ary[4], 2)
+end
+
 return GameFrame;

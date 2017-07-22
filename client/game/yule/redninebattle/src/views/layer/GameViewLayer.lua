@@ -850,16 +850,7 @@ function GameViewLayer:onGetUserBet( )
         --sp:setPosition(self.m_tableJettonBtn[nIdx-1]:getPosition())
 		sp:setPosition(self:getBetRandomPos(btn))
         btn:addChild(sp)
-		--[[self.m_betAreaLayout:addChild(sp)
 
-		--下注信息显示
-		if nil == self.m_tableJettonNode[area] then
-			local jettonNode = self:createJettonNode()
-			jettonNode:setPosition(btn:getPosition());
-			self.m_tagControl:addChild(jettonNode);
-			jettonNode:setTag(-1);
-			self.m_tableJettonNode[area] = jettonNode;
-		end]]
 		self:refreshJettonNode(btn, llScore, llScore, self:isMeChair(wUser))
 	end
 
@@ -918,29 +909,21 @@ function GameViewLayer:reEnterGameBet( cbArea, llScore )
 	for k,v in pairs(vec) do
 		local info = v;
 		for i=1,info.m_cbCount do
-			local str = string.format("room_chip_%d_0.png", info.m_cbIdx);
-			local sp = cc.Sprite:createWithSpriteFrameName(str);
+			local str = string.format("chip_res/chip%d.png", info.m_cbIdx);
+			local sp = cc.Sprite:create(str)--WithSpriteFrameName(str);
 			if nil ~= sp then
-				sp:setScale(0.35);
+				sp:setScale(3.0)--0.35);
 				sp:setTag(yl.INVALID_CHAIR);
 				local name = string.format("%d", cbArea) --ExternalFun.formatScore(info.m_llScore);
 				sp:setName(name);
 
 				self:randomSetJettonPos(btn, sp);
-				self.m_betAreaLayout:addChild(sp);
+				btn:addChild(sp);
 			end
 		end
 	end
 
-	--下注信息显示
-	if nil == self.m_tableJettonNode[cbArea] then
-		local jettonNode = self:createJettonNode()
-		jettonNode:setPosition(btn:getPosition());
-		self.m_tagControl:addChild(jettonNode);
-		jettonNode:setTag(-1);
-		self.m_tableJettonNode[cbArea] = jettonNode;
-	end
-	self:refreshJettonNode(self.m_tableJettonNode[cbArea], llScore, llScore, false)
+	self:refreshJettonNode(btn, llScore, llScore, false)
 end
 
 --断线重连更新玩家已下注
@@ -950,15 +933,34 @@ function GameViewLayer:reEnterUserBet( cbArea, llScore )
 		return;
 	end
 
-	--下注信息显示
-	if nil == self.m_tableJettonNode[cbArea] then
-		local jettonNode = self:createJettonNode()
-		jettonNode:setPosition(btn:getPosition());
-		self.m_tagControl:addChild(jettonNode);
-		jettonNode:setTag(-1);
-		self.m_tableJettonNode[cbArea] = jettonNode;
+	self:refreshJettonNode(btn, llScore, 0, true)
+end
+
+function GameViewLayer:onEventGameSceneEnd(  )
+    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+	if nil == cmd_gameend then
+		return
 	end
-	self:refreshJettonNode(self.m_tableJettonNode[cbArea], llScore, 0, true)
+
+    self:initHandCard(self.m_lyCardUp, 1)
+    self:initHandCard(self.m_lyCardLeft, 2)
+    self:initHandCard(self.m_lyCardDown, 3)
+    self:initHandCard(self.m_lyCardRight, 4)
+
+    self:showCardEnd(self.m_lyCardUp)
+    self:showCardEnd(self.m_lyCardDown)
+    self:showCardEnd(self.m_lyCardLeft)
+    self:showCardEnd(self.m_lyCardRight)
+end
+
+function GameViewLayer:showCardEnd(node)
+    local card1 = node:getChildByTag(1)
+    card1:setVisible(true)
+    card1:getChildByTag(1):showCardBack(false)
+
+    local card2 = node:getChildByTag(2)
+    card2:setVisible(true)
+    card2:getChildByTag(1):showCardBack(false)
 end
 
 --游戏结束
@@ -999,8 +1001,8 @@ function GameViewLayer:showCard()
     local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
 
     self:initHandCard(self.m_lyCardUp, 1)
-    self:initHandCard(self.m_lyCardDown, 2)
-    self:initHandCard(self.m_lyCardLeft, 3)
+    self:initHandCard(self.m_lyCardLeft, 2)
+    self:initHandCard(self.m_lyCardDown, 3)
     self:initHandCard(self.m_lyCardRight, 4)
 
     self.m_dealCardIdx = 0
@@ -1013,7 +1015,23 @@ function GameViewLayer:showCard()
         self:dealCard1()
     end)
 
-    local act = cc.Sequence:create(cc.DelayTime:create(4), callfunc)
+    local callfunc1 = cc.CallFunc:create(function()
+        self:showGameResult(true)
+
+        --推断赢家
+	    local bWinShunMen,bWinDuiMen,bWinDaoMen = self:getDataMgr():DeduceWinner()
+	
+        --读取记录列表
+        local pServerGameRecord = {}
+        pServerGameRecord.bWinShunMen = bWinShunMen
+        pServerGameRecord.bWinDuiMen = bWinDuiMen
+        pServerGameRecord.bWinDaoMen = bWinDaoMen
+        self:SetGameHistory(pServerGameRecord.bWinShunMen, pServerGameRecord.bWinDaoMen, pServerGameRecord.bWinDuiMen)
+
+        self:updateRecord()
+    end)
+
+    local act = cc.Sequence:create(cc.DelayTime:create(4), callfunc, cc.DelayTime:create(8), callfunc1)
     self.m_lyCardStart:runAction(act)
 end
 
@@ -1140,14 +1158,6 @@ function GameViewLayer:dealCard1(seatNum)
 
     card2:runAction(act)
     hand_r:runAction(act_1)
-
-    local callfunc1 = cc.CallFunc:create(function()
-        self:showGameResult(true)
-        self:updateRecord()
-    end)
-
-    local act = cc.Sequence:create(cc.DelayTime:create(8), callfunc1)
-    self.m_lyCardStart:runAction(act)
 end
 
 --刷新列表
@@ -1338,14 +1348,6 @@ function GameViewLayer:gameDataInit( )
 	yl.m_bDynamicJoin = false;
 	self.m_scoreUser = self:getMeUserItem().lScore or 0
 
-	--下注信息
-	self.m_tableJettonBtn = {};
-	self.m_tableJettonArea = {};
-
-	--下注提示
-	self.m_tableJettonNode = {};
-
-	
 	self.m_userListLayer = nil
 	self.m_wallBill = nil
 	self.m_cardLayer = nil
@@ -1491,7 +1493,7 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 	end
 
 	node.m_llAreaTotal = node.m_llAreaTotal + total
-	node:setVisible( node.m_llAreaTotal > 0)
+	node:setVisible( true )--node.m_llAreaTotal > 0)
 
     local tag = node:getTag()
 
@@ -1503,6 +1505,8 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 	end
     self.m_tableJettonNum[tag]:setString(str)
 	--node.m_textMyJetton:setString(str);
+
+    self.m_lUserJettonScore[tag] = node.m_llMyTotal
 
 	--总下注
 	str = ExternalFun.numberThousands(node.m_llAreaTotal)
@@ -1604,7 +1608,7 @@ function GameViewLayer:updateRecord()
 
         for j=0,2 do
             --胜利标识
-			local nFlagsIndex = "1";
+			local nFlagsIndex = "1"
 			if -1 == bWinMen[j] then
 				nFlagsIndex = "0"
             end
@@ -1626,7 +1630,7 @@ end
 
 --庄家信息
 function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore) 
-	--庄家椅子号
+	--[[--庄家椅子号
 	local wBankerUser = yl.INVALID_CHAIR;
 
 	--查找椅子号
@@ -1639,7 +1643,9 @@ function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore)
 				break
 			end
 		end
-	end
+	end]]
+    local wBankerUser = dwBankerUserID
+    local pUserData = self:getDataMgr():getChairUserList()[wBankerUser]
 
 	--切换判断
 	if pUserData ~= nil and self.m_wBankerUser ~= wBankerUser then
@@ -1706,6 +1712,11 @@ function GameViewLayer:getApplyable(  )
 	else
 		return false
 	end
+end
+
+--获取能否取消上庄
+function GameViewLayer:getCancelable(  )
+	return self.m_cbGameStatus == g_var(cmd).GAME_SCENE_FREE
 end
 ------
 return GameViewLayer

@@ -183,7 +183,7 @@ cmd.CMD_S_ApplyBanker =
 --取消申请
 cmd.CMD_S_CancelBanker =
 {
-    {k = "szCancelUser", t = "tchar", s = yl.LEN_NICKNAME},     --取消玩家
+    {k = "szCancelUser", t = "string", s = yl.LEN_NICKNAME},     --取消玩家
 }
 
 --切换庄家
