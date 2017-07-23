@@ -63,11 +63,6 @@ end
 function GameLogic.GetCardValue( cbCardData )
 	return bit:_and(cbCardData, GameLogic.MASK_VALUE);
 end
-
---获取花色
-function GameLogic.GetCardColor( cbCardData )
-	return bit:_and(cbCardData, GameLogic.MASK_COLOR);
-end
 ------------------------------------------------------------------
 
 ------------------------------------------------------------------
@@ -127,7 +122,7 @@ function GameLogic.GetCardListPip(cbCardData, cbCardCount)
 		cbCardValue = GameLogic.GetCardValue(cbCardData[i])
 
         local v = 6
-        if 1 ~=cbCardValue then
+        if 1 ~= cbCardValue then
             v = cbCardValue
         end
 
@@ -152,7 +147,7 @@ function GameLogic.CompareCard(cbFirstCardData, cbFirstCardCount, cbNextCardData
 	end
 
 	--特殊牌型判断
-	if CT_POINT ~= cbFirstCardType and cbFirstCardType == cbNextCardType then
+	if GameLogic.CT_POINT ~= cbFirstCardType and cbFirstCardType == cbNextCardType then
 		return -1
 	end
 
@@ -188,44 +183,41 @@ function GameLogic.CompareCard(cbFirstCardData, cbFirstCardCount, cbNextCardData
 end
 
 function GameLogic.GetCardType(cbCardData, cbCardCount)
-    local cbCardDataSort = cbCardData
-
-	--特殊牌型
 	--双天
-	if (12==cbCardDataSort[1] and 44==cbCardDataSort[2]) or (12==cbCardDataSort[2] and 44==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_1 end   	
+	if (12==cbCardData[1] and 44==cbCardData[2]) or (12==cbCardData[2] and 44==cbCardData[1]) then return GameLogic.CT_SPECIAL_1 end   	
 	--双地
-	if (2==cbCardDataSort[1] and 34==cbCardDataSort[2]) or (2==cbCardDataSort[2] and 34==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_2 end
+	if (2==cbCardData[1] and 34==cbCardData[2]) or (2==cbCardData[2] and 34==cbCardData[1]) then return GameLogic.CT_SPECIAL_2 end
 	--至尊
-	if (49==cbCardDataSort[1] and 51==cbCardDataSort[2]) or (49==cbCardDataSort[2] and 51==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_3 end 
+	if (49==cbCardData[1] and 51==cbCardData[2]) or (49==cbCardData[2] and 51==cbCardData[1]) then return GameLogic.CT_SPECIAL_3 end 
 	--双人
-	if (8==cbCardDataSort[1] and 40==cbCardDataSort[2]) or (8==cbCardDataSort[2] and 40==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_4 end 
+	if (8==cbCardData[1] and 40==cbCardData[2]) or (8==cbCardData[2] and 40==cbCardData[1]) then return GameLogic.CT_SPECIAL_4 end 
 	--双和
-	if (4==cbCardDataSort[1] and 36==cbCardDataSort[2]) or (4==cbCardDataSort[2] and 36==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_5 end
+	if (4==cbCardData[1] and 36==cbCardData[2]) or (4==cbCardData[2] and 36==cbCardData[1]) then return GameLogic.CT_SPECIAL_5 end
 	--双梅
-	if (26==cbCardDataSort[1] and 58==cbCardDataSort[2]) or (26==cbCardDataSort[2] and 58==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_6 end
+	if (26==cbCardData[1] and 58==cbCardData[2]) or (26==cbCardData[2] and 58==cbCardData[1]) then return GameLogic.CT_SPECIAL_6 end
 	--双长
-	if (22==cbCardDataSort[1] and 54==cbCardDataSort[2]) or (22==cbCardDataSort[2] and 54==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_7 end
+	if (22==cbCardData[1] and 54==cbCardData[2]) or (22==cbCardData[2] and 54==cbCardData[1]) then return GameLogic.CT_SPECIAL_7 end
 	--双板凳
-	if (20==cbCardDataSort[1] and 52==cbCardDataSort[2]) or (20==cbCardDataSort[2] and 52==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_8 end
+	if (20==cbCardData[1] and 52==cbCardData[2]) or (20==cbCardData[2] and 52==cbCardData[1]) then return GameLogic.CT_SPECIAL_8 end
 	--双斧头
-	if (27==cbCardDataSort[1] and 59==cbCardDataSort[2]) or (27==cbCardDataSort[2] and 59==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_9 end
+	if (27==cbCardData[1] and 59==cbCardData[2]) or (27==cbCardData[2] and 59==cbCardData[1]) then return GameLogic.CT_SPECIAL_9 end
 	--双红头
-	if (10==cbCardDataSort[1] and 42==cbCardDataSort[2]) or (10==cbCardDataSort[2] and 42==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_10 end
+	if (10==cbCardData[1] and 42==cbCardData[2]) or (10==cbCardData[2] and 42==cbCardData[1]) then return GameLogic.CT_SPECIAL_10 end
 	--双铜锤
-	if (7==cbCardDataSort[1] and 39==cbCardDataSort[2]) or (7==cbCardDataSort[2] and 39==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_11 end
+	if (7==cbCardData[1] and 39==cbCardData[2]) or (7==cbCardData[2] and 39==cbCardData[1]) then return GameLogic.CT_SPECIAL_11 end
 	--双幺五
-	if (6==cbCardDataSort[1] and 38==cbCardDataSort[2]) or (6==cbCardDataSort[2] and 38==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_12 end
+	if (6==cbCardData[1] and 38==cbCardData[2]) or (6==cbCardData[2] and 38==cbCardData[1]) then return GameLogic.CT_SPECIAL_12 end
 	--杂九
-	if (9==cbCardDataSort[1] and 41==cbCardDataSort[2]) or (9==cbCardDataSort[2] and 41==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_13 end
+	if (9==cbCardData[1] and 41==cbCardData[2]) or (9==cbCardData[2] and 41==cbCardData[1]) then return GameLogic.CT_SPECIAL_13 end
 	--杂八
-	if (24==cbCardDataSort[1] and 56==cbCardDataSort[2]) or (24==cbCardDataSort[2] and 56==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_14 end
+	if (24==cbCardData[1] and 56==cbCardData[2]) or (24==cbCardData[2] and 56==cbCardData[1]) then return GameLogic.CT_SPECIAL_14 end
 	--杂七
-	if (23==cbCardDataSort[1] and 55==cbCardDataSort[2]) or (23==cbCardDataSort[2] and 55==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_15 end
+	if (23==cbCardData[1] and 55==cbCardData[2]) or (23==cbCardData[2] and 55==cbCardData[1]) then return GameLogic.CT_SPECIAL_15 end
 	--杂五
-	if (5==cbCardDataSort[1] and 37==cbCardDataSort[2]) or (5==cbCardDataSort[2] and 37==cbCardDataSort[1]) then return GameLogic.CT_SPECIAL_16 end
+	if (5==cbCardData[1] and 37==cbCardData[2]) or (5==cbCardData[2] and 37==cbCardData[1]) then return GameLogic.CT_SPECIAL_16 end
 	--获取点数
-	local cbFirstCardValue = GameLogic.GetCardValue(cbCardDataSort[1])
-	local cbSecondCardValue = GameLogic.GetCardValue(cbCardDataSort[2])
+	local cbFirstCardValue = GameLogic.GetCardValue(cbCardData[1])
+	local cbSecondCardValue = GameLogic.GetCardValue(cbCardData[2])
 	--天九王
 	if (12==cbFirstCardValue and 9==cbSecondCardValue) or (9==cbFirstCardValue and 12==cbSecondCardValue) then return GameLogic.CT_SPECIAL_17 end
 	--天杠
@@ -238,42 +230,39 @@ end
 
 --逻辑大小
 function GameLogic.GetCardLogicValue(cbCardData)
-	--获取花色
-	local cbColor = GameLogic.GetCardColor(cbCardData)
-
 	--获取数值
 	local cbValue = GameLogic.GetCardValue(cbCardData)
 
 	--红桃方片Q
-	if 12==cbCardData and 44==cbCardData then return 17 end
+	if 12==cbCardData or 44==cbCardData then return 17 end
 	--红桃方片2
-	if 2==cbCardData and 34==cbCardData then return 16 end
+	if 2==cbCardData or 34==cbCardData then return 16 end
 	--红桃方片8
-	if 8==cbCardData and 40==cbCardData then return 15 end
+	if 8==cbCardData or 40==cbCardData then return 15 end
 	--红桃方片4
-	if 4==cbCardData and 36==cbCardData then return 14 end
+	if 4==cbCardData or 36==cbCardData then return 14 end
 	--黑桃梅花10
-	if 26==cbCardData and 58==cbCardData then return 13 end
+	if 26==cbCardData or 58==cbCardData then return 13 end
 	--黑桃梅花6
-	if 22==cbCardData and 54==cbCardData then return 12 end
+	if 22==cbCardData or 54==cbCardData then return 12 end
 	--黑桃梅花4
-	if 20==cbCardData and 52==cbCardData then return 11 end
+	if 20==cbCardData or 52==cbCardData then return 11 end
 	--红桃方片J *判断黑桃梅花J
-	if 27==cbCardData and 59==cbCardData then return 10 end
+	if 27==cbCardData or 59==cbCardData then return 10 end
 	--红桃方片10
-	if 10==cbCardData and 42==cbCardData then  return 9 end
+	if 10==cbCardData or 42==cbCardData then  return 9 end
 	--红桃方片7
-	if 7==cbCardData and 39==cbCardData then return 8 end
+	if 7==cbCardData or 39==cbCardData then return 8 end
 	--红桃方片6
-	if 6==cbCardData and 38==cbCardData then return 7 end
+	if 6==cbCardData or 38==cbCardData then return 7 end
 	--红桃方片9
-	if 9==cbCardData and 41==cbCardData then return 6 end
+	if 9==cbCardData or 41==cbCardData then return 6 end
 	--黑桃梅花8
-	if 24==cbCardData and 56==cbCardData then  return 5 end
+	if 24==cbCardData or 56==cbCardData then  return 5 end
 	--黑桃梅花7
-	if 23==cbCardData and 55==cbCardData then return 4 end
+	if 23==cbCardData or 55==cbCardData then return 4 end
 	--红桃方片5
-	if 5==cbCardData and 37==cbCardData then return 3 end
+	if 5==cbCardData or 37==cbCardData then return 3 end
 	--黑桃A
 	if 49==cbCardData then return 2 end
 	--黑桃3
@@ -290,7 +279,7 @@ function GameLogic.GetCardPointLogicValue(cbCardData, cbCardCount)
     end
 
 	local cbMaxValue = 0
-	local cbCardValue = {}
+	local cbCardValue = {0,0}
 	for i=1,cbCardCount do
 		cbCardValue[i] = GameLogic.GetCardLogicValue(cbCardData[i])	
 

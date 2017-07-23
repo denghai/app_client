@@ -159,7 +159,7 @@ function GameViewLayer:initRecords()
             local node = self.m_lyRecord:getChildByName("s_" .. i .. "_" .. j)
             node:setProperty(str, "game_res/WIN_FLAGS.png", 26, 24, "0")
             node:setString("1")
-            --node:setProperty(str, "game_res/ME_WIN_FLAGS.png", 24, 26, "1")
+            node:setVisible(false)
         end
     end
 end
@@ -320,7 +320,7 @@ end
 
 --初始化庄家信息
 function GameViewLayer:initBankerInfo( )
-	local banker_layout = self.m_lyBankerInfo;
+	local banker_layout = self.m_lyBankerInfo
 
     --庄家头像
     self.m_spBankerIcon = banker_layout:getChildByName("face_icon")
@@ -344,7 +344,7 @@ function GameViewLayer:initBankerInfo( )
 end
 
 function GameViewLayer:reSetBankerInfo(  )
-    self.m_spBankerIcon:setVisible(false)
+    --self.m_spBankerIcon:setVisible(false)
 	self.m_textBankerNickname:setString("")
 	self.m_textBankerCoint:setString("")
 end
@@ -365,6 +365,27 @@ function GameViewLayer:initUserInfo(  )
 	self:reSetUserInfo()
 end
 
+function GameViewLayer:SetCurGameScore()
+    local Jetton = 0
+    for i=1,3 do
+        Jetton = Jetton + self.m_lUserJettonScore[i]
+    end
+
+    local str = ExternalFun.numberThousands(Jetton)
+	if string.len(str) > 11 then
+		str = string.sub(str,1,11) .. "..."
+	end
+    self.m_textUserJetton:setString(str)
+
+    local Score = self.m_lMeCurGameScore
+
+    str = ExternalFun.numberThousands(Score)
+	if string.len(str) > 11 then
+		str = string.sub(str,1,11) .. "..."
+	end
+    self.m_textUserScore:setString(str)
+end
+
 function GameViewLayer:reSetUserInfo(  )
 	self.m_scoreUser = 0
 	local myUser = self:getMeUserItem()
@@ -375,15 +396,11 @@ function GameViewLayer:reSetUserInfo(  )
 	
     self.m_textUseNickName:setString(self.m_nicknameUser)
     
-    print("自己金币:" .. ExternalFun.formatScore(self.m_scoreUser))
 	local str = ExternalFun.numberThousands(self.m_scoreUser)
 	if string.len(str) > 11 then
-		str = string.sub(str,1,11) .. "..."
+		str = string.sub(str,1,7) .. "..."
 	end
 	self.m_textUserCoint:setString(str)
-
-    self.m_textUserJetton:setString("0")
-    self.m_textUserScore:setString("0")
 end
 
 --初始化桌面筹码区
@@ -527,6 +544,9 @@ function GameViewLayer:cleanJettonArea(  )
 	    self.m_tableJettonScore[i]:setString("0")
         self.m_tableJettonNum[i]:setString("0")
 	end
+
+    self.m_lUserJettonScore = {0,0,0}
+    self.m_textUserJetton:setString("0")
 end
 
 function GameViewLayer:initAction(  )
@@ -610,6 +630,8 @@ function GameViewLayer:showGameResult( bShow )
             rs.lEndUserScore = cmd_gameend.lUserScore
             rs.lEndUserReturnScore = cmd_gameend.lUserReturnScore
             rs.lEndBankerScore = cmd_gameend.lBankerScore
+        else
+            return
         end
 
 		self.m_gameResultLayer:showGameResult(rs)
@@ -755,49 +777,6 @@ function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBank
 	--获取庄家数据
 	self.m_bNoBanker = false
 
-	local nickstr = "";
-	--庄家姓名
-	if true == bEnableSysBanker then --允许系统坐庄
-		if yl.INVALID_CHAIR == wBankerUser then
-			nickstr = "系统坐庄"
-		else
-			local userItem = self:getDataMgr():getChairUserList()[wBankerUser + 1];
-			if nil ~= userItem then
-				nickstr = userItem.szNickName 
-
-				if self:isMeChair(wBankerUser) then
-					self.m_enApplyState = APPLY_STATE.kApplyedState
-				end
-			else
-				print("获取用户数据失败")
-			end
-		end	
-	else
-		if yl.INVALID_CHAIR == wBankerUser then
-			nickstr = "无人坐庄"
-			self.m_bNoBanker = true
-		else
-			local userItem = self:getDataMgr():getChairUserList()[wBankerUser + 1];
-			if nil ~= userItem then
-				nickstr = userItem.szNickName 
-
-				if self:isMeChair(wBankerUser) then
-					self.m_enApplyState = APPLY_STATE.kApplyedState
-				end
-			else
-				print("获取用户数据失败")
-			end
-		end
-	end
-	self.m_textBankerNickname:setString(nickstr);
-
-	--庄家金币
-	local str = string.formatNumberThousands(lBankerScore);
-	if string.len(str) > 11 then
-		str = string.sub(str, 1, 7) .. "...";
-	end
-	self.m_textBankerCoint:setString("金币:" .. str);
-
     self:refreshCondition()
 
 	--[[--坐下用户庄家
@@ -937,20 +916,22 @@ function GameViewLayer:reEnterUserBet( cbArea, llScore )
 end
 
 function GameViewLayer:onEventGameSceneEnd(  )
-    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
-	if nil == cmd_gameend then
+    local cmd_gameend = self:getDataMgr().m_tabGameSceneEndCmd
+	if nil == cmd_gameend or cmd_gameend.cbTableCardArray == nil then
 		return
 	end
 
-    self:initHandCard(self.m_lyCardUp, 1)
-    self:initHandCard(self.m_lyCardLeft, 2)
-    self:initHandCard(self.m_lyCardDown, 3)
-    self:initHandCard(self.m_lyCardRight, 4)
+    self:initHandCard(self.m_lyCardUp, cmd_gameend.cbTableCardArray[1])
+    self:initHandCard(self.m_lyCardLeft, cmd_gameend.cbTableCardArray[2])
+    self:initHandCard(self.m_lyCardDown, cmd_gameend.cbTableCardArray[3])
+    self:initHandCard(self.m_lyCardRight, cmd_gameend.cbTableCardArray[4])
 
     self:showCardEnd(self.m_lyCardUp)
     self:showCardEnd(self.m_lyCardDown)
     self:showCardEnd(self.m_lyCardLeft)
     self:showCardEnd(self.m_lyCardRight)
+
+    self:getDataMgr().m_bRunAnimate = false
 end
 
 function GameViewLayer:showCardEnd(node)
@@ -969,6 +950,8 @@ function GameViewLayer:onGetGameEnd(  )
 	if nil == cmd_gameend then
 		return
 	end
+
+    self.m_lMeCurGameScore = self.m_lMeCurGameScore + cmd_gameend.lUserScore
 
     local cbCardData = cmd_gameend.cbLeftCardCount
     local spCard = g_var(SpCard):createCard(cbCardData)
@@ -999,11 +982,16 @@ end
 
 function GameViewLayer:showCard()
     local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+    if nil == cmd_gameend or cmd_gameend.cbTableCardArray == nil then
+		return
+	end
 
-    self:initHandCard(self.m_lyCardUp, 1)
-    self:initHandCard(self.m_lyCardLeft, 2)
-    self:initHandCard(self.m_lyCardDown, 3)
-    self:initHandCard(self.m_lyCardRight, 4)
+    self:getDataMgr().m_bRunAnimate = true
+
+    self:initHandCard(self.m_lyCardUp, cmd_gameend.cbTableCardArray[1])
+    self:initHandCard(self.m_lyCardLeft, cmd_gameend.cbTableCardArray[2])
+    self:initHandCard(self.m_lyCardDown, cmd_gameend.cbTableCardArray[3])
+    self:initHandCard(self.m_lyCardRight, cmd_gameend.cbTableCardArray[4])
 
     self.m_dealCardIdx = 0
 
@@ -1022,22 +1010,18 @@ function GameViewLayer:showCard()
 	    local bWinShunMen,bWinDuiMen,bWinDaoMen = self:getDataMgr():DeduceWinner()
 	
         --读取记录列表
-        local pServerGameRecord = {}
-        pServerGameRecord.bWinShunMen = bWinShunMen
-        pServerGameRecord.bWinDuiMen = bWinDuiMen
-        pServerGameRecord.bWinDaoMen = bWinDaoMen
-        self:SetGameHistory(pServerGameRecord.bWinShunMen, pServerGameRecord.bWinDaoMen, pServerGameRecord.bWinDuiMen)
+        self:SetGameHistory(bWinShunMen, bWinDaoMen, bWinDuiMen)
 
         self:updateRecord()
+
+        self:SetCurGameScore()
     end)
 
     local act = cc.Sequence:create(cc.DelayTime:create(4), callfunc, cc.DelayTime:create(8), callfunc1)
     self.m_lyCardStart:runAction(act)
 end
 
-function GameViewLayer:initHandCard(node, idx)
-    local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
-
+function GameViewLayer:initHandCard(node, cbTableCardArray)
     node:setVisible(true)
 
     local card1 = node:getChildByName("card1")
@@ -1056,14 +1040,14 @@ function GameViewLayer:initHandCard(node, idx)
     ndStart:setTag(5)
 
     card1:removeAllChildren()
-    local cbCardData1 = cmd_gameend.cbTableCardArray[idx][1]
+    local cbCardData1 = cbTableCardArray[1]
     local spCard1 = g_var(SpCard):createCard(cbCardData1)
     spCard1:setTag(1)
     spCard1:showCardBack(true)
     card1:addChild(spCard1)
 
     card2:removeAllChildren()
-    local cbCardData2 = cmd_gameend.cbTableCardArray[idx][2]
+    local cbCardData2 = cbTableCardArray[2]
     local spCard2 = g_var(SpCard):createCard(cbCardData2)
     spCard2:setTag(1)
     spCard2:showCardBack(true)
@@ -1071,11 +1055,14 @@ function GameViewLayer:initHandCard(node, idx)
 end
 
 function GameViewLayer:dealCard()
-    if self.m_dealCardIdx >= 4 then
+    if self.m_dealCardIdx >= 4 or self:getDataMgr().m_bRunAnimate == false then
         return
     end
 
     local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+    if cmd_gameend.cbLeftCardCount == nil then
+        return
+    end
 
     local seatNum = (cmd_gameend.cbLeftCardCount + self.m_dealCardIdx) % 4
     local node = self.m_lyCardRight
@@ -1120,11 +1107,14 @@ function GameViewLayer:dealCard()
 end
 
 function GameViewLayer:dealCard1(seatNum)
-    if self.m_dealCardIdx >= 4 then
+    if self.m_dealCardIdx >= 4 or self:getDataMgr().m_bRunAnimate == false then
         return
     end
 
     local cmd_gameend = self:getDataMgr().m_tabGameEndCmd
+    if cmd_gameend.cbLeftCardCount == nil then
+        return
+    end
 
     local seatNum = (cmd_gameend.cbLeftCardCount + self.m_dealCardIdx) % 4
     local node = self.m_lyCardRight
@@ -1288,10 +1278,8 @@ function GameViewLayer:gameDataInit( )
     self.m_nRecordFirst = 1
     self.m_GameRecordArrary = {}
 
-    self.m_lUserJettonScore = {}
-    self.m_lUserJettonScore[g_var(cmd).ID_SHUN_MEN] = 0
-	self.m_lUserJettonScore[g_var(cmd).ID_DI_MEN] = 0
-	self.m_lUserJettonScore[g_var(cmd).ID_TIAN_MEN] = 0
+    self.m_lUserJettonScore = {0,0,0}
+    self.m_lMeCurGameScore = 0
 
     --筹码面额
     self.m_pJettonNumber = 
@@ -1523,6 +1511,8 @@ function GameViewLayer:refreshJettonNode( node, my, total, bMyJetton )
 		end
 	end
     self.m_tableJettonScore[tag]:setString(str)
+
+    self:SetCurGameScore()
 end
 ------
 
@@ -1575,6 +1565,9 @@ function GameViewLayer:SetGameHistory( bWinShunMen, bWinDaoMen, bWinDuiMen )
 	--移动下标
     local maxFlagCount = g_var(cmd).MAX_SCORE_HISTORY
 	self.m_nRecordLast = (self.m_nRecordLast + 1) % maxFlagCount
+    if self.m_nRecordLast == 0 then
+        self.m_nRecordLast = maxFlagCount
+    end
 	if self.m_nRecordLast == self.m_nRecordFirst then
 		self.m_nRecordFirst = (self.m_nRecordFirst + 1) % maxFlagCount
 	end
@@ -1608,9 +1601,9 @@ function GameViewLayer:updateRecord()
 
         for j=0,2 do
             --胜利标识
-			local nFlagsIndex = "1"
+			local nFlagsIndex = "0"
 			if -1 == bWinMen[j] then
-				nFlagsIndex = "0"
+				nFlagsIndex = "1"
             end
 
             local node = self.m_lyRecord:getChildByName("s_" .. i .. "_" .. j)
@@ -1622,6 +1615,8 @@ function GameViewLayer:updateRecord()
                 node:setProperty(str, "game_res/ME_WIN_FLAGS.png", 26, 24, "0")
                 node:setString(nFlagsIndex)
             end
+
+            node:setVisible(true)
         end
         --移动下标
         nIdx = (nIdx - 2 + g_var(cmd).MAX_SCORE_HISTORY) % g_var(cmd).MAX_SCORE_HISTORY + 1
@@ -1645,7 +1640,7 @@ function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore)
 		end
 	end]]
     local wBankerUser = dwBankerUserID
-    local pUserData = self:getDataMgr():getChairUserList()[wBankerUser]
+    local pUserData = self:getDataMgr():getChairUserList()[wBankerUser+1]
 
 	--切换判断
 	if pUserData ~= nil and self.m_wBankerUser ~= wBankerUser then
@@ -1656,13 +1651,24 @@ function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore)
 
         self.m_textBankerNickname:setString(pUserData.szNickName)
 
-	    local head = g_var(PopupInfoHead):createClipHead(pUserData, self.m_spBankerIcon:getContentSize().width)
-	    head:setPosition(self.m_spBankerIcon:getPosition())
-	    self.m_lyBankerInfo:addChild(head)
-	    head:enableInfoPop(true)
+        --更新头像
+	    if nil ~= self.m_spBankerIcon and nil ~= self.m_spBankerIcon:getParent() then
+		    self.m_spBankerIcon:removeFromParent()
+		    self.m_spBankerIcon = nil
+	    end
+	    self.m_spBankerIcon = g_var(PopupInfoHead):createNormal(pUserData, 48*6)
+        self.m_spBankerIcon:setPosition(181.00,458.56)
+	    self.m_lyBankerInfo:addChild(self.m_spBankerIcon)
+	    --self.m_spBankerIcon:enableInfoPop(true, cc.p(350,220), cc.p(1.0, yPer))
+
+        lBankerScore = pUserData.lScore
 	end
     if yl.INVALID_CHAIR == wBankerUser then
         self.m_textBankerNickname:setString("系统坐庄")
+        if nil ~= self.m_spBankerIcon and nil ~= self.m_spBankerIcon:getParent() then
+		    self.m_spBankerIcon:removeFromParent()
+		    self.m_spBankerIcon = nil
+	    end
     end
 
     local str = string.formatNumberThousands(lBankerScore);

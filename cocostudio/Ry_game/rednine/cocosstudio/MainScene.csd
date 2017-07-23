@@ -478,15 +478,16 @@
           <AbstractNodeData Name="face" ActionTag="1897103574" Tag="163" IconVisible="False" LeftMargin="-343.8626" RightMargin="519.8626" TopMargin="-219.6408" BottomMargin="219.6408" ctype="SpriteObjectData">
             <Size X="960.0000" Y="640.0000" />
             <Children>
-              <AbstractNodeData Name="face_icon" ActionTag="1156041312" Tag="159" IconVisible="False" LeftMargin="156.3854" RightMargin="755.6146" TopMargin="157.4277" BottomMargin="434.5723" CharWidth="48" CharHeight="48" LabelText="0" StartChar="0" ctype="TextAtlasObjectData">
-                <Size X="48.0000" Y="48.0000" />
+              <AbstractNodeData Name="face_icon" ActionTag="1027036793" Tag="119" IconVisible="False" LeftMargin="167.0000" RightMargin="765.0000" TopMargin="167.4400" BottomMargin="444.5600" ctype="SpriteObjectData">
+                <Size X="28.0000" Y="28.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="180.3854" Y="458.5723" />
-                <Scale ScaleX="5.0000" ScaleY="5.0000" />
+                <Position X="181.0000" Y="458.5600" />
+                <Scale ScaleX="6.6541" ScaleY="7.7200" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.1879" Y="0.7165" />
-                <PreSize X="0.0500" Y="0.0750" />
-                <LabelAtlasFileImage_CNB Type="Normal" Path="res/user_face_image.png" Plist="" />
+                <PrePosition X="0.1885" Y="0.7165" />
+                <PreSize X="0.0479" Y="0.0719" />
+                <FileData Type="Normal" Path="res/green_edit.png" Plist="" />
+                <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
               <AbstractNodeData Name="face_nickname" ActionTag="-1219902577" Tag="161" IconVisible="False" LeftMargin="565.0580" RightMargin="264.9420" TopMargin="95.6707" BottomMargin="524.3293" FontSize="20" LabelText="名字最多7个字" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="TextObjectData">
                 <Size X="130.0000" Y="20.0000" />
@@ -499,18 +500,18 @@
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
-              <AbstractNodeData Name="face_gold" ActionTag="-2058964953" Tag="162" IconVisible="False" LeftMargin="569.7631" RightMargin="290.2369" TopMargin="228.4072" BottomMargin="391.5928" FontSize="20" LabelText="8888888888" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="TextObjectData">
+              <AbstractNodeData Name="face_gold" ActionTag="-2058964953" Tag="162" IconVisible="False" LeftMargin="520.0580" RightMargin="339.9420" TopMargin="228.4072" BottomMargin="391.5928" FontSize="20" LabelText="8888888888" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="TextObjectData">
                 <Size X="100.0000" Y="20.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="619.7631" Y="401.5928" />
+                <Position X="570.0580" Y="401.5928" />
                 <Scale ScaleX="4.0000" ScaleY="4.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.6456" Y="0.6275" />
+                <PrePosition X="0.5938" Y="0.6275" />
                 <PreSize X="0.1042" Y="0.0313" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
-              <AbstractNodeData Name="btn_reqZhuang" ActionTag="-1127010334" Tag="160" IconVisible="False" LeftMargin="550.6800" RightMargin="312.3200" TopMargin="447.4900" BottomMargin="152.5100" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="4" BottomEage="4" Scale9OriginX="15" Scale9OriginY="4" Scale9Width="12" Scale9Height="6" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
+              <AbstractNodeData Name="btn_reqZhuang" ActionTag="-1127010334" Tag="160" IconVisible="False" LeftMargin="550.6800" RightMargin="312.3200" TopMargin="447.4900" BottomMargin="152.5100" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="4" BottomEage="4" Scale9OriginX="-15" Scale9OriginY="-4" Scale9Width="30" Scale9Height="8" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
                 <Size X="97.0000" Y="40.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
                 <Position X="599.1800" Y="172.5100" />

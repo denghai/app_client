@@ -44,6 +44,8 @@ function GameFrame:ctor()
     self.m_tabGameResult = {}
     self.m_tabBetArea = {}
     self.m_tabGameEndCmd = {}
+    self.m_tabGameSceneEndCmd = {}
+    self.m_bRunAnimate = false
 end
 
 ------
@@ -564,6 +566,8 @@ function GameFrame:DeduceWinner()
 	bWinShunMen = GameLogic.CompareCard(ary[1], 2, ary[2], 2)
 	bWinDuiMen = GameLogic.CompareCard(ary[1], 2, ary[3], 2)
 	bWinDaoMen = GameLogic.CompareCard(ary[1], 2, ary[4], 2)
+
+    return bWinShunMen,bWinDaoMen,bWinDuiMen
 end
 
 return GameFrame;
