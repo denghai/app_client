@@ -45,7 +45,6 @@ function GameFrame:ctor()
     self.m_tabBetArea = {}
     self.m_tabGameEndCmd = {}
     self.m_tabGameSceneEndCmd = {}
-    self.m_bRunAnimate = false
 end
 
 ------

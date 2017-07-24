@@ -102,6 +102,27 @@ function GameViewLayer:loadRes(  )
     cc.Director:getInstance():getTextureCache():addImage("res/BT_CANCEL_APPLY.png");
 end
 
+function GameViewLayer:gameDataReset(  )
+	--资源释放
+	cc.Director:getInstance():getTextureCache():removeTextureForKey("game/redNine_card.png")
+
+	--cc.SpriteFrameCache:getInstance():removeSpriteFramesFromFile("setting/setting.plist")
+	--cc.Director:getInstance():getTextureCache():removeTextureForKey("setting/setting.png")
+	cc.Director:getInstance():getTextureCache():removeUnusedTextures()
+	cc.SpriteFrameCache:getInstance():removeUnusedSpriteFrames()
+
+
+	--播放大厅背景音乐
+	ExternalFun.playPlazzBackgroudAudio()
+
+	--变量释放
+	self.m_actDropIn:release();
+	self.m_actDropOut:release();
+
+	self:getDataMgr():removeAllUser()
+	self:getDataMgr():clearRecord()
+end
+
 ---------------------------------------------------------------------------------------
 --界面初始化
 function GameViewLayer:initCsbRes(  )
@@ -134,8 +155,8 @@ function GameViewLayer:initCsbRes(  )
     --发牌区
     self:initCard(csbNode)
 
-    --轮庄Tips
-    self.m_lyCenterTips = csbNode:getChildByName("change_banker")
+    --Tips
+    self.m_lyCenterTips = csbNode:getChildByName("center_tip")
     self.m_lyCenterTips:setVisible(false)
 
 	--初始化按钮
@@ -668,18 +689,9 @@ end
 ------
 --网络接收
 function GameViewLayer:onGetUserScore( item )
-	--[[--自己
+	--自己
 	if item.dwUserID == GlobalUserItem.dwUserID then
        self:reSetUserInfo()
-    end
-
-    --坐下用户
-    for i = 1, g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
-    	if nil ~= self.m_tabSitDownUser[i] then
-    		if item.wChairID == self.m_tabSitDownUser[i]:getChair() then
-    			self.m_tabSitDownUser[i]:updateScore(item)
-    		end
-    	end
     end
 
     --庄家
@@ -689,8 +701,8 @@ function GameViewLayer:onGetUserScore( item )
 		if string.len(str) > 11 then
 			str = string.sub(str, 1, 9) .. "...";
 		end
-		self.m_textBankerCoint:setString("金币:" .. str);
-    end]]
+		self.m_textBankerCoint:setString(str);
+    end
 end
 
 function GameViewLayer:refreshCondition(  )
@@ -710,8 +722,6 @@ end
 
 --游戏free
 function GameViewLayer:onGameFree( )
-	yl.m_bDynamicJoin = false
-
 	self:reSetForNewGame()
 
 	--上庄条件刷新
@@ -729,7 +739,7 @@ function GameViewLayer:onGameStart( )
 	self.m_bOnGameRes = false
 
 	--不是自己庄家,且有庄家
-	if false == self:isMeChair(self.m_wBankerUser) and false == self.m_bNoBanker then
+	if false == self:isMeChair(self.m_wBankerUser) then
 		--下注
 		self:enableJetton(true);
 		--调整下注按钮
@@ -763,30 +773,6 @@ function GameViewLayer:reEnterStart( lUserJetton )
 		--默认选中的筹码
 		self:switchJettonBtnState(DEFAULT_BET)
 	end		
-end
-
---刷新庄家信息
-function GameViewLayer:onChangeBanker( wBankerUser, lBankerScore, bEnableSysBanker )
-	print("更新庄家数据:" .. wBankerUser .. "; coin =>" .. lBankerScore)
-
-	--上一个庄家是自己，且当前庄家不是自己，标记自己的状态
-	if self.m_wBankerUser ~= wBankerUser and self:isMeChair(self.m_wBankerUser) then
-		self.m_enApplyState = APPLY_STATE.kCancelState
-	end
-	self.m_wBankerUser = wBankerUser
-	--获取庄家数据
-	self.m_bNoBanker = false
-
-    self:refreshCondition()
-
-	--[[--坐下用户庄家
-	local chair = -1
-	for i = 1, g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
-		if nil ~= self.m_tabSitDownUser[i] then
-			chair = self.m_tabSitDownUser[i]:getChair()
-			self.m_tabSitDownUser[i]:updateBanker(chair == wBankerUser)
-		end
-	end]]
 end
 
 --更新用户下注
@@ -931,7 +917,7 @@ function GameViewLayer:onEventGameSceneEnd(  )
     self:showCardEnd(self.m_lyCardLeft)
     self:showCardEnd(self.m_lyCardRight)
 
-    self:getDataMgr().m_bRunAnimate = false
+    self.m_bOnGameRes = false
 end
 
 function GameViewLayer:showCardEnd(node)
@@ -986,7 +972,7 @@ function GameViewLayer:showCard()
 		return
 	end
 
-    self:getDataMgr().m_bRunAnimate = true
+    self:showTipsAnimate("game_res/WAITING.png")
 
     self:initHandCard(self.m_lyCardUp, cmd_gameend.cbTableCardArray[1])
     self:initHandCard(self.m_lyCardLeft, cmd_gameend.cbTableCardArray[2])
@@ -1055,7 +1041,7 @@ function GameViewLayer:initHandCard(node, cbTableCardArray)
 end
 
 function GameViewLayer:dealCard()
-    if self.m_dealCardIdx >= 4 or self:getDataMgr().m_bRunAnimate == false then
+    if self.m_dealCardIdx >= 4 or self.m_bOnGameRes == false then
         return
     end
 
@@ -1107,7 +1093,7 @@ function GameViewLayer:dealCard()
 end
 
 function GameViewLayer:dealCard1(seatNum)
-    if self.m_dealCardIdx >= 4 or self:getDataMgr().m_bRunAnimate == false then
+    if self.m_dealCardIdx >= 4 or self.m_bOnGameRes == false then
         return
     end
 
@@ -1155,61 +1141,6 @@ function GameViewLayer:refreshApplyList(  )
 	if nil ~= self.m_applyListLayer and self.m_applyListLayer:isVisible() then
 		local userList = self:getDataMgr():getApplyBankerUserList()		
 		self.m_applyListLayer:refreshList(userList)
-	end
-end
-
-function GameViewLayer:refreshUserList(  )
-	if nil ~= self.m_userListLayer and self.m_userListLayer:isVisible() then
-		local userList = self:getDataMgr():getUserList()		
-		self.m_userListLayer:refreshList(userList)
-	end
-end
-
---更新扑克牌
-function GameViewLayer:onGetGameCard( tabRes, bAni, cbTime )
-	--[[if nil == self.m_cardLayer then
-		self.m_cardLayer = g_var(GameCardLayer):create(self)
-		self:addToRootLayer(self.m_cardLayer, TAG_ZORDER.GAMECARD_ZORDER)
-	end
-	self.m_cardLayer:showLayer(true)
-	self.m_cardLayer:refresh(tabRes, bAni, cbTime)]]
-
-end
-
---座位坐下信息
-function GameViewLayer:onGetSitDownInfo( config, info )
-	self.m_tabSitDownConfig = config
-	
-	local pos = cc.p(0,0)
-	--获取已占位信息
-	for i = 1, g_var(cmd).MAX_OCCUPY_SEAT_COUNT do
-		print("sit chair " .. info[i])
-		self:onGetSitDown(i - 1, info[i], false)
-	end
-end
-
---座位坐下
-function GameViewLayer:onGetSitDown( index, wchair, bAni )
-	if wchair ~= nil 
-		and nil ~= index
-		and index ~= g_var(cmd).SEAT_INVALID_INDEX 
-		and wchair ~= yl.INVALID_CHAIR then
-		local useritem = self:getDataMgr():getChairUserList()[wchair + 1]
-
-		if nil ~= useritem then
-			--下标加1
-			index = index + 1
-			if nil == self.m_tabSitDownUser[index] then
-				self.m_tabSitDownUser[index] = g_var(SitRoleNode):create(self, index)
-				self.m_tabSitDownUser[index]:setPosition(self.m_tabSitDownList[index]:getPosition())
-				self.m_roleSitDownLayer:addChild(self.m_tabSitDownUser[index])
-			end
-			self.m_tabSitDownUser[index]:onSitDown(useritem, bAni, wchair == self.m_wBankerUser)
-
-			if useritem.dwUserID == GlobalUserItem.dwUserID then
-				self.m_nSelfSitIdx = index
-			end
-		end
 	end
 end
 ---------------------------------------------------------------------------------------
@@ -1263,7 +1194,6 @@ function GameViewLayer:dismissPopWait( )
 end
 
 function GameViewLayer:gameDataInit( )
-
     --播放背景音乐
     ExternalFun.playBackgroudAudio("GAME_BLACKGROUND.wav")
 
@@ -1303,7 +1233,7 @@ function GameViewLayer:gameDataInit( )
     self.m_tableJettonNum = {}
 
     --庄家信息
-    self.m_wBankerUser = 0
+    self.m_wBankerUser = yl.INVALID_CHAIR
 	self.m_wBankerTime = 0
 	self.m_lBankerWinScore = 0
 	self.m_lTmpBankerWinScore = 0
@@ -1316,95 +1246,22 @@ function GameViewLayer:gameDataInit( )
     --申请状态
 	self.m_enApplyState = APPLY_STATE.kCancelState
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	self.m_nJettonSelect = -1
 	self.m_lHaveJetton = 0;
 	self.m_llMaxJetton = 0;
-	yl.m_bDynamicJoin = false;
 	self.m_scoreUser = self:getMeUserItem().lScore or 0
 
-	self.m_userListLayer = nil
-	self.m_wallBill = nil
-	self.m_cardLayer = nil
 	self.m_gameResultLayer = nil
 	self.m_pClock = nil
-	self.m_bankLayer = nil
 
-	--用户坐下配置
-	self.m_tabSitDownConfig = {}
-	self.m_tabSitDownUser = {}
 	--自己坐下
 	self.m_nSelfSitIdx = nil
-
-	--座位列表
-	self.m_tabSitDownList = {}
-
-	--当前庄家用户
-	self.m_wBankerUser = yl.INVALID_CHAIR
 
 	--选中的筹码
 	self.m_nSelectBet = DEFAULT_BET
 
 	--是否结算状态
 	self.m_bOnGameRes = false
-
-	--是否无人坐庄
-	self.m_bNoBanker = false
-end
-
-function GameViewLayer:gameDataReset(  )
-	--资源释放
-	cc.Director:getInstance():getTextureCache():removeTextureForKey("game/card.png")
-	cc.SpriteFrameCache:getInstance():removeSpriteFramesFromFile("game/game.plist")
-	cc.Director:getInstance():getTextureCache():removeTextureForKey("game/game.png")
-	cc.SpriteFrameCache:getInstance():removeSpriteFramesFromFile("game/pk_card.plist")
-	cc.Director:getInstance():getTextureCache():removeTextureForKey("game/pk_card.png")
-	cc.SpriteFrameCache:getInstance():removeSpriteFramesFromFile("bank/bank.plist")
-	cc.Director:getInstance():getTextureCache():removeTextureForKey("bank/bank.png")
-
-	--特殊处理public_res blank.png 冲突
-	local dict = cc.FileUtils:getInstance():getValueMapFromFile("public/public.plist")
-	if nil ~= framesDict and type(framesDict) == "table" then
-		for k,v in pairs(framesDict) do
-			if k ~= "blank.png" then
-				cc.SpriteFrameCache:getInstance():removeSpriteFrameByName(k)
-			end
-		end
-	end
-	cc.Director:getInstance():getTextureCache():removeTextureForKey("public_res/public_res.png")
-
-	cc.SpriteFrameCache:getInstance():removeSpriteFramesFromFile("setting/setting.plist")
-	cc.Director:getInstance():getTextureCache():removeTextureForKey("setting/setting.png")
-	cc.Director:getInstance():getTextureCache():removeUnusedTextures()
-	cc.SpriteFrameCache:getInstance():removeUnusedSpriteFrames()
-
-
-	--播放大厅背景音乐
-	ExternalFun.playPlazzBackgroudAudio()
-
-	--变量释放
-	self.m_actDropIn:release();
-	self.m_actDropOut:release();
-	if nil ~= self.m_cardLayer then
-		self.m_cardLayer:clean()
-	end
-
-	yl.m_bDynamicJoin = false;
-	self:getDataMgr():removeAllUser()
-	self:getDataMgr():clearRecord()
 end
 
 function GameViewLayer:getJettonIdx( llScore )
@@ -1625,26 +1482,11 @@ end
 
 --庄家信息
 function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore) 
-	--[[--庄家椅子号
-	local wBankerUser = yl.INVALID_CHAIR;
-
-	--查找椅子号
-    local pUserData = nil
-	if 0 ~= dwBankerUserID then
-		for wChairID = 1,yl.MAX_CHAIR do
-            pUserData = self:getDataMgr():getChairUserList()[wChairID + 1]
-			if nil ~= pUserData and dwBankerUserID == pUserData.dwUserID then
-				wBankerUser = wChairID
-				break
-			end
-		end
-	end]]
     local wBankerUser = dwBankerUserID
     local pUserData = self:getDataMgr():getChairUserList()[wBankerUser+1]
 
 	--切换判断
 	if pUserData ~= nil and self.m_wBankerUser ~= wBankerUser then
-		self.m_wBankerUser = wBankerUser
 		self.m_wBankerTime = 0
 		self.m_lBankerWinScore = 0
 		self.m_lTmpBankerWinScore = 0
@@ -1677,6 +1519,25 @@ function GameViewLayer:SetBankerInfo(dwBankerUserID, lBankerScore)
 	end
     self.m_textBankerCoint:setString(str)
 	self.m_lBankerScore = lBankerScore
+
+    self:refreshCondition()
+
+    print("更新庄家数据:" .. wBankerUser .. "; coin =>" .. lBankerScore.."   ###"..self.m_wBankerUser)
+
+	--上一个庄家是自己，且当前庄家不是自己，标记自己的状态
+	if self.m_wBankerUser ~= wBankerUser and self:isMeChair(self.m_wBankerUser) then
+		self.m_enApplyState = APPLY_STATE.kCancelState
+	end
+
+    if self.m_wBankerUser ~= wBankerUser then
+        self.m_wBankerUser = wBankerUser
+
+        if self:isMeChair(self.m_wBankerUser) then
+            self:showTipsAnimate("game_res/redNine_me_banker.png")
+        else
+            self:showTipsAnimate("game_res/redNine_change_banker.png")
+        end
+    end
 
     self:refreshCondition()
 end
@@ -1723,6 +1584,16 @@ end
 --获取能否取消上庄
 function GameViewLayer:getCancelable(  )
 	return self.m_cbGameStatus == g_var(cmd).GAME_SCENE_FREE
+end
+
+function GameViewLayer:showTipsAnimate(pngFile)
+    self.m_lyCenterTips:stopAllActions()
+    self.m_lyCenterTips:setTexture(pngFile)
+    self.m_lyCenterTips:setVisible(true)
+    self.m_lyCenterTips:setPosition( cc.p(666.0, 256.0) )
+    self.m_lyCenterTips:setOpacity(255)
+    local spawn = cc.Spawn:create(cc.FadeOut:create(3.0), cc.MoveBy:create(3.0, cc.p(0,1000)))
+    self.m_lyCenterTips:runAction(spawn)
 end
 ------
 return GameViewLayer

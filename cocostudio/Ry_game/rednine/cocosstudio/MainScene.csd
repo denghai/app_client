@@ -17,17 +17,6 @@
             <FileData Type="Normal" Path="game_res/redNine_bg.png" Plist="" />
             <BlendFunc Src="770" Dst="771" />
           </AbstractNodeData>
-          <AbstractNodeData Name="change_banker" ActionTag="586878250" Tag="62" IconVisible="False" LeftMargin="551.0101" RightMargin="353.9899" TopMargin="353.7152" BottomMargin="226.2848" ctype="SpriteObjectData">
-            <Size X="231.0000" Y="60.0000" />
-            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-            <Position X="666.5101" Y="256.2848" />
-            <Scale ScaleX="1.0000" ScaleY="1.0000" />
-            <CColor A="255" R="255" G="255" B="255" />
-            <PrePosition X="0.5867" Y="0.4004" />
-            <PreSize X="0.2033" Y="0.0938" />
-            <FileData Type="Normal" Path="game_res/redNine_change_banker.png" Plist="" />
-            <BlendFunc Src="1" Dst="771" />
-          </AbstractNodeData>
           <AbstractNodeData Name="chips" ActionTag="350235242" Tag="101" IconVisible="True" LeftMargin="249.3370" RightMargin="886.6630" TopMargin="554.5914" BottomMargin="85.4086" ctype="SingleNodeObjectData">
             <Size X="0.0000" Y="0.0000" />
             <Children>
@@ -485,7 +474,7 @@
                 <Scale ScaleX="6.6541" ScaleY="7.7200" />
                 <CColor A="255" R="255" G="255" B="255" />
                 <PrePosition X="0.1885" Y="0.7165" />
-                <PreSize X="0.0479" Y="0.0719" />
+                <PreSize X="0.0292" Y="0.0437" />
                 <FileData Type="Normal" Path="res/green_edit.png" Plist="" />
                 <BlendFunc Src="1" Dst="771" />
               </AbstractNodeData>
@@ -1199,6 +1188,17 @@
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.5995" Y="0.5375" />
             <PreSize X="0.0000" Y="0.0000" />
+          </AbstractNodeData>
+          <AbstractNodeData Name="center_tip" Visible="False" ActionTag="586878250" Tag="62" IconVisible="False" LeftMargin="551.0100" RightMargin="353.9900" TopMargin="353.7200" BottomMargin="226.2800" ctype="SpriteObjectData">
+            <Size X="231.0000" Y="60.0000" />
+            <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+            <Position X="666.5100" Y="256.2800" />
+            <Scale ScaleX="1.0000" ScaleY="1.0000" />
+            <CColor A="255" R="255" G="255" B="255" />
+            <PrePosition X="0.5867" Y="0.4004" />
+            <PreSize X="0.2033" Y="0.0938" />
+            <FileData Type="Normal" Path="game_res/redNine_change_banker.png" Plist="" />
+            <BlendFunc Src="1" Dst="771" />
           </AbstractNodeData>
         </Children>
       </ObjectData>
