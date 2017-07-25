@@ -54,3 +54,8 @@ GloryProject.VC.db
 /frameworks/cocos2d-x/cocos/platform/android/libcocos2dx/bin/AndroidManifest.xml
 /frameworks/runtime-src/proj.android/bin/AndroidManifest.xml
 /frameworks/runtime-src/thirdlib/umeng_android/bin/AndroidManifest.xml
+/frameworks/runtime-src/proj.android/gen
+/frameworks/runtime-src/proj.android/.settings
+/frameworks/runtime-src/proj.android/bin
+/publish
+/simulator

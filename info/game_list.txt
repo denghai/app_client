@@ -1,4 +1,5 @@
 [name:游戏中文名, des:md5路径(用于生成md5版本文件), ori:源路径(用于拷贝), zipped:是否添加到压缩列表， folder:目录(用于压缩指定游戏)]
+name=百人红九,des=client\ciphercode\game\yule\redninebattle,ori=game\yule\redninebattle,folder=redninebattle,zipped=0,primode=0
 name=豪车俱乐部,des=client\ciphercode\game\yule\luxurycar,ori=game\yule\luxurycar,folder=luxurycar,zipped=0
 name=百家乐,des=client\ciphercode\game\yule\baccaratnew,ori=game\yule\baccaratnew,folder=baccaratnew,zipped=0
 name=水浒传,des=client\ciphercode\game\yule\watermargin,ori=game\yule\watermargin,folder=watermargin,zipped=0

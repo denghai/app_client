@@ -16,6 +16,8 @@ else
 MATHNEONFILE := math/MathUtil.cpp
 endif
 
+LOCAL_CFLAGS :=-DCOCOS2D_DEBUG=1 -DANDROID
+
 LOCAL_SRC_FILES := \
 cocos2d.cpp \
 2d/CCAction.cpp \

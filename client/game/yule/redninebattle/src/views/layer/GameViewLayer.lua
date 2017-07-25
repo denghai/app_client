@@ -30,19 +30,6 @@ local enumTable =
     "BT_HELP",
 	"BT_EXIT",
     "BT_REQBANKER",
-    
-
-	"BT_START",
-	"BT_LUDAN",
-	"BT_BANK",
-	"BT_SET",
-	"BT_ROBBANKER",
-	"BT_APPLYBANKER",
-	"BT_APPLYLIST",
-    "BT_USERLIST",
-	"BANK_LAYER",
-	"BT_CLOSEBANK",
-	"BT_TAKESCORE",
 }
 local TAG_ENUM = ExternalFun.declarEnumWithTable(GameViewLayer.TAG_START, enumTable);
 
@@ -231,7 +218,6 @@ end
 
 --初始化按钮
 function GameViewLayer:initBtn( csbNode )
-	------
     local function btnEvent( sender, eventType )
 		if eventType == ccui.TouchEventType.ended then
 			self:onButtonClickedEvent(sender:getTag(), sender);
@@ -254,75 +240,6 @@ function GameViewLayer:initBtn( csbNode )
 	btn:addTouchEventListener(btnEvent);
 
     self:refreshMusicBtnState();
-
-	--[[local btnlist_check = csbNode:getChildByName("btnlist_check");
-	btnlist_check:addEventListener(checkEvent);
-	btnlist_check:setSelected(false);
-	btnlist_check:setLocalZOrder(TAG_ZORDER.DROPDOWN_CHECK_ZORDER)
-	------
-
-
-	------
-	--按钮列表
-	local function btnEvent( sender, eventType )
-		if eventType == ccui.TouchEventType.ended then
-			self:onButtonClickedEvent(sender:getTag(), sender);
-		end
-	end	
-	local btn_list = csbNode:getChildByName("sp_btn_list");
-	self.m_btnList = btn_list;
-	btn_list:setScaleY(0.0000001)
-	btn_list:setLocalZOrder(TAG_ZORDER.DROPDOWN_ZORDER)
-
-	--路单
-	local btn = csbNode:getChildByName("ludan_btn");
-	btn:setTag(TAG_ENUM.BT_LUDAN);
-	btn:addTouchEventListener(btnEvent);
-
-	--银行
-	btn = btn_list:getChildByName("bank_btn");
-	btn:setTag(TAG_ENUM.BT_BANK);
-	btn:addTouchEventListener(btnEvent);
-
-	--设置
-	btn = btn_list:getChildByName("set_btn");
-	btn:setTag(TAG_ENUM.BT_SET);
-	btn:addTouchEventListener(btnEvent);
-
-	--离开
-	btn = btn_list:getChildByName("back_btn");
-	btn:setTag(TAG_ENUM.BT_EXIT);
-	btn:addTouchEventListener(btnEvent);
-
-	
-	------
-
-
-	------
-	--上庄、抢庄
-	local banker_bg = csbNode:getChildByName("banker_bg");
-	self.m_spBankerBg = banker_bg;
-	--抢庄
-	btn = banker_bg:getChildByName("rob_btn");
-	btn:setTag(TAG_ENUM.BT_ROBBANKER);
-	btn:addTouchEventListener(btnEvent);
-	self.m_btnRob = btn;
-	self.m_btnRob:setEnabled(false);
-
-	--上庄列表
-	btn = banker_bg:getChildByName("apply_btn");
-	btn:setTag(TAG_ENUM.BT_APPLYLIST);
-	btn:addTouchEventListener(btnEvent);	
-	self.m_btnApply = btn;
-	------
-
-	--玩家列表
-	btn = self.m_spBottom:getChildByName("userlist_btn");
-	btn:setTag(TAG_ENUM.BT_USERLIST);
-	btn:addTouchEventListener(btnEvent);]]
-
-	-- 帮助按钮 gameviewlayer -> gamelayer -> clientscene
-    --self:getParentNode():getParentNode():createHelpBtn2(cc.p(1287, 620), 0, 122, 0, csbNode)
 end
 
 function GameViewLayer:refreshMusicBtnState(  )

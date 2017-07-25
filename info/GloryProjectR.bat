@@ -67,7 +67,7 @@ echo *********************cocos compile android*********************
 copy /y frameworks\.cocos-project.json .\
 copy /y frameworks\.project .\
 
-call  cocos compile -p android --ap android-19 -m release -j 4
+call  cocos compile -p android --ap android-20 -m release -j 4
 POPD
 if  errorlevel 1 goto CompileError
 if  errorlevel 0 goto FinshiMove

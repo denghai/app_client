@@ -21,6 +21,8 @@ LOCAL_MODULE := cocos2dlua_shared
 
 LOCAL_MODULE_FILENAME := libqpry_lua
 
+LOCAL_CFLAGS :=-DCOCOS2D_DEBUG=1 -DANDROID
+
 LOCAL_SRC_FILES := \
 ../../Classes/AppDelegate.cpp \
 ../../Classes/ide-support/SimpleConfigParser.cpp \
