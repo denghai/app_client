@@ -873,7 +873,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     // Init the Bugly
 #if CC_TARGET_PLATFORM != CC_PLATFORM_WIN32
     #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-    	CrashReport::initCrashReport("a5f9bb958c", isDebug);
+    	//CrashReport::initCrashReport("a5f9bb958c", isDebug);
+		CrashReport::initCrashReport("90ff9b033a", isDebug);
     #elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS
     	CrashReport::initCrashReport("fb732f6832", isDebug);
     #endif    

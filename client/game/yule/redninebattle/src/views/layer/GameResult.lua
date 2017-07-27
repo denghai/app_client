@@ -32,9 +32,19 @@ function GameResultLayer:showGameResult( rs )
 	self:reSet()
 	self:setVisible(true)
 
-	self.m_meScore:setString( ExternalFun.numberThousands(rs.lEndUserScore) )
-	self.m_meScoreReturn:setString( ExternalFun.numberThousands(rs.lEndUserReturnScore) )
-	self.m_bankerScore:setString( ExternalFun.numberThousands(rs.lEndBankerScore) )
+    local function scoreToString(score)
+        local str = ""
+        if score >= 0 then
+            str = tostring(score)--string.format("%d", score)
+        else
+            str = "."..tostring(-score)--string.format(".%d", math.abs(score))
+        end
+        return str
+    end
+
+	self.m_meScore:setString( scoreToString(rs.lEndUserScore) )
+	self.m_meScoreReturn:setString( scoreToString(rs.lEndUserReturnScore) )
+	self.m_bankerScore:setString( scoreToString(rs.lEndBankerScore) )
 end
 
 function GameResultLayer:reSet( )

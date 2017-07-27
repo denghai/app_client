@@ -850,24 +850,24 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lbScore0" ActionTag="999969197" Tag="264" IconVisible="False" LeftMargin="271.4776" RightMargin="696.5224" TopMargin="197.0978" BottomMargin="408.9022" CharWidth="24" CharHeight="34" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="168.0000" Y="34.0000" />
+          <AbstractNodeData Name="lbScore0" ActionTag="999969197" Tag="264" IconVisible="False" LeftMargin="281.9776" RightMargin="707.0224" TopMargin="199.0978" BottomMargin="410.9022" CharWidth="21" CharHeight="30" LabelText="9999999" StartChar="." ctype="TextAtlasObjectData">
+            <Size X="147.0000" Y="30.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="355.4776" Y="425.9022" />
             <Scale ScaleX="0.5000" ScaleY="0.5000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.3129" Y="0.6655" />
-            <PreSize X="0.1479" Y="0.0531" />
+            <PreSize X="0.1294" Y="0.0469" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lbNum0" ActionTag="1096013524" Tag="263" IconVisible="False" LeftMargin="286.9650" RightMargin="705.0350" TopMargin="347.6012" BottomMargin="258.3988" CharWidth="24" CharHeight="34" LabelText="999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="144.0000" Y="34.0000" />
+          <AbstractNodeData Name="lbNum0" ActionTag="1096013524" Tag="263" IconVisible="False" LeftMargin="295.9650" RightMargin="714.0350" TopMargin="349.6012" BottomMargin="260.3988" CharWidth="21" CharHeight="30" LabelText="999999" StartChar="." ctype="TextAtlasObjectData">
+            <Size X="126.0000" Y="30.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="358.9650" Y="275.3988" />
             <Scale ScaleX="0.5000" ScaleY="0.5000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.3160" Y="0.4303" />
-            <PreSize X="0.1268" Y="0.0531" />
+            <PreSize X="0.1109" Y="0.0469" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
           <AbstractNodeData Name="deskChip1" ActionTag="1071704635" Tag="106" IconVisible="False" LeftMargin="182.9863" RightMargin="-6.9863" TopMargin="61.2632" BottomMargin="-61.2632" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
@@ -885,24 +885,24 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lbScore1" ActionTag="-30824998" Tag="107" IconVisible="False" LeftMargin="583.5348" RightMargin="384.4652" TopMargin="288.2387" BottomMargin="317.7613" CharWidth="24" CharHeight="34" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="168.0000" Y="34.0000" />
+          <AbstractNodeData Name="lbScore1" ActionTag="-30824998" Tag="107" IconVisible="False" LeftMargin="594.0348" RightMargin="394.9652" TopMargin="290.2387" BottomMargin="319.7613" CharWidth="21" CharHeight="30" LabelText="9999999" StartChar="." ctype="TextAtlasObjectData">
+            <Size X="147.0000" Y="30.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="667.5348" Y="334.7613" />
             <Scale ScaleX="0.5000" ScaleY="0.5000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.5876" Y="0.5231" />
-            <PreSize X="0.1479" Y="0.0531" />
+            <PreSize X="0.1294" Y="0.0469" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lbNum1" ActionTag="1054573525" Tag="108" IconVisible="False" LeftMargin="593.2308" RightMargin="398.7692" TopMargin="438.7136" BottomMargin="167.2864" CharWidth="24" CharHeight="34" LabelText="999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="144.0000" Y="34.0000" />
+          <AbstractNodeData Name="lbNum1" ActionTag="1054573525" Tag="108" IconVisible="False" LeftMargin="602.2308" RightMargin="407.7692" TopMargin="440.7136" BottomMargin="169.2864" CharWidth="21" CharHeight="30" LabelText="999999" StartChar="." ctype="TextAtlasObjectData">
+            <Size X="126.0000" Y="30.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="665.2308" Y="184.2864" />
             <Scale ScaleX="0.5000" ScaleY="0.5000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.5856" Y="0.2879" />
-            <PreSize X="0.1268" Y="0.0531" />
+            <PreSize X="0.1109" Y="0.0469" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
           <AbstractNodeData Name="deskChip2" ActionTag="805155636" Tag="109" IconVisible="False" LeftMargin="480.3107" RightMargin="-304.3108" TopMargin="-29.6790" BottomMargin="29.6790" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="930" Scale9Height="618" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
@@ -920,24 +920,24 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lbScore2" ActionTag="-13808768" Tag="110" IconVisible="False" LeftMargin="885.1332" RightMargin="82.8668" TopMargin="198.5849" BottomMargin="407.4151" CharWidth="24" CharHeight="34" LabelText="9999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="168.0000" Y="34.0000" />
+          <AbstractNodeData Name="lbScore2" ActionTag="-13808768" Tag="110" IconVisible="False" LeftMargin="916.6332" RightMargin="114.3668" TopMargin="200.5849" BottomMargin="409.4151" CharWidth="21" CharHeight="30" LabelText=".9999" StartChar="." ctype="TextAtlasObjectData">
+            <Size X="105.0000" Y="30.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="969.1332" Y="424.4151" />
             <Scale ScaleX="0.5000" ScaleY="0.5000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.8531" Y="0.6631" />
-            <PreSize X="0.1479" Y="0.0531" />
+            <PreSize X="0.0924" Y="0.0469" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
-          <AbstractNodeData Name="lbNum2" ActionTag="-24112005" Tag="111" IconVisible="False" LeftMargin="889.9250" RightMargin="102.0750" TopMargin="348.3865" BottomMargin="257.6135" CharWidth="24" CharHeight="34" LabelText="999999" StartChar="0" ctype="TextAtlasObjectData">
-            <Size X="144.0000" Y="34.0000" />
+          <AbstractNodeData Name="lbNum2" ActionTag="-24112005" Tag="111" IconVisible="False" LeftMargin="898.9250" RightMargin="111.0750" TopMargin="350.3865" BottomMargin="259.6135" CharWidth="21" CharHeight="30" LabelText="999999" StartChar="." ctype="TextAtlasObjectData">
+            <Size X="126.0000" Y="30.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="961.9250" Y="274.6135" />
             <Scale ScaleX="0.5000" ScaleY="0.5000" />
             <CColor A="255" R="255" G="255" B="255" />
             <PrePosition X="0.8468" Y="0.4291" />
-            <PreSize X="0.1268" Y="0.0531" />
+            <PreSize X="0.1109" Y="0.0469" />
             <LabelAtlasFileImage_CNB Type="Normal" Path="game_res/winnumber.png" Plist="" />
           </AbstractNodeData>
           <AbstractNodeData Name="card_up" Visible="False" ActionTag="592294140" Tag="362" IconVisible="True" LeftMargin="674.2238" RightMargin="461.7762" TopMargin="157.3380" BottomMargin="482.6620" ctype="SingleNodeObjectData">

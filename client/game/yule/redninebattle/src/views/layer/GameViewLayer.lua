@@ -565,6 +565,7 @@ function GameViewLayer:showGameResult( bShow )
         local rs = self:getDataMgr().m_tabGameResult
 
         if nil ~= cmd_gameend then
+            dump(cmd_gameend, "   &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&   ")
             rs.lEndUserScore = cmd_gameend.lUserScore
             rs.lEndUserReturnScore = cmd_gameend.lUserReturnScore
             rs.lEndBankerScore = cmd_gameend.lBankerScore
@@ -824,6 +825,8 @@ function GameViewLayer:onEventGameSceneEnd(  )
 		return
 	end
 
+    self.m_lyCardStart:stopAllActions()
+
     self:initHandCard(self.m_lyCardUp, cmd_gameend.cbTableCardArray[1])
     self:initHandCard(self.m_lyCardLeft, cmd_gameend.cbTableCardArray[2])
     self:initHandCard(self.m_lyCardDown, cmd_gameend.cbTableCardArray[3])
@@ -835,6 +838,8 @@ function GameViewLayer:onEventGameSceneEnd(  )
     self:showCardEnd(self.m_lyCardRight)
 
     self.m_bOnGameRes = false
+
+    self:enableJetton(false)
 end
 
 function GameViewLayer:showCardEnd(node)
@@ -1359,6 +1364,10 @@ function GameViewLayer:updateRecord()
         --胜利标识
         local ClientGameRecord = self.m_GameRecordArrary[nIdx]
         if ClientGameRecord == nil then
+            for j=0,2 do
+                local node = self.m_lyRecord:getChildByName("s_" .. i .. "_" .. j)
+                node:setVisible(false)
+            end
             return
         end
 

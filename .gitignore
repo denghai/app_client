@@ -59,3 +59,6 @@ GloryProject.VC.db
 /frameworks/runtime-src/proj.android/bin
 /publish
 /simulator
+/client/game/yule/brnn/res/.DS_Store
+/client/game/yule/brnn/src/*.DS_Store
+/client/game/yule/brnn/src/views/.DS_Store

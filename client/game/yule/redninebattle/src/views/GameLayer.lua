@@ -509,6 +509,10 @@ function GameLayer:onSubSendRecord( dataBuffer )
         return;
     end
     
+    self._gameView.m_nRecordLast = 1
+    self._gameView.m_nRecordFirst = 1
+    self._gameView.m_GameRecordArrary = {}
+
     --读取记录列表
     for i=1,recordcount do
         local  pServerGameRecord = {}
